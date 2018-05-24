@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Douane App</string>
+    <string name="title_activity_login">Sign in</string>
+
+        //login
+    <string name="prompt_email">Gebruikersnaam</string>
+    <string name="prompt_passwd">Wachtwoord</string>
+    <string name="prompt_stay_login">Blijf ingelogd</string>
+    <string name="prompt_login">Inloggen</string>
+
 </resources>
