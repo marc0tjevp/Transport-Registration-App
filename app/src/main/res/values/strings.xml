@@ -7,5 +7,6 @@
     <string name="prompt_passwd">Wachtwoord</string>
     <string name="prompt_stay_login">Blijf ingelogd</string>
     <string name="prompt_login">Inloggen</string>
+    <string name="mrn_code">MRN code</string>
 
 </resources>
