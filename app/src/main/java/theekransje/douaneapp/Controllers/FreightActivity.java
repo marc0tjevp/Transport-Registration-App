@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import theekransje.douaneapp.R;
 
-public class VrachtActivity extends AppCompatActivity {
-    private static final String TAG = "VrachtActivity";
+public class FreightActivity extends AppCompatActivity {
+    private static final String TAG = "FreightActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

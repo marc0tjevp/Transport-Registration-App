@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,8 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import theekransje.douaneapp.API.AsyncLogin;
 import theekransje.douaneapp.Domain.Driver;
@@ -89,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     @Override
     public void onLoginSucces(Driver driver) {
         Log.d(TAG, "onLoginSucces: called");
-        Intent intent = new Intent(this, VrachtActivity.class);
+        Intent intent = new Intent(this, FreightActivity.class);
         intent.putExtra("DRIVER", driver);
         startActivity(intent);
     }

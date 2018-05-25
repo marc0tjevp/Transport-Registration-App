@@ -7,6 +7,6 @@ import theekransje.douaneapp.Domain.Driver;
  */
 
 public interface OnLoginResult {
-    public void onLoginSucces(Driver chauffeur);
+    public void onLoginSucces(Driver driver);
     public void onLoginFailure(String error);
 }

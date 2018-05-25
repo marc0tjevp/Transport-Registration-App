@@ -9,5 +9,5 @@ import theekransje.douaneapp.Domain.Freight;
  */
 
 public interface OnFreightListAvail {
-    public void OnFreightListAvail(ArrayList<Freight> vrachts);
+    public void OnFreightListAvail(ArrayList<Freight> freights);
 }

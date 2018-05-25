@@ -7,5 +7,5 @@ import theekransje.douaneapp.Domain.Freight;
  */
 
 public interface OnStatusDetailAvail {
-    public void OnStatusDetailAvail(Freight vracht);
+    public void OnStatusDetailAvail(Freight freight);
 }

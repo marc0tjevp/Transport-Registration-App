@@ -26,7 +26,7 @@
         <activity android:name=".Controllers.StatusActivity" />
         <activity android:name=".Controllers.StatusDetailActivity" />
         <activity android:name=".Controllers.DrivingActivity" />
-        <activity android:name=".Controllers.VrachtActivity"></activity>
+        <activity android:name=".Controllers.FreightActivity"></activity>
     </application>
 
 </manifest>
