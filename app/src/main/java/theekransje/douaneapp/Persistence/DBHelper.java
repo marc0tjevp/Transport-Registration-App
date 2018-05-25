@@ -8,4 +8,5 @@ package theekransje.douaneapp.Persistence;
 
 
 public class DBHelper {
+    private static final String TAG = "DBHelper";
 }

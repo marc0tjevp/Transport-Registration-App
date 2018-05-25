@@ -7,6 +7,8 @@ import theekransje.douaneapp.R;
 
 public class StatusDetailActivity extends AppCompatActivity {
 
+    private static final String TAG = "StatusDetailActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

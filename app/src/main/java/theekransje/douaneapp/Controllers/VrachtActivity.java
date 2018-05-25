@@ -6,6 +6,7 @@ import android.os.Bundle;
 import theekransje.douaneapp.R;
 
 public class VrachtActivity extends AppCompatActivity {
+    private static final String TAG = "VrachtActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

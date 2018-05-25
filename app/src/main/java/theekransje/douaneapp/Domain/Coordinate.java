@@ -1,10 +1,13 @@
 package theekransje.douaneapp.Domain;
 
+import java.io.Serializable;
+
 /**
  * Created by Sander on 5/24/2018.
  */
 
-public class Coordinate {
+public class Coordinate implements Serializable {
+    private static final String TAG = "Coordinate";
     private long nanoTime;
     private long x;
     private long y;
