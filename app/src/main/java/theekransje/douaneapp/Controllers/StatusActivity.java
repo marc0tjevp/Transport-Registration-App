@@ -6,6 +6,7 @@ import android.os.Bundle;
 import theekransje.douaneapp.R;
 
 public class StatusActivity extends AppCompatActivity {
+    private static final String TAG = "StatusActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

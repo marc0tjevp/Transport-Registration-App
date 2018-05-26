@@ -1,12 +1,14 @@
 package theekransje.douaneapp.Domain;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  * Created by Sander on 5/24/2018.
  */
 
-public class MRMFormulier {
+public class MRMFormulier implements Serializable {
+        private static final String TAG = "MRMFormulier";
 
 
 

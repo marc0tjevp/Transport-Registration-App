@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context="theekransje.douaneapp.Controllers.LoginActivity">
 
+    <TextView
+        android:id="@+id/login_imei"
+        android:layout_width="215dp"
+        android:layout_height="23dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="176dp"

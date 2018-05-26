@@ -7,4 +7,5 @@ package theekransje.douaneapp.Persistence;
 //////Achtergrond Thread welke de data verzend zodra er internet verbinding is. Na succesvolle verzending verwijdering uit db
 
 public class BackgroundDataSenderThread {
+    private static final String TAG = "BackgroundDataSenderThread";
 }
