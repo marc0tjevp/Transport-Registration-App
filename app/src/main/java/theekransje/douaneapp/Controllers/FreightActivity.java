@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class FreightActivity extends AppCompatActivity {
     }
 
     public void addMRN(View view) {
-        EditText editText = findViewById(R.id.editText);
+        EditText editText = findViewById(R.id.mrnEditText);
         String mrnCode = editText.getText().toString();
         if (mrnCode.length() > 0){
             freightAdapter.addMRN(mrnCode);

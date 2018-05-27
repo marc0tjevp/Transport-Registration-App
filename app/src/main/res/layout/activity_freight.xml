@@ -21,48 +21,48 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/imageButton"
+            app:layout_constraintBottom_toTopOf="@+id/cameraButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/mrnEditText"
             android:layout_width="match_parent"
             android:layout_marginEnd="50dp"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button"
+            android:layout_above="@+id/buttonAdd"
             android:layout_alignParentStart="true"
             android:ems="10"
             android:hint="@string/mrn_code"
             android:inputType="textPersonName" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonSend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:text="Verzend geselecteerde"
+            android:text="@string/send_selected"
             android:onClick="sendCodes"/>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonAdd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button2"
+            android:layout_above="@+id/buttonSend"
             android:layout_alignParentStart="true"
-            android:text="Toevoegen"
+            android:text="@string/add"
             android:onClick="addMRN"/>
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/cameraButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="-50dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/editText"
-            android:layout_toEndOf="@+id/editText"
+            android:layout_alignTop="@+id/mrnEditText"
+            android:layout_toEndOf="@+id/mrnEditText"
             android:onClick="scan"
             app:srcCompat="@android:drawable/ic_menu_camera" />
     </RelativeLayout>

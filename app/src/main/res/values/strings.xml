@@ -12,5 +12,7 @@
     <string name="want_to_delete">Wil je dit item verwijderen?</string>
     <string name="delete">Verwijderen</string>
     <string name="sending_codes">De mrn codes zijn verstuurd</string>
+    <string name="add">Toevoegen</string>
+    <string name="send_selected">Verzend geselecteerde</string>
 
 </resources>
