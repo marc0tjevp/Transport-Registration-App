@@ -64,14 +64,18 @@ public class BarcodeScannerActivity extends AppCompatActivity implements ZXingSc
     @Override
     public void onResume() {
         super.onResume();
-        zXingScannerView.setResultHandler(this);
-        zXingScannerView.startCamera();
+        if (zXingScannerView != null) {
+            zXingScannerView.setResultHandler(this);
+            zXingScannerView.startCamera();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        zXingScannerView.stopCamera();
+        if (zXingScannerView != null) {
+            zXingScannerView.stopCamera();
+        }
     }
 
     @Override

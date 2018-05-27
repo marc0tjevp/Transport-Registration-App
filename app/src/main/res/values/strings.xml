@@ -8,5 +8,9 @@
     <string name="prompt_stay_login">Blijf ingelogd</string>
     <string name="prompt_login">Inloggen</string>
     <string name="mrn_code">MRN code</string>
+    <string name="no_permission_camera">Geen toestemming verleend voor de camera</string>
+    <string name="want_to_delete">Wil je dit item verwijderen?</string>
+    <string name="delete">Verwijderen</string>
+    <string name="sending_codes">De mrn codes zijn verstuurd</string>
 
 </resources>
