@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/myCoordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="theekransje.douaneapp.Controllers.FreightActivity"
+    tools:layout_editor_absoluteY="81dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
+
+
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="360dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/cameraButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/mrnEditText"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="50dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/buttonAdd"
+            android:layout_alignParentStart="true"
+            android:ems="10"
+            android:hint="@string/mrn_code"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/buttonSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/send_selected"
+            android:onClick="sendCodes"/>
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/buttonSend"
+            android:layout_alignParentStart="true"
+            android:text="@string/add"
+            android:onClick="addMRN"/>
+
+        <ImageButton
+            android:id="@+id/cameraButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="-50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/mrnEditText"
+            android:layout_toEndOf="@+id/mrnEditText"
+            android:onClick="scan"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
