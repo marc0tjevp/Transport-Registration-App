@@ -14,5 +14,7 @@
     <string name="sending_codes">De mrn codes zijn verstuurd</string>
     <string name="add">Toevoegen</string>
     <string name="send_selected">Volgende</string>
+    <string name="end_of_drive">Einde rit</string>
+    <string name="drive_break">Pauze</string>
 
 </resources>
