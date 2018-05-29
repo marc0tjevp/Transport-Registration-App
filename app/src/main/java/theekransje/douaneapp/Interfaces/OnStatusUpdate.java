@@ -1,5 +1,7 @@
 package theekransje.douaneapp.Interfaces;
 
+import java.util.ArrayList;
+
 import theekransje.douaneapp.Domain.Freight;
 
 /**
@@ -7,5 +9,6 @@ import theekransje.douaneapp.Domain.Freight;
  */
 
 public interface OnStatusUpdate {
-    public void onStatusUpdateAvail(Freight freight);
+    ArrayList<String> getFreights();
+    public void onStatusUpdateAvail(ArrayList<Freight> freight);
 }

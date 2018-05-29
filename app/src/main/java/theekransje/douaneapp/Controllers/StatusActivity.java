@@ -9,17 +9,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import theekransje.douaneapp.API.AsyncGetStatusUpdate;
 import theekransje.douaneapp.Domain.DouaneStatus;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Domain.MRMFormulier;
+import theekransje.douaneapp.Interfaces.OnStatusUpdate;
 import theekransje.douaneapp.R;
 
-public class StatusActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class StatusActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnStatusUpdate {
 
     private ArrayList<Freight> freights;
     private Driver driver;
@@ -42,7 +47,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         navigation.setOnNavigationItemSelectedListener(this);
 
 
-        ArrayList<Freight> data = new ArrayList();
+        final ArrayList<Freight> data = new ArrayList<>();
 
         for (int i = 0; i < 6; i++) {
             MRMFormulier mrn = new MRMFormulier();
@@ -64,7 +69,12 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
 
         rv.setAdapter(adapter);
 
+        new StatusTimer(this,freights);
+    }
 
+    @Override
+    public void onStatusUpdateAvail(Freight freight) {
+        Toast.makeText(this,freight.getMrmFormulier().Mrn+" has an update",Toast.LENGTH_SHORT).show();
     }
 
     @Override
