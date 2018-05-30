@@ -56,6 +56,7 @@ public class BackgroundDataSenderThread extends Thread {
 
                             DataOutputStream os = new DataOutputStream(conn.getOutputStream());
 
+                            ////////////insert token info
                             os.write(a.getJSONOBJECT().toString().getBytes("UTF-8"));
                             os.flush();
                             os.close();
