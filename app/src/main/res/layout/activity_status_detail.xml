@@ -6,4 +6,83 @@
     android:layout_height="match_parent"
     tools:context="theekransje.douaneapp.Controllers.StatusDetailActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/status_detail_mrn"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="status_detail_mrn"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/status_detail_datetime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_datetime" />
+
+        <TextView
+            android:id="@+id/status_detail_sender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_sender" />
+
+        <TextView
+            android:id="@+id/status_detail_recipient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_recipient" />
+
+        <TextView
+            android:id="@+id/status_detail_reference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_reference" />
+
+        <TextView
+            android:id="@+id/status_detail_client"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_client" />
+
+        <TextView
+            android:id="@+id/status_detail_item_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_item_amount" />
+
+        <TextView
+            android:id="@+id/status_detail_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_value" />
+
+        <TextView
+            android:id="@+id/status_detail_total_weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_total_weight" />
+
+        <TextView
+            android:id="@+id/status_detail_currency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="status_detail_currency" />
+
+        <TextView
+            android:id="@+id/status_detail_status"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:gravity="center_vertical"
+            android:text="status_detail_status"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

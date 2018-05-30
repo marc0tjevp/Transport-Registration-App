@@ -65,8 +65,13 @@ public class FreightAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private static class ViewHolder {
+    private static class ViewHolder implements View.OnClickListener {
         public TextView mrn;
         public RelativeLayout layout;
+
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 }

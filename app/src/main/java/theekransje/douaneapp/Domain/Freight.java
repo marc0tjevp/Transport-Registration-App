@@ -11,4 +11,16 @@ public class Freight implements Serializable {
     private MRMFormulier mrmFormulier;
     private int ID;
     private DouaneStatus douaneStatus;
+
+    public MRMFormulier getMrmFormulier() {
+        return mrmFormulier;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public DouaneStatus getDouaneStatus() {
+        return douaneStatus;
+    }
 }
