@@ -83,17 +83,16 @@ public class BarcodeScannerActivity extends AppCompatActivity implements ZXingSc
         Intent data = new Intent();
         String text = rawResult.getText();
         Log.i("Barcodescanneractivity", text);
-        if (text.matches("[0-9]{2}[A-Z]{2}[0-9A-Z]{14}")){
+        if (text.matches("[0-9]{2}[A-Z]{2}[0-9A-Z]{14}")) {
             data.setData(Uri.parse(text));
             setResult(RESULT_OK, data);
+            finish();
         } else {
             String message = getResources().getString(R.string.code_not_mrn);
-            Toast  toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
             toast.show();
 
-            zXingScannerView.setResultHandler(this);
+            zXingScannerView.resumeCameraPreview(this);
         }
-
-        finish();
     }
 }
