@@ -14,5 +14,6 @@
     <string name="sending_codes">De mrn codes zijn verstuurd</string>
     <string name="add">Toevoegen</string>
     <string name="send_selected">Volgende</string>
+    <string name="code_not_mrn">Code voldoet niet aan MRN standaard</string>
 
 </resources>
