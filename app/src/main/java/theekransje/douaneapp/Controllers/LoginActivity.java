@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -43,8 +44,9 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         } else {
             try {
                 String IMEI = ((TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+                
 
-                int hash = IMEI.hashCode();
+                int hash = Settings.Secure.ANDROID_ID.hashCode();
 
                 if (hash < 0) {
                     hash = hash * (-1);
