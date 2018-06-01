@@ -73,17 +73,14 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     }
 
     @Override
-    public void onStatusUpdateAvail(ArrayList<Freight> freights) {
-        ArrayList<Freight> newFreights = new ArrayList<>();
-        for (Freight freight: freights){
-            for (Freight subFreight:this.freights){
-                if (freight.getMrmFormulier().getMrn()==subFreight.getMrmFormulier().getMrn()&&!subFreight.equals(freight)){
-                    Toast.makeText(this,subFreight.getMrmFormulier().getMrn()+"has an update",Toast.LENGTH_SHORT).show();
-                }
+    public void onStatusUpdateAvail(Freight freights) {
+        for (Freight freight : this.freights){
+            if (freight.getMrmFormulier().Mrn.equals(freights.getMrmFormulier().Mrn)&&!freight.getMrmFormulier().equals(freights.getMrmFormulier())){
+                Toast.makeText(this,freights.getMrmFormulier().Mrn+" has an update",Toast.LENGTH_SHORT).show();
+                this.freights.remove(freight);
+                this.freights.add(freights);
             }
-            newFreights.add(freight);
         }
-        this.freights = newFreights;
     }
 
     @Override

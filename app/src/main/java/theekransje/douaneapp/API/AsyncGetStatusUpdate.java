@@ -23,7 +23,7 @@ import theekransje.douaneapp.Interfaces.OnStatusUpdate;
 
 //Query status update. Deze worden afgevuurd door een achtergrond thread. Stop hier dus geen while lus in!
 
-public class AsyncGetStatusUpdate extends AsyncTask<Void,ArrayList<String>,ArrayList<Freight>> {
+public class AsyncGetStatusUpdate extends AsyncTask<Freight,ArrayList<String>,Freight> {
     private static final String TAG = "AsyncGetStatusUpdate";
     private final String endPoint = "/tbd";
     private ApiHelper helper;
@@ -35,42 +35,31 @@ public class AsyncGetStatusUpdate extends AsyncTask<Void,ArrayList<String>,Array
 
 
     @Override
-    protected ArrayList<Freight> doInBackground(Void... voids) {
+    protected Freight doInBackground(Freight... freight) {
         HttpURLConnection connection = helper.getConnection();
         try {
             OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
-            JSONArray mrns=new JSONArray();
-            ArrayList<String> mrnStrings= new ArrayList<>();
-            for (Freight freight : listener.getFreights()){
-                mrnStrings.add(freight.getMrmFormulier().Mrn);
-            }
-            for (String nextLine:mrnStrings) {
-                mrns.put(nextLine);
-            }
-            JSONObject object = new JSONObject();
+            JSONObject mrns = new JSONObject();
+            mrns.put("mrn",freight[0].getMrmFormulier().Mrn);
             Log.e(TAG,mrns.toString());
-            osw.write(object.toString());
+            osw.write(mrns.toString());
             Log.e(TAG,helper.convertIStoString(connection.getInputStream()));
             JSONArray returnedData = new JSONArray(connection);
-            ArrayList<Freight> freights = new ArrayList<>();
-            for (int i = 0; returnedData.length()<i; i++){
-                Freight newFreight = new Freight();
-                MRMFormulier formulier = new MRMFormulier();
-                JSONObject data = returnedData.getJSONObject(i);
-                formulier.Mrn = data.getString("mrn");
-                formulier.AantalArtikelen=data.getInt("aantalartikelen");
-                formulier.Afzender = data.getString("afzender");
-                formulier.Currency = data.getString("currency");
-                formulier.DateTime = (LocalDate) data.get("time");
-                formulier.Ontvanger = data.getString("ontvanger");
-                formulier.Opdrachtgever = data.getString("opdrachtgever");
-                formulier.Reference = data.getString("reference");
-                formulier.TotaalBedrag = data.getDouble("totaalbedrag");
-                formulier.TotaalGewicht = data.getDouble("totaalgewicht");
-                newFreight.setMrmFormulier(formulier);
-                freights.add(newFreight);
-            }
-            listener.onStatusUpdateAvail(freights);
+            Freight newFreight = new Freight();
+            MRMFormulier formulier = new MRMFormulier();
+            JSONObject data = returnedData.getJSONObject(0);
+            formulier.Mrn = data.getString("mrn");
+            formulier.AantalArtikelen=data.getInt("aantalartikelen");
+            formulier.Afzender = data.getString("afzender");
+            formulier.Currency = data.getString("currency");
+            formulier.DateTime = (LocalDate) data.get("time");
+            formulier.Ontvanger = data.getString("ontvanger");
+            formulier.Opdrachtgever = data.getString("opdrachtgever");
+            formulier.Reference = data.getString("reference");
+            formulier.TotaalBedrag = data.getDouble("totaalbedrag");
+            formulier.TotaalGewicht = data.getDouble("totaalgewicht");
+            newFreight.setMrmFormulier(formulier);
+            listener.onStatusUpdateAvail(newFreight);
         } catch (Exception e){
             Log.e(TAG,e.getMessage());
         }finally {
@@ -80,7 +69,7 @@ public class AsyncGetStatusUpdate extends AsyncTask<Void,ArrayList<String>,Array
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Freight> arrayList) {
+    protected void onPostExecute(Freight arrayList) {
         listener.onStatusUpdateAvail(arrayList);
         super.onPostExecute(arrayList);
     }

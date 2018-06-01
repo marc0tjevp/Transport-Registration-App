@@ -17,6 +17,8 @@ public class StatusTimer extends TimerTask {
     }
     @Override
     public void run() {
-        new AsyncGetStatusUpdate(listener).execute(listener.getFreights());
+        for(Freight freight:listener.getFreights()) {
+            new AsyncGetStatusUpdate(listener).execute(freight);
+        }
     }
 }
