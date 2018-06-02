@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
             try {
                 String IMEI = ((TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
-                int hash = IMEI.hashCode();
+                int hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
 
                 if (hash < 0) {
                     hash = hash * (-1);
