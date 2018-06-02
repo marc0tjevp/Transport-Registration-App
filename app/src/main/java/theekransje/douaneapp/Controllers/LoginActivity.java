@@ -15,9 +15,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import theekransje.douaneapp.API.APIMethodes;
 import theekransje.douaneapp.API.AsyncLogin;
+import theekransje.douaneapp.Domain.APITask;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Interfaces.OnLoginResult;
+import theekransje.douaneapp.Persistence.BackgroundDataSenderThread;
+import theekransje.douaneapp.Persistence.DBHelper;
 import theekransje.douaneapp.R;
 
 public class LoginActivity extends AppCompatActivity implements OnLoginResult {
@@ -34,6 +40,9 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         TextView IMEIView = (TextView) findViewById(R.id.login_imei);
 
 
+
+
+
         ///////set IMEI
 
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
@@ -44,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
             try {
                 String IMEI = ((TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
-                int hash = IMEI.hashCode();
+                int hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
 
                 if (hash < 0) {
                     hash = hash * (-1);
@@ -62,21 +71,22 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         ((Button) findViewById(R.id.login_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (    !passWd.getText().equals("")
+                if (!passWd.getText().equals("")
                         &&
                         !userName.getText().equals("")
                         &&
                         !passWd.getText().equals(R.string.prompt_passwd)
                         &&
                         !userName.getText().equals(R.string.prompt_email)
-                        ){
+                        ) {
                     Driver driver = new Driver();
                     driver.setUserName(userName.getText().toString());
                     driver.setPasswd(passWd.getText().toString());
 
-                    new AsyncLogin(driver,(OnLoginResult) view.getContext()).execute();
+                    new AsyncLogin(driver, (OnLoginResult) view.getContext()).execute();
 
-                };
+                }
+                ;
 
             }
         });
@@ -84,8 +94,17 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
 
     @Override
     public void onLoginSucces(Driver driver) {
+
+        if (BackgroundDataSenderThread.thread != null){
+            BackgroundDataSenderThread.thread.destroy();
+            BackgroundDataSenderThread.thread = null;
+        }
+
+        BackgroundDataSenderThread.thread = new BackgroundDataSenderThread(this);
+        BackgroundDataSenderThread.thread.start();
+
         Log.d(TAG, "onLoginSucces: called");
-        Intent intent = new Intent(this, FreightActivity.class);
+        Intent intent = new Intent(this, StatusActivity.class);
         intent.putExtra("DRIVER", driver);
         startActivity(intent);
     }
@@ -94,13 +113,12 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     public void onLoginFailure(final String error) {
         Log.d(TAG, "onLoginFailure: called");
 
-         runOnUiThread( new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
-
 
 
     }

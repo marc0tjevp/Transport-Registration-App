@@ -1,6 +1,9 @@
 package theekransje.douaneapp.Controllers;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -74,4 +77,6 @@ public class FreightAdapter extends BaseAdapter {
 
         }
     }
+
+
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navbar_status"
+        android:icon="@drawable/navbar_status"
+        android:title="@string/text_navbar_status" />
+
+    <item
+        android:id="@+id/navbar_freight"
+        android:icon="@drawable/navbar_freight"
+        android:title="@string/text_navbar_freight" />
+
+    <item
+        android:id="@+id/navbar_drive"
+        android:icon="@drawable/navbar_drive"
+        android:title="@string/text_navbar_drive" />
+
+</menu>
