@@ -7,12 +7,19 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.view.MenuItem;
+
+import android.text.InputFilter;
+import android.view.KeyEvent;
+
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -55,6 +62,18 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         freightAdapter = new FreightAdapter(s, this.getLayoutInflater());
         listview.setAdapter(freightAdapter);
         freightAdapter.notifyDataSetChanged();
+        EditText editText = findViewById(R.id.mrnEditText);
+        editText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    addMRN(null);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -94,11 +113,16 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
     public void addMRN(View view) {
         EditText editText = findViewById(R.id.mrnEditText);
         String mrnCode = editText.getText().toString();
-        if (mrnCode.length() > 0){
+        if (mrnCode.matches("[0-9]{2}[A-Z]{2}[0-9A-Z]{14}")){
             freightAdapter.addMRN(mrnCode);
             freightAdapter.notifyDataSetChanged();
+            editText.setText("");
+        } else {
+            String message = getResources().getString(R.string.code_not_mrn);
+
+            Toast  toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+            toast.show();
         }
-        editText.setText("");
     }
 
     public void sendCodes(View view) {
