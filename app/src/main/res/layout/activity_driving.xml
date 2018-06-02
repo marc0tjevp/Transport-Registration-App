@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="theekransje.douaneapp.Controllers.DrivingActivity">
 
-<<<<<<< HEAD
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -65,7 +65,7 @@
 
     </LinearLayout>
 
-=======
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/driving_navbar"
         android:layout_width="0dp"
@@ -81,5 +81,5 @@
         app:menu="@menu/navigation">
 
     </android.support.design.widget.BottomNavigationView>
->>>>>>> master
+
 </android.support.constraint.ConstraintLayout>
