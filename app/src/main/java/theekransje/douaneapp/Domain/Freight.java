@@ -11,4 +11,32 @@ public class Freight implements Serializable {
     private MRMFormulier mrmFormulier;
     private int ID;
     private DouaneStatus douaneStatus;
+
+    public static String getTAG() {
+        return TAG;
+    }
+
+    public MRMFormulier getMrmFormulier() {
+        return mrmFormulier;
+    }
+
+    public void setMrmFormulier(MRMFormulier mrmFormulier) {
+        this.mrmFormulier = mrmFormulier;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public DouaneStatus getDouaneStatus() {
+        return douaneStatus;
+    }
+
+    public void setDouaneStatus(DouaneStatus douaneStatus) {
+        this.douaneStatus = douaneStatus;
+    }
 }

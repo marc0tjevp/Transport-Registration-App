@@ -9,6 +9,23 @@
     tools:context="theekransje.douaneapp.Controllers.FreightActivity"
     tools:layout_editor_absoluteY="81dp">
 
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/freight_navbar"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/buttonAdd"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.995"
+        app:menu="@menu/navigation">
+
+    </android.support.design.widget.BottomNavigationView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,10 +46,10 @@
             android:id="@+id/mrnEditText"
             android:layout_width="match_parent"
             android:layout_marginEnd="50dp"
-            android:imeOptions="actionDone"
             android:layout_height="wrap_content"
             android:layout_above="@+id/buttonAdd"
             android:layout_alignParentStart="true"
+            android:imeOptions="actionSend"
             android:ems="10"
             android:hint="@string/mrn_code"
             android:inputType="textPersonName" />
@@ -51,9 +68,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/buttonSend"
-            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/cameraButton"
+            android:onClick="addMRN"
             android:text="@string/add"
-            android:onClick="addMRN"/>
+            android:textSize="14sp" />
 
         <ImageButton
             android:id="@+id/cameraButton"

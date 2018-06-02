@@ -20,7 +20,7 @@ import theekransje.douaneapp.Domain.Driver;
 
 public class ApiHelper {
     private static final String TAG = "ApiHelper";
-    private static final String API_URL = "http://heroku.com/api/";
+    public static final String API_URL = "http://heroku.com/api/";
 
 
 
