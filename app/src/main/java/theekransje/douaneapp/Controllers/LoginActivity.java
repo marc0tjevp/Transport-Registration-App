@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         BackgroundDataSenderThread.thread.start();
 
         Log.d(TAG, "onLoginSucces: called");
-        Intent intent = new Intent(this, FreightActivity.class);
+        Intent intent = new Intent(this, StatusActivity.class);
         intent.putExtra("DRIVER", driver);
         startActivity(intent);
     }

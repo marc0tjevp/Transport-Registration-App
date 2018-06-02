@@ -10,10 +10,22 @@
     <string name="mrn_code">MRN code</string>
     <string name="no_permission_camera">Geen toestemming verleend voor de camera</string>
     <string name="want_to_delete">Wil je dit item verwijderen?</string>
+    <string name="designated_freights">Gekoppelde vrachten</string>
     <string name="delete">Verwijderen</string>
     <string name="sending_codes">De mrn codes zijn verstuurd</string>
     <string name="add">Toevoegen</string>
     <string name="send_selected">Volgende</string>
+
+    <string name="text_navbar_status">Huidig</string>
+    <string name="text_navbar_freight">Toevoegen</string>
+    <string name="text_navbar_drive">Rijden</string>
+    <string name="sender">Verzender:</string>
+    <string name="recipient">Ontvanger:</string>
+    <string name="status">Status:</string>
+    <string name="status_update">Status van de formulieren update elke 30 seconden.</string>
+
+
     <string name="code_not_mrn">Code voldoet niet aan MRN standaard</string>
+
 
 </resources>

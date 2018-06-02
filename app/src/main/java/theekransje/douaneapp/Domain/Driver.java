@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 public class Driver implements Serializable {
     private static final String TAG = "Driver";
+    private String uid;
     private String userName;
     private String passwd;
     private String IMEIHash;
