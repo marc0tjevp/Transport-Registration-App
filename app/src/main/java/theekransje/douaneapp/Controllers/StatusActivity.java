@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -54,6 +56,13 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             mrn.setAfzender("Bob");
             mrn.setOntvanger("Eric");
             mrn.setMrn("" + (new Random().nextInt(100000)) + 1010000);
+            mrn.setCurrency("€");
+            mrn.setDateTime((new Date()).getTime());
+            mrn.setTotaalBedrag(new Random().nextInt(5000));
+            mrn.setAantalArtikelen(new Random().nextInt(50));
+            mrn.setReference("REF" + (new Random().nextInt(10000000)+99999));
+            mrn.setOpdrachtgever("AvanZ Transport");
+            mrn.setTotaalGewicht((double) (new Random().nextInt(100000))/100);
             Freight freight = new Freight();
             freight.setDouaneStatus(DouaneStatus.values()[new Random().nextInt(DouaneStatus.values().length - 1)]);
             freight.setMrmFormulier(mrn);
@@ -65,7 +74,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         rv.setLayoutManager(layoutManager);
 
         rv.scrollToPosition(0);
-        StatusAdapter adapter = new StatusAdapter(data, this);
+        StatusAdapter adapter = new StatusAdapter(data, this, this.driver);
 
         rv.setAdapter(adapter);
 

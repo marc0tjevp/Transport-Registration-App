@@ -56,7 +56,7 @@ public class AsyncLogin extends AsyncTask {
                 driver.setToken(r.getString("Token"));
                 listener.onLoginSucces(driver);
             }else {
-                Log.d(TAG, "doInBackground: Invalid");;
+                Log.d(TAG, "doInBackground: Login failed");;
 
                 driver.setToken("1");
                 listener.onLoginSucces(driver);
