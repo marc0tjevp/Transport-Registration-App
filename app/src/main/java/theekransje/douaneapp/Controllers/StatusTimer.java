@@ -15,6 +15,7 @@ public class StatusTimer extends TimerTask {
         Timer timer = new Timer();
         timer.schedule(this,0,30000);
     }
+
     @Override
     public void run() {
         for(Freight freight:listener.getFreights()) {

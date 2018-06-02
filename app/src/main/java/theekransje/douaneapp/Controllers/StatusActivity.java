@@ -69,7 +69,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
 
         rv.setAdapter(adapter);
 
-        new StatusTimer(this);
+      //  new StatusTimer(this);
     }
 
     @Override
