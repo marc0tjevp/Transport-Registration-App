@@ -24,6 +24,18 @@
     <string name="status">Status:</string>
     <string name="status_update">Status van de formulieren update elke 30 seconden.</string>
 
+    <string name="status_detail_datetime">Datum:</string>
+    <string name="status_detail_sender">Afzender: </string>
+    <string name="status_detail_recipient">Ontvanger: </string>
+    <string name="status_detail_reference">Referentie:"</string>
+    <string name="status_detail_client">Opdrachtgever: </string>
+    <string name="status_detail_item_amount">Aantal artikelen: </string>
+    <string name="status_detail_total_weight">Totaal gewicht: </string>
+    <string name="status_detail_value">Totale waarde: </string>
+
+
+
+
 
     <string name="code_not_mrn">Code voldoet niet aan MRN standaard</string>
 

@@ -46,16 +46,16 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
 
             Freight f = (Freight) getIntent().getSerializableExtra("FREIGHT");
 
-        ((TextView)(findViewById(R.id.status_detail_client))).setText(      "Opdrachtgever:     "+f.getMrmFormulier().Opdrachtgever);
-        ((TextView)(findViewById(R.id.status_detail_datetime))).setText(    "Datum:             "  + f.getMrmFormulier().DateTime + "");
-        ((TextView)(findViewById(R.id.status_detail_recipient))).setText(   "Ontvanger:         "  + f.getMrmFormulier().Ontvanger);
-        ((TextView)(findViewById(R.id.status_detail_reference))).setText(   "Referentie:        "  + f.getMrmFormulier().getReference());
-        ((TextView)(findViewById(R.id.status_detail_item_amount))).setText( "Aantal artikelen   " + f.getMrmFormulier().getAantalArtikelen());
-        ((TextView)(findViewById(R.id.status_detail_sender))).setText(      "Verzender:         "  + f.getMrmFormulier().Afzender);
-        ((TextView)(findViewById(R.id.status_detail_mrn))).setText(         "MRN:               "  + f.getMrmFormulier().Mrn);
-        ((TextView)(findViewById(R.id.status_detail_total_weight))).setText("Totaal gewicht:    "  + f.getMrmFormulier().TotaalGewicht + "");
-        ((TextView)(findViewById(R.id.status_detail_status))).setText(      "Status:            " +f.getDouaneStatus().toString());
-        ((TextView)(findViewById(R.id.status_detail_value))).setText(       "Waarde:            "+f.getMrmFormulier().TotaalBedrag + "" + f.getMrmFormulier().Currency);
+        ((TextView)(findViewById(R.id.status_detail_client))).setText(""+f.getMrmFormulier().Opdrachtgever);
+        ((TextView)(findViewById(R.id.status_detail_datetime))).setText(""+f.getMrmFormulier().DateTime + "");
+        ((TextView)(findViewById(R.id.status_detail_recipient))).setText(""+f.getMrmFormulier().Ontvanger);
+        ((TextView)(findViewById(R.id.status_detail_reference))).setText(""+f.getMrmFormulier().getReference());
+        ((TextView)(findViewById(R.id.status_detail_item_amount))).setText(""+f.getMrmFormulier().getAantalArtikelen());
+        ((TextView)(findViewById(R.id.status_detail_sender))).setText(""+f.getMrmFormulier().Afzender);
+        ((TextView)(findViewById(R.id.status_detail_mrn))).setText(         "MRN: "  + f.getMrmFormulier().Mrn);
+        ((TextView)(findViewById(R.id.status_detail_total_weight))).setText(""+f.getMrmFormulier().TotaalGewicht + "");
+        ((TextView)(findViewById(R.id.status_detail_status))).setText(      "Status:  " +f.getDouaneStatus().toString());
+        ((TextView)(findViewById(R.id.status_detail_value))).setText(""+f.getMrmFormulier().TotaalBedrag + "" + f.getMrmFormulier().Currency);
     }
 
     @Override
