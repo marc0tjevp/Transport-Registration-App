@@ -36,4 +36,5 @@ dependencies {
     implementation("me.dm7.barcodescanner:zxing:1.9.8") {
         exclude module: 'support-v4'
     }
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
 }
