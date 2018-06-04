@@ -12,7 +12,7 @@ public class MRMFormulier implements Serializable {
 
         public String Mrn;
         public String Reference;
-        public LocalDate DateTime;
+        public long DateTime;
         public String Afzender;
         public String Ontvanger;
         public String Opdrachtgever;
@@ -42,11 +42,11 @@ public class MRMFormulier implements Serializable {
                 Reference = reference;
         }
 
-        public LocalDate getDateTime() {
+        public long getDateTime() {
                 return DateTime;
         }
 
-        public void setDateTime(LocalDate dateTime) {
+        public void setDateTime(long dateTime) {
                 DateTime = dateTime;
         }
 

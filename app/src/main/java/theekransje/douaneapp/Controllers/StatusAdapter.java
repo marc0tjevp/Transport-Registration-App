@@ -1,6 +1,7 @@
 package theekransje.douaneapp.Controllers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import theekransje.douaneapp.Domain.DouaneStatus;
+import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.R;
 
@@ -24,13 +26,14 @@ import theekransje.douaneapp.R;
 public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder> {
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView status;
         public TextView sender;
         public TextView recipient;
         public TextView mrn;
         public ConstraintLayout cl;
         public ImageView thumb;
+
 
         public View view;
 
@@ -46,16 +49,33 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             this.cl = itemView.findViewById(R.id.status_row_cl);
             this.thumb = itemView.findViewById(R.id.status_row_thumb);
 
+            this.view.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(v.getContext(), StatusDetailActivity.class);
+
+            i.putExtra("DRIVER",driver);
+            i.putExtra("FREIGHTS", mData);
+            i.putExtra("FREIGHT", mData.get(this.getLayoutPosition()));
+
+            v.getContext().startActivity(i);
+
         }
     }
 
 
     private ArrayList<Freight> mData;
     private Context mContext;
+    private Driver driver;
 
-    public StatusAdapter(ArrayList<Freight> freights, Context context) {
+    public StatusAdapter(ArrayList<Freight> freights, Context context, Driver driver) {
         this.mData = freights;
+        this.driver = driver;
         this.mContext = context;
+
     }
 
     @NonNull
