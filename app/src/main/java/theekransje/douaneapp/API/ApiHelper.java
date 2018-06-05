@@ -63,7 +63,6 @@ public class ApiHelper {
     public static String convertIStoString(InputStream inputStream) {
         Log.d("", "convertIStoString: called");
 
-
         try {
             ///////////////////CONVERT InputStream to String////////////////////////
 

@@ -12,9 +12,11 @@ public class Freight implements Serializable {
     private int ID;
     private DouaneStatus douaneStatus;
 
+
     public static String getTAG() {
         return TAG;
     }
+
 
     public MRMFormulier getMrmFormulier() {
         return mrmFormulier;
@@ -24,19 +26,23 @@ public class Freight implements Serializable {
         this.mrmFormulier = mrmFormulier;
     }
 
+
     public int getID() {
         return ID;
+    }
+
+
+    public DouaneStatus getDouaneStatus() {
+        return douaneStatus;
     }
 
     public void setID(int ID) {
         this.ID = ID;
     }
 
-    public DouaneStatus getDouaneStatus() {
-        return douaneStatus;
-    }
 
     public void setDouaneStatus(DouaneStatus douaneStatus) {
         this.douaneStatus = douaneStatus;
+
     }
 }

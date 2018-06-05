@@ -51,7 +51,7 @@ public class AsyncGetStatusUpdate extends AsyncTask<Freight,ArrayList<String>,Fr
             formulier.AantalArtikelen=data.getInt("aantalartikelen");
             formulier.Afzender = data.getString("afzender");
             formulier.Currency = data.getString("currency");
-            formulier.DateTime = (LocalDate) data.get("time");
+            formulier.DateTime = (long) data.get("time");
             formulier.Ontvanger = data.getString("ontvanger");
             formulier.Opdrachtgever = data.getString("opdrachtgever");
             formulier.Reference = data.getString("reference");

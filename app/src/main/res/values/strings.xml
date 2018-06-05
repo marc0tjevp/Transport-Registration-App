@@ -15,6 +15,8 @@
     <string name="sending_codes">De mrn codes zijn verstuurd</string>
     <string name="add">Toevoegen</string>
     <string name="send_selected">Volgende</string>
+    <string name="end_of_drive">Einde rit</string>
+    <string name="drive_break">Pauze</string>
 
     <string name="text_navbar_status">Huidig</string>
     <string name="text_navbar_freight">Toevoegen</string>
@@ -23,6 +25,18 @@
     <string name="recipient">Ontvanger:</string>
     <string name="status">Status:</string>
     <string name="status_update">Status van de formulieren update elke 30 seconden.</string>
+
+    <string name="status_detail_datetime">Datum:</string>
+    <string name="status_detail_sender">Afzender: </string>
+    <string name="status_detail_recipient">Ontvanger: </string>
+    <string name="status_detail_reference">Referentie:"</string>
+    <string name="status_detail_client">Opdrachtgever: </string>
+    <string name="status_detail_item_amount">Aantal artikelen: </string>
+    <string name="status_detail_total_weight">Totaal gewicht: </string>
+    <string name="status_detail_value">Totale waarde: </string>
+
+
+
 
 
     <string name="code_not_mrn">Code voldoet niet aan MRN standaard</string>
