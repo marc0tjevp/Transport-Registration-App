@@ -1,8 +1,12 @@
 package theekransje.douaneapp.Controllers;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +45,9 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         this.c = this;
         this.driver = (Driver) getIntent().getSerializableExtra("DRIVER");
         this.freights = (ArrayList<Freight>) getIntent().getSerializableExtra("FREIGHTS");
+        if (freights==null){
+            freights = new ArrayList<>();
+        }
 
         BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
         navigation.setSelectedItemId(R.id.navbar_status);
@@ -59,6 +66,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             freight.setMrmFormulier(mrn);
             data.add(freight);
         }
+        this.freights.addAll(data);
 
         RecyclerView rv = findViewById(R.id.status_rv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -76,6 +84,12 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     public void onStatusUpdateAvail(Freight freights) {
         for (Freight freight : this.freights){
             if (freight.getMrmFormulier().Mrn.equals(freights.getMrmFormulier().Mrn)&&!freight.getMrmFormulier().equals(freights.getMrmFormulier())){
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, NotificationChannel.DEFAULT_CHANNEL_ID)
+                        .setSmallIcon(R.drawable.navbar_drive)
+                        .setContentTitle(""+R.string.app_name)
+                        .setContentInfo(freight.getMrmFormulier().Mrn +" has an update")
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+                NotificationManagerCompat.from(this).notify(1,mBuilder.build());
                 Toast.makeText(this,freights.getMrmFormulier().Mrn+" has an update",Toast.LENGTH_SHORT).show();
                 this.freights.remove(freight);
                 this.freights.add(freights);
