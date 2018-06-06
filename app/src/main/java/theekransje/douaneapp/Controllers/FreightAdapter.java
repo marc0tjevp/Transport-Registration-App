@@ -11,16 +11,17 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import theekransje.douaneapp.R;
 
 public class FreightAdapter extends BaseAdapter {
 
-    private List<String> mrns;
+    private ArrayList<String> mrns;
     private LayoutInflater mInflator;
 
-    public FreightAdapter(List<String> mrnList, LayoutInflater layoutInflater){
+    public FreightAdapter(ArrayList<String> mrnList, LayoutInflater layoutInflater){
         mrns = mrnList;
         mInflator = layoutInflater;
     }
@@ -78,7 +79,11 @@ public class FreightAdapter extends BaseAdapter {
         public void onClick(View v) {
             Log.d("TEST", "onClick: " + v.getId());
         }
+
+
     }
+
+
 
 
 }

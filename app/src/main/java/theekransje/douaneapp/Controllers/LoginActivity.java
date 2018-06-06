@@ -29,6 +29,8 @@ import theekransje.douaneapp.R;
 public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     private static final String TAG = "LoginActivity";
 
+    int hash;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: called");
@@ -37,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
 
         final TextView userName = (TextView) findViewById(R.id.login_user);
         final TextView passWd = (TextView) findViewById(R.id.login_passwd);
-        TextView IMEIView = (TextView) findViewById(R.id.login_imei);
+        final TextView IMEIView = (TextView) findViewById(R.id.login_imei);
 
 
 
@@ -53,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
             try {
                 String IMEI = ((TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
-                int hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
+                this.hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
 
                 if (hash < 0) {
                     hash = hash * (-1);
@@ -82,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
                     Driver driver = new Driver();
                     driver.setUserName(userName.getText().toString());
                     driver.setPasswd(passWd.getText().toString());
+                    driver.setIMEIHash(hash+"");
 
                     new AsyncLogin(driver, (OnLoginResult) view.getContext()).execute();
 

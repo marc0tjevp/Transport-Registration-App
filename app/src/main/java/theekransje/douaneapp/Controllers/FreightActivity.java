@@ -43,7 +43,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
     private Driver driver;
     private Context c;
 
-    private List<String> s;
+    private ArrayList<String> s;
 
 
     ListView list;
@@ -68,7 +68,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         s = new ArrayList<>();
 
 
-        final List<String> selected = new ArrayList<>();
+        final ArrayList<String> selected = new ArrayList<>();
 
         s.add("14DB" + new Random().nextInt(1000000000));
         s.add("14DB" + new Random().nextInt(1000000000));
@@ -91,7 +91,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
 
 
-                freightAdapter = new FreightAdapter(s, this.getLayoutInflater());
+        freightAdapter = new FreightAdapter(s, this.getLayoutInflater());
         listview.setAdapter(freightAdapter);
         freightAdapter.notifyDataSetChanged();
 
