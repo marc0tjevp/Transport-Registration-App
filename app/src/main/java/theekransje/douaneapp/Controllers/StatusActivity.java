@@ -1,6 +1,8 @@
 package theekransje.douaneapp.Controllers;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.time.LocalDate;
@@ -78,7 +82,17 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
 
         rv.setAdapter(adapter);
 
-      //  new StatusTimer(this);
+
+        ImageButton imageButton = findViewById(R.id.status_imageButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), FreightActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
+
+   //    new StatusTimer(this);
     }
 
     @Override
@@ -104,15 +118,21 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                 Navbar.goToStatus(c, driver, freights);
 
                 return true;
-            case R.id.navbar_freight:
-                Log.d(TAG, "onNavigationItemSelected: FIRED");
-                Navbar.goToFreights(c, driver, freights);
-                return true;
+
             case R.id.navbar_drive:
                 Navbar.goToDrive(c, driver, freights);
 
                 return true;
         }
         return false;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    //    BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
+    //    navigation.setSelectedItemId(R.id.navbar_status);
     }
 }

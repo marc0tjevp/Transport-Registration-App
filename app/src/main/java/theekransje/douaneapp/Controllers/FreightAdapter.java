@@ -1,6 +1,7 @@
 package theekransje.douaneapp.Controllers;
 
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ public class FreightAdapter extends BaseAdapter {
     public void addMRN(String s){
         mrns.add(s);
     }
+
     public void removeMRN(int position){
         mrns.remove(position);
     }
@@ -55,7 +57,7 @@ public class FreightAdapter extends BaseAdapter {
 
             viewHolder = new ViewHolder();
             viewHolder.mrn = convertView.findViewById(R.id.mrn);
-            viewHolder.layout = convertView.findViewById(R.id.layout);
+            viewHolder.layout = convertView.findViewById(R.id.freight_layout);
 
             convertView.setTag(viewHolder);
         } else {
@@ -70,11 +72,11 @@ public class FreightAdapter extends BaseAdapter {
 
     private static class ViewHolder implements View.OnClickListener {
         public TextView mrn;
-        public RelativeLayout layout;
+        public ConstraintLayout layout;
 
         @Override
         public void onClick(View v) {
-
+            Log.d("TEST", "onClick: " + v.getId());
         }
     }
 

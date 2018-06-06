@@ -46,10 +46,6 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 Navbar.goToStatus(c, driver, freights);
 
                 return true;
-            case R.id.navbar_freight:
-                Log.d(TAG, "onNavigationItemSelected: FIRED");
-                Navbar.goToFreights(c, driver, freights);
-                return true;
             case R.id.navbar_drive:
                 Navbar.goToDrive(c, driver, freights);
 

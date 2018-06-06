@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     public void onLoginSucces(Driver driver) {
 
         if (BackgroundDataSenderThread.thread != null){
-            BackgroundDataSenderThread.thread.destroy();
+            BackgroundDataSenderThread.thread.endThread();
             BackgroundDataSenderThread.thread = null;
         }
 
@@ -119,7 +119,5 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
                 Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 }

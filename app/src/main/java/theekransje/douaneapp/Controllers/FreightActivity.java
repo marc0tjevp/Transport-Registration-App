@@ -2,6 +2,7 @@ package theekransje.douaneapp.Controllers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -19,17 +20,20 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.R;
+import theekransje.douaneapp.Util.ListViewAdapter;
 
-public class FreightActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class FreightActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
     private static final String TAG = FreightActivity.class.getSimpleName();
 
     private static final int SCAN_BARCODE = 1;
@@ -39,11 +43,15 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
     private Driver driver;
     private Context c;
 
+    private List<String> s;
 
 
+    ListView list;
+    ListViewAdapter adapter;
+    SearchView editSearch;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_freight);
@@ -53,43 +61,73 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         this.freights = (ArrayList<Freight>) getIntent().getSerializableExtra("FREIGHTS");
 
         BottomNavigationView navigation = this.findViewById(R.id.freight_navbar);
-        navigation.setSelectedItemId(R.id.navbar_freight);
         navigation.setOnNavigationItemSelectedListener(this);
 
 
-        ListView listview = findViewById(R.id.list_view);
-        List<String> s = new ArrayList<>();
-        freightAdapter = new FreightAdapter(s, this.getLayoutInflater());
+        ListView listview = findViewById(R.id.status_list_view);
+        s = new ArrayList<>();
+
+
+        final List<String> selected = new ArrayList<>();
+
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+        s.add("14DB" + new Random().nextInt(1000000000));
+
+
+
+                freightAdapter = new FreightAdapter(s, this.getLayoutInflater());
         listview.setAdapter(freightAdapter);
         freightAdapter.notifyDataSetChanged();
-        EditText editText = findViewById(R.id.mrnEditText);
-        editText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
 
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    addMRN(null);
-                    return true;
-                }
-                return false;
-            }
-        });
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.myCoordinatorLayout),
-                        R.string.want_to_delete, Snackbar.LENGTH_LONG);
-                mySnackbar.setAction(R.string.delete, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        freightAdapter.removeMRN(position);
-                        freightAdapter.notifyDataSetChanged();
-                    }
-                });
-                mySnackbar.show();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                if (selected.contains(new String(s.get(position)))) {
+                    view.setBackgroundColor(Color.WHITE);
+                    selected.remove(s.get(position));
+                } else {
+                    view.setBackgroundColor(Color.GREEN);
+                    selected.add(s.get(position));
+                }
+
             }
+
         });
+
+
+
+        list = (ListView) findViewById(R.id.listview);
+
+        adapter = new ListViewAdapter(this, s);
+
+
+        list.setAdapter(adapter);
+
+        editSearch = (SearchView) findViewById(R.id.search);
+        editSearch.setOnQueryTextListener(this);
+
+        onQueryTextChange("123");
+
+        list.setVisibility(View.GONE);
     }
 
     public void scan(View view) {
@@ -111,24 +149,13 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
     }
 
     public void addMRN(View view) {
-        EditText editText = findViewById(R.id.mrnEditText);
-        String mrnCode = editText.getText().toString();
-        if (mrnCode.matches("[0-9]{2}[A-Z]{2}[0-9A-Z]{14}")){
-            freightAdapter.addMRN(mrnCode);
-            freightAdapter.notifyDataSetChanged();
-            editText.setText("");
-        } else {
-            String message = getResources().getString(R.string.code_not_mrn);
 
-            Toast  toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-            toast.show();
-        }
+
     }
 
     public void sendCodes(View view) {
         Toast.makeText(this, R.string.sending_codes, Toast.LENGTH_LONG).show();
     }
-
 
 
     @Override
@@ -138,10 +165,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
                 Navbar.goToStatus(c, driver, freights);
 
                 return true;
-            case R.id.navbar_freight:
-                Log.d(TAG, "onNavigationItemSelected: FIRED");
-                Navbar.goToFreights(c, driver, freights);
-                return true;
+
             case R.id.navbar_drive:
                 Navbar.goToDrive(c, driver, freights);
 
@@ -149,4 +173,30 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         }
         return false;
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavigationView navigation = this.findViewById(R.id.freight_navbar);
+        navigation.setSelectedItemId(R.id.freight_navbar);
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+
+        String text = newText;
+        adapter.filter(text);
+        return false;
+    }
+
+
 }

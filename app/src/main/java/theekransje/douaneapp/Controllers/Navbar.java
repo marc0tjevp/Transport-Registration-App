@@ -27,15 +27,6 @@ public class Navbar {
         context.startActivity(intent);
     }
 
-    public static void goToFreights(Context context, Driver driver, ArrayList<Freight> freights){
-        Log.d(TAG, "goToFreights: FIRED");
-        Intent intent = new Intent(context, FreightActivity.class);
-
-        intent.putExtra("DRIVER", driver);
-        intent.putExtra("FREIGHTS", freights);
-
-        context.startActivity(intent);
-    }
 
     public static void goToDrive(Context context, Driver driver, ArrayList<Freight> freights){
         Log.d(TAG, "goToDrive: FIRED");
