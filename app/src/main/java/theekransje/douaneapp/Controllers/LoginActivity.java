@@ -17,10 +17,14 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import theekransje.douaneapp.API.APIMethodes;
+import theekransje.douaneapp.API.ApiHelper;
 import theekransje.douaneapp.API.AsyncLogin;
 import theekransje.douaneapp.Domain.APITask;
 import theekransje.douaneapp.Domain.Driver;
+import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Interfaces.OnLoginResult;
 import theekransje.douaneapp.Persistence.BackgroundDataSenderThread;
 import theekransje.douaneapp.Persistence.DBHelper;
@@ -109,6 +113,9 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         Log.d(TAG, "onLoginSucces: called");
         Intent intent = new Intent(this, StatusActivity.class);
         intent.putExtra("DRIVER", driver);
+        intent.putExtra("FREIGHTS",new ArrayList<Freight>());
+        ApiHelper.token = driver.getToken();
+
         startActivity(intent);
     }
 

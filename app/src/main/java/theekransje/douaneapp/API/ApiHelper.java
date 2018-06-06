@@ -21,6 +21,7 @@ import theekransje.douaneapp.Domain.Driver;
 public class ApiHelper {
     private static final String TAG = "ApiHelper";
     public static final String API_URL = "http://colt.softether.net:8080/";
+    public static String token;
 
 
 
@@ -41,6 +42,10 @@ public class ApiHelper {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(apiMethode.toString());
             conn.setRequestProperty("Content-Type", "application/json");
+
+            if (token != null){
+                conn.setRequestProperty("Authorization", "Bearer " + token );
+            }
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setUseCaches(false);

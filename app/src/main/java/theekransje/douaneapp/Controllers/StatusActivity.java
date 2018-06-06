@@ -53,32 +53,15 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         navigation.setOnNavigationItemSelectedListener(this);
 
 
-        final ArrayList<Freight> data = new ArrayList<>();
 
-        for (int i = 0; i < 6; i++) {
-            MRMFormulier mrn = new MRMFormulier();
-            mrn.setAfzender("Bob");
-            mrn.setOntvanger("Eric");
-            mrn.setMrn("" + (new Random().nextInt(100000)) + 1010000);
-            mrn.setCurrency("€");
-            mrn.setDateTime((new Date()).getTime());
-            mrn.setTotaalBedrag(new Random().nextInt(5000));
-            mrn.setAantalArtikelen(new Random().nextInt(50));
-            mrn.setReference("REF" + (new Random().nextInt(10000000)+99999));
-            mrn.setOpdrachtgever("AvanZ Transport");
-            mrn.setTotaalGewicht((double) (new Random().nextInt(100000))/100);
-            Freight freight = new Freight();
-            freight.setDouaneStatus(DouaneStatus.values()[new Random().nextInt(DouaneStatus.values().length - 1)]);
-            freight.setMrmFormulier(mrn);
-            data.add(freight);
-        }
+
 
         RecyclerView rv = findViewById(R.id.status_rv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv.setLayoutManager(layoutManager);
 
         rv.scrollToPosition(0);
-        StatusAdapter adapter = new StatusAdapter(data, this, this.driver);
+        StatusAdapter adapter = new StatusAdapter(this.freights, this, this.driver);
 
         rv.setAdapter(adapter);
 
@@ -98,7 +81,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     @Override
     public void onStatusUpdateAvail(Freight freights) {
         for (Freight freight : this.freights){
-            if (freight.getMrmFormulier().Mrn.equals(freights.getMrmFormulier().Mrn)&&!freight.getMrmFormulier().equals(freights.getMrmFormulier())){
+            if (freight.getMrmFormulier().Mrn.equals(freights.getMrmFormulier().Mrn)&&!freight.equals(freights)){
                 Toast.makeText(this,freights.getMrmFormulier().Mrn+" has an update",Toast.LENGTH_SHORT).show();
                 this.freights.remove(freight);
                 this.freights.add(freights);

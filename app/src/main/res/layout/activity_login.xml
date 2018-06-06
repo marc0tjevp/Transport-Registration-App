@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@string/prompt_email"
+            android:text="gebruiker"
             android:textAlignment="center" />
 
         <EditText
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
-            android:text="@string/prompt_passwd"
+            android:text="wachtwoord"
             android:textAlignment="center" />
 
         <LinearLayout
