@@ -125,7 +125,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         editSearch = (SearchView) findViewById(R.id.search);
         editSearch.setOnQueryTextListener(this);
 
-        onQueryTextChange("123");
+        onQueryTextChange("");
 
         list.setVisibility(View.GONE);
     }
@@ -191,6 +191,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
     @Override
     public boolean onQueryTextChange(String newText) {
+
 
 
         String text = newText;
