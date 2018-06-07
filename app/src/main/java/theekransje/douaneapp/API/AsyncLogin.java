@@ -1,7 +1,10 @@
 package theekransje.douaneapp.API;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
+
+import com.google.android.gms.common.util.Base64Utils;
 
 import org.json.JSONObject;
 
@@ -55,7 +58,22 @@ public class AsyncLogin extends AsyncTask {
 
             if(statusCode == 200){
                 JSONObject r = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream()));
+
                 driver.setToken(r.getString("token"));
+                ApiHelper.token = driver.getToken();
+                Log.d(TAG, "doInBackground: token " + driver.getToken());
+
+                String encodedString = driver.getToken().split("\\.")[1];
+                Log.d(TAG, "doInBackground: " + encodedString);
+                byte[] decodedByteArray = Base64Utils.decode(encodedString);
+                String decodedToken = new String(decodedByteArray);
+
+
+                Log.d(TAG, "doInBackground: " + decodedToken);
+
+                driver.setUid(new JSONObject(decodedToken).getString("sub"));
+
+
                 listener.onLoginSucces(driver);
             }else if(statusCode == 401) {
                 Log.d(TAG, "doInBackground: Login failed");;

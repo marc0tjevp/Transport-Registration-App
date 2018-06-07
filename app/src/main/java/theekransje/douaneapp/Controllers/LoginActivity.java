@@ -114,7 +114,6 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         Intent intent = new Intent(this, StatusActivity.class);
         intent.putExtra("DRIVER", driver);
         intent.putExtra("FREIGHTS",new ArrayList<Freight>());
-        ApiHelper.token = driver.getToken();
 
         startActivity(intent);
     }

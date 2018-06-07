@@ -2,7 +2,6 @@ package theekransje.douaneapp.Controllers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -15,27 +14,23 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import theekransje.douaneapp.API.AsyncGetStatusUpdate;
-import theekransje.douaneapp.Domain.DouaneStatus;
+import theekransje.douaneapp.API.AsyncGetStatusDetail;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
-import theekransje.douaneapp.Domain.MRMFormulier;
+import theekransje.douaneapp.Domain.MRNFormulier;
+import theekransje.douaneapp.Interfaces.OnStatusDetailAvail;
 import theekransje.douaneapp.Interfaces.OnStatusUpdate;
 import theekransje.douaneapp.R;
 
-public class StatusActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnStatusUpdate {
+public class StatusActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnStatusUpdate, OnStatusDetailAvail {
 
     private ArrayList<Freight> freights;
     private Driver driver;
     private Context c;
-
+    private ArrayList<String> selectedMRN;
+    private StatusAdapter adapter;
 
     private static final String TAG = "StatusActivity";
 
@@ -47,11 +42,28 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         this.c = this;
         this.driver = (Driver) getIntent().getSerializableExtra("DRIVER");
         this.freights = (ArrayList<Freight>) getIntent().getSerializableExtra("FREIGHTS");
+        this.selectedMRN = (ArrayList<String>) getIntent().getSerializableExtra("MRN");
+
+
 
         BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
         navigation.setSelectedItemId(R.id.navbar_status);
         navigation.setOnNavigationItemSelectedListener(this);
 
+        if (this.freights == null ||    this.freights.size() == 0){
+            this.freights = new ArrayList<>();
+        }
+        if (this.selectedMRN == null){
+            Log.d(TAG, "onCreate: MRN list empty, creating empty array");
+            this.selectedMRN = new ArrayList<>();
+        }else {
+            Log.d(TAG, "onCreate: SELECTED MRNs" + this.selectedMRN.size());
+        }
+
+        for (String s: this.selectedMRN
+             ) {
+            new AsyncGetStatusDetail(s,this).execute();
+        }
 
 
 
@@ -61,7 +73,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         rv.setLayoutManager(layoutManager);
 
         rv.scrollToPosition(0);
-        StatusAdapter adapter = new StatusAdapter(this.freights, this, this.driver);
+        adapter = new StatusAdapter(this.freights, this, this.driver);
 
         rv.setAdapter(adapter);
 
@@ -75,14 +87,15 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             }
         });
 
+
    //    new StatusTimer(this);
     }
 
     @Override
     public void onStatusUpdateAvail(Freight freights) {
         for (Freight freight : this.freights){
-            if (freight.getMrmFormulier().Mrn.equals(freights.getMrmFormulier().Mrn)&&!freight.equals(freights)){
-                Toast.makeText(this,freights.getMrmFormulier().Mrn+" has an update",Toast.LENGTH_SHORT).show();
+            if (freight.getMRNFormulier().Mrn.equals(freights.getMRNFormulier().Mrn)&&!freight.equals(freights)){
+                Toast.makeText(this,freights.getMRNFormulier().Mrn+" has an update",Toast.LENGTH_SHORT).show();
                 this.freights.remove(freight);
                 this.freights.add(freights);
             }
@@ -117,5 +130,16 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
 
     //    BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
     //    navigation.setSelectedItemId(R.id.navbar_status);
+    }
+
+    @Override
+    public void OnStatusDetailAvail(final Freight freight) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.addFreight(freight);
+            }
+        });
+
     }
 }

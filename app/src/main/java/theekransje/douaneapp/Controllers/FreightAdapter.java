@@ -1,5 +1,6 @@
 package theekransje.douaneapp.Controllers;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
@@ -14,16 +15,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.R;
 
 public class FreightAdapter extends BaseAdapter {
 
     private ArrayList<String> mrns;
     private LayoutInflater mInflator;
+    private ArrayList<String> selected;
 
-    public FreightAdapter(ArrayList<String> mrnList, LayoutInflater layoutInflater){
+    public FreightAdapter(ArrayList<String> mrnList, LayoutInflater layoutInflater, ArrayList<String> selected){
         mrns = mrnList;
         mInflator = layoutInflater;
+        this.selected = selected;
     }
 
     public void addMRN(String s){
@@ -68,6 +72,7 @@ public class FreightAdapter extends BaseAdapter {
         String mrn = mrns.get(position);
         viewHolder.mrn = convertView.findViewById(R.id.mrn);
         viewHolder.mrn.setText(mrn);
+//        viewHolder.layout.setBackgroundColor(Color.GREEN);
         return convertView;
     }
 

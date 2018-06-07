@@ -7,12 +7,12 @@ import java.time.LocalDate;
  * Created by Sander on 5/24/2018.
  */
 
-public class MRMFormulier implements Serializable {
-        private static final String TAG = "MRMFormulier";
+public class MRNFormulier implements Serializable {
+        private static final String TAG = "MRNFormulier";
 
         public String Mrn;
         public String Reference;
-        public long DateTime;
+        public String DateTime;
         public String Afzender;
         public String Ontvanger;
         public String Opdrachtgever;
@@ -42,11 +42,11 @@ public class MRMFormulier implements Serializable {
                 Reference = reference;
         }
 
-        public long getDateTime() {
+        public String getDateTime() {
                 return DateTime;
         }
 
-        public void setDateTime(long dateTime) {
+        public void String(String dateTime) {
                 DateTime = dateTime;
         }
 

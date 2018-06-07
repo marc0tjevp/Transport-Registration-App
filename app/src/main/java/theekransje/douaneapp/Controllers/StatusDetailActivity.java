@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -46,16 +45,16 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
 
             Freight f = (Freight) getIntent().getSerializableExtra("FREIGHT");
 
-        ((TextView)(findViewById(R.id.status_detail_client))).setText(""+f.getMrmFormulier().Opdrachtgever);
-        ((TextView)(findViewById(R.id.status_detail_datetime))).setText(""+f.getMrmFormulier().DateTime + "");
-        ((TextView)(findViewById(R.id.status_detail_recipient))).setText(""+f.getMrmFormulier().Ontvanger);
-        ((TextView)(findViewById(R.id.status_detail_reference))).setText(""+f.getMrmFormulier().getReference());
-        ((TextView)(findViewById(R.id.status_detail_item_amount))).setText(""+f.getMrmFormulier().getAantalArtikelen());
-        ((TextView)(findViewById(R.id.status_detail_sender))).setText(""+f.getMrmFormulier().Afzender);
-        ((TextView)(findViewById(R.id.status_detail_mrn))).setText(         "MRN: "  + f.getMrmFormulier().Mrn);
-        ((TextView)(findViewById(R.id.status_detail_total_weight))).setText(""+f.getMrmFormulier().TotaalGewicht + "");
+        ((TextView)(findViewById(R.id.status_detail_client))).setText(""+f.getMRNFormulier().Opdrachtgever);
+        ((TextView)(findViewById(R.id.status_detail_datetime))).setText(""+f.getMRNFormulier().DateTime + "");
+        ((TextView)(findViewById(R.id.status_detail_recipient))).setText(""+f.getMRNFormulier().Ontvanger);
+        ((TextView)(findViewById(R.id.status_detail_reference))).setText(""+f.getMRNFormulier().getReference());
+        ((TextView)(findViewById(R.id.status_detail_item_amount))).setText(""+f.getMRNFormulier().getAantalArtikelen());
+        ((TextView)(findViewById(R.id.status_detail_sender))).setText(""+f.getMRNFormulier().Afzender);
+        ((TextView)(findViewById(R.id.status_detail_mrn))).setText(         "MRN: "  + f.getMRNFormulier().Mrn);
+        ((TextView)(findViewById(R.id.status_detail_total_weight))).setText(""+f.getMRNFormulier().TotaalGewicht + "");
         ((TextView)(findViewById(R.id.status_detail_status))).setText(      "Status:  " +f.getDouaneStatus().toString());
-        ((TextView)(findViewById(R.id.status_detail_value))).setText(""+f.getMrmFormulier().TotaalBedrag + "" + f.getMrmFormulier().Currency);
+        ((TextView)(findViewById(R.id.status_detail_value))).setText(""+f.getMRNFormulier().TotaalBedrag + "" + f.getMRNFormulier().Currency);
     }
 
     @Override

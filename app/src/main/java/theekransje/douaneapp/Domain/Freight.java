@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class Freight implements Serializable {
     private static final String TAG = "Freight";
-    private MRMFormulier mrmFormulier;
+    private MRNFormulier MRNFormulier;
     private int ID;
     private DouaneStatus douaneStatus;
 
@@ -18,12 +18,12 @@ public class Freight implements Serializable {
     }
 
 
-    public MRMFormulier getMrmFormulier() {
-        return mrmFormulier;
+    public MRNFormulier getMRNFormulier() {
+        return MRNFormulier;
     }
 
-    public void setMrmFormulier(MRMFormulier mrmFormulier) {
-        this.mrmFormulier = mrmFormulier;
+    public void setMRNFormulier(MRNFormulier MRNFormulier) {
+        this.MRNFormulier = MRNFormulier;
     }
 
 

@@ -5,47 +5,41 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.util.Log;
 import android.view.MenuItem;
 
-import android.text.InputFilter;
-import android.view.KeyEvent;
-
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
+import theekransje.douaneapp.API.AsyncGetFreights;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
+import theekransje.douaneapp.Interfaces.OnFreightListAvail;
 import theekransje.douaneapp.R;
 import theekransje.douaneapp.Util.ListViewAdapter;
 
-public class FreightActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
+public class FreightActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, OnFreightListAvail {
     private static final String TAG = FreightActivity.class.getSimpleName();
 
     private static final int SCAN_BARCODE = 1;
     private FreightAdapter freightAdapter;
 
     private ArrayList<Freight> freights;
+    private ArrayList<String> allFreightMrn;
     private Driver driver;
     private Context c;
 
-    private ArrayList<String> s;
+    private static ArrayList<String> selected = new ArrayList<>();
 
-
+    ListView listview;
     ListView list;
     ListViewAdapter adapter;
     SearchView editSearch;
@@ -55,45 +49,31 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_freight);
+        FreightActivity.selected = new ArrayList<>();
+
 
         this.c = this;
         this.driver = (Driver) getIntent().getSerializableExtra("DRIVER");
         this.freights = (ArrayList<Freight>) getIntent().getSerializableExtra("FREIGHTS");
 
+
+
+
+        if (this.freights != null && this.freights.size() > 0) {
+            for (Freight f : freights) {
+                FreightActivity.selected.add(f.getMRNFormulier().getMrn());
+            }
+        }
+
+
         BottomNavigationView navigation = this.findViewById(R.id.freight_navbar);
         navigation.setOnNavigationItemSelectedListener(this);
 
 
-        ListView listview = findViewById(R.id.status_list_view);
-        s = new ArrayList<>();
+        listview = findViewById(R.id.status_list_view);
 
 
         final ArrayList<String> selected = new ArrayList<>();
-
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-        s.add("14DB" + new Random().nextInt(1000000000));
-
-
-
-        freightAdapter = new FreightAdapter(s, this.getLayoutInflater());
-        listview.setAdapter(freightAdapter);
-        freightAdapter.notifyDataSetChanged();
 
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,33 +81,31 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-                if (selected.contains(new String(s.get(position)))) {
+                if (FreightActivity.selected.contains(new String(allFreightMrn.get(position)))) {
                     view.setBackgroundColor(Color.WHITE);
-                    selected.remove(s.get(position));
+                    FreightActivity.selected.remove(allFreightMrn.get(position));
                 } else {
                     view.setBackgroundColor(Color.GREEN);
-                    selected.add(s.get(position));
+                    FreightActivity.selected.add(allFreightMrn.get(position));
+                    Log.d(TAG, "sendCodes: sending mrns: " + FreightActivity.selected.toString());
+
+                    Log.d(TAG, "onItemClick: selected now contains entries: " +  FreightActivity.selected.size());
                 }
-
             }
-
         });
 
 
-
         list = (ListView) findViewById(R.id.listview);
-
-        adapter = new ListViewAdapter(this, s);
-
-
+        adapter = new ListViewAdapter(this, selected);
         list.setAdapter(adapter);
-
         editSearch = (SearchView) findViewById(R.id.search);
         editSearch.setOnQueryTextListener(this);
-
         onQueryTextChange("");
-
         list.setVisibility(View.GONE);
+
+
+
+        new AsyncGetFreights(this,driver).execute();
     }
 
     public void scan(View view) {
@@ -155,6 +133,20 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
     public void sendCodes(View view) {
         Toast.makeText(this, R.string.sending_codes, Toast.LENGTH_LONG).show();
+
+        Log.d(TAG, "goToStatus: Fired");
+
+        Intent intent = new Intent(c, StatusActivity.class);
+        intent.putExtra("DRIVER", driver);
+        intent.putExtra("FREIGHTS", freights);
+
+        Log.d(TAG, "sendCodes: sending mrns: " +  FreightActivity.selected.toString());
+        intent.putExtra("MRN", FreightActivity.selected);
+
+
+        c.startActivity(intent);
+
+
     }
 
 
@@ -193,11 +185,27 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
     public boolean onQueryTextChange(String newText) {
 
 
-
         String text = newText;
         adapter.filter(text);
         return false;
     }
 
+    @Override
+    public void OnFreightListAvail(ArrayList<String> freights) {
+        this.allFreightMrn = freights;
+        freightAdapter = new FreightAdapter(freights, this.getLayoutInflater(), selected);
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+
+
+                listview.setAdapter(freightAdapter);
+                freightAdapter.notifyDataSetChanged();
+            }
+        });
+
+
+    }
 }

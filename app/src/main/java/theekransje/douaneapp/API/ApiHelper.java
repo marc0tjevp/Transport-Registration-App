@@ -29,6 +29,8 @@ public class ApiHelper {
 
     private APIMethodes apiMethode;
 
+    private HttpURLConnection conn;
+
     public ApiHelper(String endpoint, APIMethodes apiMethode) {
         this.endpoint = endpoint;
         this.apiMethode = apiMethode;
@@ -39,18 +41,26 @@ public class ApiHelper {
         try {
 
             URL url = new URL(API_URL + endpoint);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(apiMethode.toString());
             conn.setRequestProperty("Content-Type", "application/json");
 
             if (token != null){
                 conn.setRequestProperty("Authorization", "Bearer " + token );
             }
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
+
+            if (apiMethode == APIMethodes.POST){
+                conn.setDoOutput(true);
+            }
+
             conn.setUseCaches(false);
             conn.setChunkedStreamingMode(100);
             conn.connect();
+
+            Log.d(TAG, "getConnection: " + conn.toString());
+            Log.d(TAG, "getConnection: " + conn.getRequestMethod());
+            Log.d(TAG, "getConnection: " + conn.getRequestProperty("Authorization"));
+            Log.d(TAG, "getConnection: " + conn.getRequestProperty("Content-Type"));
 
             return conn;
 
@@ -93,4 +103,6 @@ public class ApiHelper {
 
 
     }
+
+
 }
