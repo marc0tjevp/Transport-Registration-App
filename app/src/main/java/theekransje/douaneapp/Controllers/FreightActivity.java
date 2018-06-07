@@ -2,6 +2,7 @@ package theekransje.douaneapp.Controllers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -22,14 +23,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import theekransje.douaneapp.API.LocationAPI;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.R;
 
-public class FreightActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class FreightActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = FreightActivity.class.getSimpleName();
 
     private static final int SCAN_BARCODE = 1;
@@ -40,10 +46,8 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
     private Context c;
 
 
-
-
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_freight);
@@ -63,7 +67,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         listview.setAdapter(freightAdapter);
         freightAdapter.notifyDataSetChanged();
         EditText editText = findViewById(R.id.mrnEditText);
-        editText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+        editText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -102,33 +106,92 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         switch (requestCode) {
             case SCAN_BARCODE: {
                 if (resultCode == RESULT_OK) {
-                    String mrnCode = data.getData().toString();
-                    freightAdapter.addMRN(mrnCode);
-                    freightAdapter.notifyDataSetChanged();
+                    Object response = null;
+                    try {
+                        response = new LocationAPI().execute().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    if (response != null) {
+                        JSONObject jsonObject;
+                        try {
+                            // Top level json object
+                            jsonObject = new JSONObject((String) response);
+
+
+                            String country = jsonObject.getString("country");
+
+                            Log.i(TAG, "Country = " + country);
+                            if (country != null && country.equals("Netherlands")) {
+                                String mrnCode = data.getData().toString();
+                                freightAdapter.addMRN(mrnCode);
+                                freightAdapter.notifyDataSetChanged();
+                            } else {
+                                String message = getResources().getString(R.string.country_not_netherlands);
+
+                                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        } catch (JSONException ex) {
+                            Log.e(TAG, "onPostExecute JSONException " + ex.getLocalizedMessage());
+                        }
+
+                    }
                 }
             }
         }
     }
 
     public void addMRN(View view) {
-        EditText editText = findViewById(R.id.mrnEditText);
-        String mrnCode = editText.getText().toString();
-        if (mrnCode.matches("[0-9]{2}[A-Z]{2}[0-9A-Z]{14}")){
-            freightAdapter.addMRN(mrnCode);
-            freightAdapter.notifyDataSetChanged();
-            editText.setText("");
-        } else {
-            String message = getResources().getString(R.string.code_not_mrn);
+        Object response = null;
+        try {
+            response = new LocationAPI().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if (response != null) {
+            JSONObject jsonObject;
+            try {
+                // Top level json object
+                jsonObject = new JSONObject((String) response);
 
-            Toast  toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-            toast.show();
+
+                String country = jsonObject.getString("country");
+
+                Log.i(TAG, "Country = " + country);
+                if (country != null && country.equals("Netherlands")) {
+                    EditText editText = findViewById(R.id.mrnEditText);
+                    String mrnCode = editText.getText().toString();
+                    if (mrnCode.matches("[0-9]{2}[A-Z]{2}[0-9A-Z]{14}")) {
+                        freightAdapter.addMRN(mrnCode);
+                        freightAdapter.notifyDataSetChanged();
+                        editText.setText("");
+                    } else {
+                        String message = getResources().getString(R.string.code_not_mrn);
+
+                        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                } else {
+                    String message = getResources().getString(R.string.country_not_netherlands);
+
+                    Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            } catch (JSONException ex) {
+                Log.e(TAG, "onPostExecute JSONException " + ex.getLocalizedMessage());
+            }
+
         }
     }
 
     public void sendCodes(View view) {
         Toast.makeText(this, R.string.sending_codes, Toast.LENGTH_LONG).show();
     }
-
 
 
     @Override
