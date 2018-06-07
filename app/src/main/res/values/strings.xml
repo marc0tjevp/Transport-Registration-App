@@ -2,7 +2,7 @@
     <string name="app_name">Douane App</string>
     <string name="title_activity_login">Sign in</string>
 
-        //login
+    //login
     <string name="prompt_email">Gebruikersnaam</string>
     <string name="prompt_passwd">Wachtwoord</string>
     <string name="prompt_stay_login">Blijf ingelogd</string>
@@ -37,9 +37,6 @@
     <string name="status_detail_item_amount">Aantal artikelen: </string>
     <string name="status_detail_total_weight">Totaal gewicht: </string>
     <string name="status_detail_value">Totale waarde: </string>
-
-
-
 
 
     <string name="code_not_mrn">Code voldoet niet aan MRN standaard</string>

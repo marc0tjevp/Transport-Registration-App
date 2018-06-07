@@ -17,10 +17,14 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import theekransje.douaneapp.API.APIMethodes;
+import theekransje.douaneapp.API.ApiHelper;
 import theekransje.douaneapp.API.AsyncLogin;
 import theekransje.douaneapp.Domain.APITask;
 import theekransje.douaneapp.Domain.Driver;
+import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Interfaces.OnLoginResult;
 import theekransje.douaneapp.Persistence.BackgroundDataSenderThread;
 import theekransje.douaneapp.Persistence.DBHelper;
@@ -28,6 +32,8 @@ import theekransje.douaneapp.R;
 
 public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     private static final String TAG = "LoginActivity";
+
+    int hash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
 
         final TextView userName = (TextView) findViewById(R.id.login_user);
         final TextView passWd = (TextView) findViewById(R.id.login_passwd);
-        TextView IMEIView = (TextView) findViewById(R.id.login_imei);
+        final TextView IMEIView = (TextView) findViewById(R.id.login_imei);
 
 
 
@@ -53,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
             try {
                 String IMEI = ((TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
-                int hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
+                this.hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
 
                 if (hash < 0) {
                     hash = hash * (-1);
@@ -82,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
                     Driver driver = new Driver();
                     driver.setUserName(userName.getText().toString());
                     driver.setPasswd(passWd.getText().toString());
+                    driver.setIMEIHash(hash+"");
 
                     new AsyncLogin(driver, (OnLoginResult) view.getContext()).execute();
 
@@ -96,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     public void onLoginSucces(Driver driver) {
 
         if (BackgroundDataSenderThread.thread != null){
-            BackgroundDataSenderThread.thread.destroy();
+            BackgroundDataSenderThread.thread.endThread();
             BackgroundDataSenderThread.thread = null;
         }
 
@@ -106,6 +113,8 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         Log.d(TAG, "onLoginSucces: called");
         Intent intent = new Intent(this, StatusActivity.class);
         intent.putExtra("DRIVER", driver);
+        intent.putExtra("FREIGHTS",new ArrayList<Freight>());
+
         startActivity(intent);
     }
 
@@ -119,7 +128,5 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
                 Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 }

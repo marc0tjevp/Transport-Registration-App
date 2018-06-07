@@ -1,6 +1,8 @@
 package theekransje.douaneapp.Controllers;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -10,23 +12,28 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.R;
 
 public class FreightAdapter extends BaseAdapter {
 
-    private List<String> mrns;
+    private ArrayList<String> mrns;
     private LayoutInflater mInflator;
+    private ArrayList<String> selected;
 
-    public FreightAdapter(List<String> mrnList, LayoutInflater layoutInflater){
+    public FreightAdapter(ArrayList<String> mrnList, LayoutInflater layoutInflater, ArrayList<String> selected){
         mrns = mrnList;
         mInflator = layoutInflater;
+        this.selected = selected;
     }
 
     public void addMRN(String s){
         mrns.add(s);
     }
+
     public void removeMRN(int position){
         mrns.remove(position);
     }
@@ -55,7 +62,7 @@ public class FreightAdapter extends BaseAdapter {
 
             viewHolder = new ViewHolder();
             viewHolder.mrn = convertView.findViewById(R.id.mrn);
-            viewHolder.layout = convertView.findViewById(R.id.layout);
+            viewHolder.layout = convertView.findViewById(R.id.freight_layout);
 
             convertView.setTag(viewHolder);
         } else {
@@ -65,18 +72,23 @@ public class FreightAdapter extends BaseAdapter {
         String mrn = mrns.get(position);
         viewHolder.mrn = convertView.findViewById(R.id.mrn);
         viewHolder.mrn.setText(mrn);
+//        viewHolder.layout.setBackgroundColor(Color.GREEN);
         return convertView;
     }
 
     private static class ViewHolder implements View.OnClickListener {
         public TextView mrn;
-        public RelativeLayout layout;
+        public ConstraintLayout layout;
 
         @Override
         public void onClick(View v) {
-
+            Log.d("TEST", "onClick: " + v.getId());
         }
+
+
     }
+
+
 
 
 }

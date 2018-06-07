@@ -7,11 +7,6 @@
         android:title="@string/text_navbar_status" />
 
     <item
-        android:id="@+id/navbar_freight"
-        android:icon="@drawable/navbar_freight"
-        android:title="@string/text_navbar_freight" />
-
-    <item
         android:id="@+id/navbar_drive"
         android:icon="@drawable/navbar_drive"
         android:title="@string/text_navbar_drive" />

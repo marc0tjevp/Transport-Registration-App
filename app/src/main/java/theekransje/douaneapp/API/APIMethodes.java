@@ -5,5 +5,5 @@ package theekransje.douaneapp.API;
  */
 
 public enum APIMethodes {
-    POST, GET, PUT, DELETE
+    GET, POST,  PUT, DELETE
 }

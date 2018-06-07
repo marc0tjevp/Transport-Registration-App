@@ -1,7 +1,10 @@
 package theekransje.douaneapp.API;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
+
+import com.google.android.gms.common.util.Base64Utils;
 
 import org.json.JSONObject;
 
@@ -20,7 +23,7 @@ import theekransje.douaneapp.Interfaces.OnLoginResult;
 
 public class AsyncLogin extends AsyncTask {
     private static final String TAG = "AsyncLogin";
-    private final String endPoint = "/login";
+    private final String endPoint = "auth/login";
     private OnLoginResult listener;
 
     private Driver driver;
@@ -38,9 +41,11 @@ public class AsyncLogin extends AsyncTask {
 
 
             JSONObject j = new JSONObject();
-            j.put("UserName", driver.getUserName());
-            j.put("Passwd", driver.getPasswd());
-            j.put("Hash", driver.getIMEIHash());
+            j.put("username", driver.getUserName());
+            j.put("password", driver.getPasswd());
+            j.put("imei", driver.getIMEIHash());
+
+            Log.d(TAG, "doInBackground: logging in user: " + driver.getUserName()+ "   "+ driver.getPasswd() +" "+ driver.getIMEIHash());
 
             DataOutputStream os = new DataOutputStream(conn.getOutputStream());
 
@@ -53,15 +58,29 @@ public class AsyncLogin extends AsyncTask {
 
             if(statusCode == 200){
                 JSONObject r = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream()));
-                driver.setToken(r.getString("Token"));
+
+                driver.setToken(r.getString("token"));
+                ApiHelper.token = driver.getToken();
+                Log.d(TAG, "doInBackground: token " + driver.getToken());
+
+                String encodedString = driver.getToken().split("\\.")[1];
+                Log.d(TAG, "doInBackground: " + encodedString);
+                byte[] decodedByteArray = Base64Utils.decode(encodedString);
+                String decodedToken = new String(decodedByteArray);
+
+
+                Log.d(TAG, "doInBackground: " + decodedToken);
+
+                driver.setUid(new JSONObject(decodedToken).getString("sub"));
+
+
                 listener.onLoginSucces(driver);
-            }else {
+            }else if(statusCode == 401) {
                 Log.d(TAG, "doInBackground: Login failed");;
 
-                driver.setToken("1");
-                listener.onLoginSucces(driver);
-
-                //listener.onLoginFailure("Undefined Error");
+                listener.onLoginFailure( "invalid credentials");
+            }else{
+                listener.onLoginFailure("undefined error");
             }
 
             conn.disconnect();
