@@ -22,6 +22,7 @@ public class BackgroundDataSenderThread extends Thread {
     private DBHelper dbHelper;
     private Context context;
     public static BackgroundDataSenderThread thread;
+    private boolean kill = false;
 
     public BackgroundDataSenderThread(Context context) {
         dbHelper = new DBHelper(context);
@@ -33,10 +34,10 @@ public class BackgroundDataSenderThread extends Thread {
     public void run() {
         super.run();
 
-        while (true) {
+        while (!kill) {
             try {
 
-                while (true) {
+                while (!kill) {
                     if (dbHelper.getAllTasks().size() == 0) {
 
                         Log.d(TAG, "run: NO DATA TO SEND");
@@ -92,5 +93,11 @@ public class BackgroundDataSenderThread extends Thread {
 
         }
 
+        Log.d(TAG, "run: THREAD KILLED");
+
+    }
+
+    public void endThread(){
+        this.kill = true;
     }
 }

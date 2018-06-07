@@ -77,6 +77,11 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         this.mContext = context;
 
     }
+    public void addFreight(Freight f){
+
+        this.mData.add(f);
+        this.notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -99,9 +104,9 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         }
 
 
-        holder.mrn.setText("" + freight.getMrmFormulier().getMrn());
-        holder.recipient.setText("" + freight.getMrmFormulier().getOntvanger());
-        holder.sender.setText("" + freight.getMrmFormulier().getAfzender());
+        holder.mrn.setText("" + freight.getMRNFormulier().getMrn());
+        holder.recipient.setText("" + freight.getMRNFormulier().getOntvanger());
+        holder.sender.setText("" + freight.getMRNFormulier().getAfzender());
         holder.status.setText("" + freight.getDouaneStatus().toString());
 
 

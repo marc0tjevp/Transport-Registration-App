@@ -63,4 +63,12 @@ public class Driver implements Serializable {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 }

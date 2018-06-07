@@ -2,94 +2,110 @@ package theekransje.douaneapp.Controllers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.util.Log;
 import android.view.MenuItem;
 
-import android.text.InputFilter;
-import android.view.KeyEvent;
-
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import theekransje.douaneapp.API.AsyncGetFreights;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
+import theekransje.douaneapp.Interfaces.OnFreightListAvail;
 import theekransje.douaneapp.R;
+import theekransje.douaneapp.Util.ListViewAdapter;
 
-public class FreightActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class FreightActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, OnFreightListAvail {
     private static final String TAG = FreightActivity.class.getSimpleName();
 
     private static final int SCAN_BARCODE = 1;
     private FreightAdapter freightAdapter;
 
     private ArrayList<Freight> freights;
+    private ArrayList<String> allFreightMrn;
     private Driver driver;
     private Context c;
 
+    private static ArrayList<String> selected = new ArrayList<>();
 
-
+    ListView listview;
+    ListView list;
+    ListViewAdapter adapter;
+    SearchView editSearch;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_freight);
+        FreightActivity.selected = new ArrayList<>();
+
 
         this.c = this;
         this.driver = (Driver) getIntent().getSerializableExtra("DRIVER");
         this.freights = (ArrayList<Freight>) getIntent().getSerializableExtra("FREIGHTS");
 
+
+
+
+        if (this.freights != null && this.freights.size() > 0) {
+            for (Freight f : freights) {
+                FreightActivity.selected.add(f.getMRNFormulier().getMrn());
+            }
+        }
+
+
         BottomNavigationView navigation = this.findViewById(R.id.freight_navbar);
-        navigation.setSelectedItemId(R.id.navbar_freight);
         navigation.setOnNavigationItemSelectedListener(this);
 
 
-        ListView listview = findViewById(R.id.list_view);
-        List<String> s = new ArrayList<>();
-        freightAdapter = new FreightAdapter(s, this.getLayoutInflater());
-        listview.setAdapter(freightAdapter);
-        freightAdapter.notifyDataSetChanged();
-        EditText editText = findViewById(R.id.mrnEditText);
-        editText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+        listview = findViewById(R.id.status_list_view);
 
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    addMRN(null);
-                    return true;
-                }
-                return false;
-            }
-        });
+
+        final ArrayList<String> selected = new ArrayList<>();
+
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.myCoordinatorLayout),
-                        R.string.want_to_delete, Snackbar.LENGTH_LONG);
-                mySnackbar.setAction(R.string.delete, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        freightAdapter.removeMRN(position);
-                        freightAdapter.notifyDataSetChanged();
-                    }
-                });
-                mySnackbar.show();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                if (FreightActivity.selected.contains(new String(allFreightMrn.get(position)))) {
+                    view.setBackgroundColor(Color.WHITE);
+                    FreightActivity.selected.remove(allFreightMrn.get(position));
+                } else {
+                    view.setBackgroundColor(Color.GREEN);
+                    FreightActivity.selected.add(allFreightMrn.get(position));
+                    Log.d(TAG, "sendCodes: sending mrns: " + FreightActivity.selected.toString());
+
+                    Log.d(TAG, "onItemClick: selected now contains entries: " +  FreightActivity.selected.size());
+                }
             }
         });
+
+
+        list = (ListView) findViewById(R.id.listview);
+        adapter = new ListViewAdapter(this, selected);
+        list.setAdapter(adapter);
+        editSearch = (SearchView) findViewById(R.id.search);
+        editSearch.setOnQueryTextListener(this);
+        onQueryTextChange("");
+        list.setVisibility(View.GONE);
+
+
+
+        new AsyncGetFreights(this,driver).execute();
     }
 
     public void scan(View view) {
@@ -111,24 +127,27 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
     }
 
     public void addMRN(View view) {
-        EditText editText = findViewById(R.id.mrnEditText);
-        String mrnCode = editText.getText().toString();
-        if (mrnCode.matches("[0-9]{2}[A-Z]{2}[0-9A-Z]{14}")){
-            freightAdapter.addMRN(mrnCode);
-            freightAdapter.notifyDataSetChanged();
-            editText.setText("");
-        } else {
-            String message = getResources().getString(R.string.code_not_mrn);
 
-            Toast  toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-            toast.show();
-        }
+
     }
 
     public void sendCodes(View view) {
         Toast.makeText(this, R.string.sending_codes, Toast.LENGTH_LONG).show();
-    }
 
+        Log.d(TAG, "goToStatus: Fired");
+
+        Intent intent = new Intent(c, StatusActivity.class);
+        intent.putExtra("DRIVER", driver);
+        intent.putExtra("FREIGHTS", freights);
+
+        Log.d(TAG, "sendCodes: sending mrns: " +  FreightActivity.selected.toString());
+        intent.putExtra("MRN", FreightActivity.selected);
+
+
+        c.startActivity(intent);
+
+
+    }
 
 
     @Override
@@ -138,15 +157,55 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
                 Navbar.goToStatus(c, driver, freights);
 
                 return true;
-            case R.id.navbar_freight:
-                Log.d(TAG, "onNavigationItemSelected: FIRED");
-                Navbar.goToFreights(c, driver, freights);
-                return true;
+
             case R.id.navbar_drive:
                 Navbar.goToDrive(c, driver, freights);
 
                 return true;
         }
         return false;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavigationView navigation = this.findViewById(R.id.freight_navbar);
+        navigation.setSelectedItemId(R.id.freight_navbar);
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+
+        String text = newText;
+        adapter.filter(text);
+        return false;
+    }
+
+    @Override
+    public void OnFreightListAvail(ArrayList<String> freights) {
+        this.allFreightMrn = freights;
+        freightAdapter = new FreightAdapter(freights, this.getLayoutInflater(), selected);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+
+
+                listview.setAdapter(freightAdapter);
+                freightAdapter.notifyDataSetChanged();
+            }
+        });
+
+
     }
 }

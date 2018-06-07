@@ -20,13 +20,16 @@ import theekransje.douaneapp.Domain.Driver;
 
 public class ApiHelper {
     private static final String TAG = "ApiHelper";
-    public static final String API_URL = "http://heroku.com/api/";
+    public static final String API_URL = "http://colt.softether.net:8080/";
+    public static String token;
 
 
 
     private String endpoint;
 
     private APIMethodes apiMethode;
+
+    private HttpURLConnection conn;
 
     public ApiHelper(String endpoint, APIMethodes apiMethode) {
         this.endpoint = endpoint;
@@ -38,14 +41,26 @@ public class ApiHelper {
         try {
 
             URL url = new URL(API_URL + endpoint);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(apiMethode.toString());
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
+
+            if (token != null){
+                conn.setRequestProperty("Authorization", "Bearer " + token );
+            }
+
+            if (apiMethode == APIMethodes.POST){
+                conn.setDoOutput(true);
+            }
+
             conn.setUseCaches(false);
             conn.setChunkedStreamingMode(100);
             conn.connect();
+
+            Log.d(TAG, "getConnection: " + conn.toString());
+            Log.d(TAG, "getConnection: " + conn.getRequestMethod());
+            Log.d(TAG, "getConnection: " + conn.getRequestProperty("Authorization"));
+            Log.d(TAG, "getConnection: " + conn.getRequestProperty("Content-Type"));
 
             return conn;
 
@@ -88,4 +103,6 @@ public class ApiHelper {
 
 
     }
+
+
 }
