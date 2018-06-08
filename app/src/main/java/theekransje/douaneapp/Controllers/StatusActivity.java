@@ -2,6 +2,7 @@ package theekransje.douaneapp.Controllers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import theekransje.douaneapp.API.AsyncGetStatusDetail;
+import theekransje.douaneapp.Domain.DouaneStatus;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Domain.MRNFormulier;
@@ -31,6 +33,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     private Context c;
     private ArrayList<String> selectedMRN;
     private StatusAdapter adapter;
+    private Thread t;
 
     private static final String TAG = "StatusActivity";
 
@@ -45,27 +48,24 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         this.selectedMRN = (ArrayList<String>) getIntent().getSerializableExtra("MRN");
 
 
-
         BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
         navigation.setSelectedItemId(R.id.navbar_status);
         navigation.setOnNavigationItemSelectedListener(this);
 
-        if (this.freights == null ||    this.freights.size() == 0){
+        if (this.freights == null || this.freights.size() == 0) {
             this.freights = new ArrayList<>();
         }
-        if (this.selectedMRN == null){
+        if (this.selectedMRN == null) {
             Log.d(TAG, "onCreate: MRN list empty, creating empty array");
             this.selectedMRN = new ArrayList<>();
-        }else {
+        } else {
             Log.d(TAG, "onCreate: SELECTED MRNs" + this.selectedMRN.size());
         }
 
-        for (String s: this.selectedMRN
-             ) {
-            new AsyncGetStatusDetail(s,this).execute();
+        for (String s : this.selectedMRN
+                ) {
+            new AsyncGetStatusDetail(s, this).execute();
         }
-
-
 
 
         RecyclerView rv = findViewById(R.id.status_rv);
@@ -87,15 +87,44 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             }
         });
 
+       this.t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    boolean allready = false;
 
-   //    new StatusTimer(this);
+                    while (!allready) {
+
+                        Log.d(TAG, "run: Status Update thread running");
+                        for (Freight f : adapter.getmData()
+                                ) {
+                            if (!f.getDouaneStatus().equals(DouaneStatus.VERTREK_OK)){
+                                Log.d(TAG, "run: status doesnt eq. VERTREK_OK updating form " + f.getMRNFormulier().getMrn() );
+                                allready = false;
+                                updateStatus(f.getMRNFormulier().getMrn());
+                            }
+
+
+                        }
+                        Thread.sleep(5000);
+                    }
+                    
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+       t.start();
+
+        //    new StatusTimer(this);
     }
 
     @Override
     public void onStatusUpdateAvail(Freight freights) {
-        for (Freight freight : this.freights){
-            if (freight.getMRNFormulier().Mrn.equals(freights.getMRNFormulier().Mrn)&&!freight.equals(freights)){
-                Toast.makeText(this,freights.getMRNFormulier().Mrn+" has an update",Toast.LENGTH_SHORT).show();
+        for (Freight freight : this.freights) {
+            if (freight.getMRNFormulier().Mrn.equals(freights.getMRNFormulier().Mrn) && !freight.equals(freights)) {
+                Toast.makeText(this, freights.getMRNFormulier().Mrn + " has an update", Toast.LENGTH_SHORT).show();
                 this.freights.remove(freight);
                 this.freights.add(freights);
             }
@@ -128,8 +157,8 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     protected void onResume() {
         super.onResume();
 
-    //    BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
-    //    navigation.setSelectedItemId(R.id.navbar_status);
+        //    BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
+        //    navigation.setSelectedItemId(R.id.navbar_status);
     }
 
     @Override
@@ -140,6 +169,16 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                 adapter.addFreight(freight);
             }
         });
+    }
 
+    public void updateStatus(String mrn) {
+        Log.d(TAG, "updateStatus: for " + mrn);
+        new AsyncGetStatusDetail(mrn, this).execute();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        t.interrupt();
     }
 }
