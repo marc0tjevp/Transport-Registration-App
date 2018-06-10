@@ -72,7 +72,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     handler.removeCallbacks(realTime);
                     handler.removeCallbacks(drivenTime);
                     drivingButton.setText(R.string.start_of_drive);
-                    String[] data = {drivenTime.getTime(),realTime.getTime()};
+                    Object[] data = {drivenTime.getDate(),state};
                     new AsyncSendTime().execute(data);
                 }
             }});
@@ -83,11 +83,16 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     pauseButton.setChecked(false);
                 }else {
                     if (isChecked){
+                        Object[] data = {drivenTime.getDate(),state};
+                        new AsyncSendTime().execute(data);
                         handler.removeCallbacks(drivenTime);
                         state = DrivingState.Paused;
                     } else {
+                        Object[] data = {drivenTime.getDate(),state};
+                        new AsyncSendTime().execute(data);
                         handler.postDelayed(drivenTime,1000);
                         state = DrivingState.Driving;
+
                     }
                 }
             }

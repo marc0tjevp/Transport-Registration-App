@@ -3,6 +3,9 @@ package theekransje.douaneapp.Domain;
 import android.os.Handler;
 import android.util.Log;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import theekransje.douaneapp.Interfaces.OnTimeChange;
 
 public class TimerClock implements Runnable{
@@ -12,6 +15,7 @@ public class TimerClock implements Runnable{
     private int minutes;
     private int seconds;
     private OnTimeChange listener;
+    private Date startDate;
     private TimerClock(){
         seconds=0;
         minutes = 0;
@@ -29,6 +33,7 @@ public class TimerClock implements Runnable{
 
     @Override
     public void run() {
+        startDate = Calendar.getInstance().getTime();
         Log.d(TAG,"running Timer");
         if (hours==4&&minutes==15&&listener!=null){
             listener.toast();
@@ -70,6 +75,10 @@ public class TimerClock implements Runnable{
         } else {
             output=output+seconds;
         }
+        return output;
+    }
+    public Date[] getDate(){
+        Date[] output = {startDate,Calendar.getInstance().getTime()};
         return output;
     }
 }
