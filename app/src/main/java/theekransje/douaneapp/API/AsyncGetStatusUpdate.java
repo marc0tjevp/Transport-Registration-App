@@ -40,11 +40,10 @@ public class AsyncGetStatusUpdate extends AsyncTask<Freight,ArrayList<String>,Fr
             mrns.put("mrn",freight[0].getMRNFormulier().Mrn);
             Log.e(TAG,mrns.toString());
             osw.write(mrns.toString());
-            Log.e(TAG,helper.convertIStoString(connection.getInputStream()));
-            JSONArray returnedData = new JSONArray(connection);
+            Log.d(TAG,helper.convertIStoString(connection.getInputStream()));
+            JSONObject data = new JSONObject(helper.convertIStoString(connection.getInputStream()));
             Freight newFreight = new Freight();
             MRNFormulier formulier = new MRNFormulier();
-            JSONObject data = returnedData.getJSONObject(0);
 
             formulier.Mrn = data.getString("mrn");
             formulier.AantalArtikelen=data.getInt("aantalartikelen");
@@ -64,11 +63,5 @@ public class AsyncGetStatusUpdate extends AsyncTask<Freight,ArrayList<String>,Fr
             connection.disconnect();
         }
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(Freight arrayList) {
-        listener.onStatusUpdateAvail(arrayList);
-        super.onPostExecute(arrayList);
     }
 }

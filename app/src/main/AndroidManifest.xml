@@ -26,7 +26,9 @@
         </activity>
         <activity android:name=".Controllers.StatusActivity" />
         <activity android:name=".Controllers.StatusDetailActivity" />
-        <activity android:name=".Controllers.DrivingActivity" />
+    <activity android:name=".Controllers.DrivingActivity">
+
+    </activity>
         <activity android:name=".Controllers.BarcodeScannerActivity" />
         <activity
             android:name=".Controllers.FreightActivity"
