@@ -5,7 +5,7 @@ package theekransje.douaneapp.Domain;
  */
 
 public enum DouaneStatus {
-    ERROR ,                   // Er is iets fout gegaan
+    ERROR,                   // Er is iets fout gegaan
     NONE,
     VERZONDEN,                // De aangifte is verzonden, we wachten op antwoord
     VERTREK_OK, 			  // Vertrek is goedgekeurd door de douane

@@ -78,7 +78,12 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
     }
     public void addFreight(Freight f){
-
+        for (Freight ff: mData
+             ) {
+            if(ff.getMRNFormulier().getMrn().equals(f.getMRNFormulier().getMrn())){
+                mData.remove(ff);
+            }
+        }
         this.mData.add(f);
         this.notifyDataSetChanged();
     }
@@ -89,8 +94,6 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.status_row, parent, false);
-
-
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -125,6 +128,10 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public ArrayList<Freight> getmData() {
+        return mData;
     }
 }
 

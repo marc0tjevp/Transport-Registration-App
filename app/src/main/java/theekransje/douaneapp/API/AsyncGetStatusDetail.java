@@ -62,9 +62,10 @@ public class AsyncGetStatusDetail extends AsyncTask {
                 mrnFormulier.setReference(jsonObject.getString("reference"));
                 mrnFormulier.DateTime = jsonObject.getString("dateTime");
 
+
                 Freight freight = new Freight();
                 freight.setMRNFormulier(mrnFormulier);
-                freight.setDouaneStatus(DouaneStatus.VERZONDEN);
+                freight.setDouaneStatus(StatusDecoder.decodeStatusCode(jsonObject.getInt("declarationStatus")));
 
 
                 Log.d(TAG, "doInBackground: MRN form received " + mrn);
