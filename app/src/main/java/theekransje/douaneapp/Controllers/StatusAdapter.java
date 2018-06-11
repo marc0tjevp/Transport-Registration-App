@@ -26,7 +26,7 @@ import theekransje.douaneapp.R;
 public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder> {
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView status;
         public TextView sender;
         public TextView recipient;
@@ -57,7 +57,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         public void onClick(View v) {
             Intent i = new Intent(v.getContext(), StatusDetailActivity.class);
 
-            i.putExtra("DRIVER",driver);
+            i.putExtra("DRIVER", driver);
             i.putExtra("FREIGHTS", mData);
             i.putExtra("FREIGHT", mData.get(this.getLayoutPosition()));
 
@@ -77,11 +77,12 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         this.mContext = context;
 
     }
-    public void addFreight(Freight f){
-        for (Freight ff: mData
-             ) {
-            if(ff.getMRNFormulier().getMrn().equals(f.getMRNFormulier().getMrn())){
+
+    public void addFreight(Freight f) {
+        for (Freight ff : mData) {
+            if (ff.getMRNFormulier().getMrn().equals(f.getMRNFormulier().getMrn())) {
                 mData.remove(ff);
+                break;
             }
         }
         this.mData.add(f);
