@@ -59,7 +59,7 @@ public class AsyncLogin extends AsyncTask {
             if(statusCode == 200){
                 JSONObject r = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream()));
 
-                driver.setToken(r.getString("token"));
+                driver.setToken(r.getString("message"));
                 ApiHelper.token = driver.getToken();
                 Log.d(TAG, "doInBackground: token " + driver.getToken());
 

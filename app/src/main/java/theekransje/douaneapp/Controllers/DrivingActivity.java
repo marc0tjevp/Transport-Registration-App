@@ -1,7 +1,12 @@
 package theekransje.douaneapp.Controllers;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +45,18 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
     private Handler handler;
     private OnTimeChange listener = this;
 
+    private LocationService locationService = new LocationService();
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            LocationService.LocationTrackingBinder binder = (LocationService.LocationTrackingBinder) service;
+            locationService = binder.getService();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+        }
+    };
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +72,11 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         this.view = findViewById(R.id.driving_time_view);
 
         view.setText(text);
+        if (freights.size() > 0) {
+            Intent intent = new Intent(this, LocationService.class);
+            intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
         //Setting onClickListener for Starting/Stopping the drive
         drivingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +89,19 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     handler.postDelayed(realTime,1000);
                     drivingButton.setText(R.string.end_of_drive);
                     state= DrivingState.Driving;
+
+                    if (freights.size() > 0) {
+                        Log.d(TAG, "Help");
+                        Intent intent = new Intent(DrivingActivity.this, LocationService.class);
+                        intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            startForegroundService(intent);
+                        } else {
+                            startService(intent);
+                        }
+                        locationService.startLocationTracking();
+
+                    }
                 } else if (drivingButton.getText().equals(getString(R.string.end_of_drive))){
                     state = DrivingState.Stopped;
                     handler.removeCallbacks(realTime);
@@ -103,6 +138,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
         navigation.setSelectedItemId(R.id.navbar_drive);
         navigation.setOnNavigationItemSelectedListener(this);
+
 
 
     }

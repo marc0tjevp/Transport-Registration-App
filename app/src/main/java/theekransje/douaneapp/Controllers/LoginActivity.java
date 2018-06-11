@@ -1,9 +1,13 @@
 package theekransje.douaneapp.Controllers;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -72,6 +76,11 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
                 Log.d(TAG, "onCreate: MISSING PERMISSIONS FOR SECURITY CHECK");
             }
         }
+        //asks for location permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 2873);
+            return;
+        }
 
 
         ((Button) findViewById(R.id.login_button)).setOnClickListener(new View.OnClickListener() {
@@ -97,6 +106,8 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
 
             }
         });
+
+        createNotificationChannel();
     }
 
     @Override
@@ -128,5 +139,18 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
                 Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Douanen app";
+            String description = "A channel dedicated to the Douanen app";
+
+            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel("DOEANENAPPTRANSIT", name, NotificationManager.IMPORTANCE_MAX);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

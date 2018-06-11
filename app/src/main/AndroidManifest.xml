@@ -3,12 +3,15 @@
     package="theekransje.douaneapp">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -26,10 +29,10 @@
         </activity>
         <activity android:name=".Controllers.StatusActivity" />
         <activity android:name=".Controllers.StatusDetailActivity" />
-    <activity android:name=".Controllers.DrivingActivity">
-
-    </activity>
+        <activity android:name=".Controllers.DrivingActivity"/>
         <activity android:name=".Controllers.BarcodeScannerActivity" />
+
+        <service android:name=".Controllers.LocationService" />
         <activity
             android:name=".Controllers.FreightActivity"
             android:configChanges="orientation" />

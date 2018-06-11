@@ -6,6 +6,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Console;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
@@ -48,8 +49,7 @@ public class AsyncGetStatusDetail extends AsyncTask {
             if (statusCode == 200) {
                 Log.d(TAG, "doInBackground: ");
 
-                JSONObject jsonObject = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream()));
-
+                JSONObject jsonObject = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream())).getJSONObject("message");
                 MRNFormulier mrnFormulier = new MRNFormulier();
                 mrnFormulier.setMrn(mrn);
                 mrnFormulier.setAantalArtikelen(jsonObject.getInt("articleAmount"));
