@@ -112,7 +112,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                             } else {
 
                             }
-                            if (!f.isPdfAvail()) {
+                            if (!f.isPdfAvail() && f.getDouaneStatus().equals(DouaneStatus.VERTREK_OK)) {
                                 allready = false;
                                 new AsyncGetPDF(f.getMRNFormulier().getMrn(), (OnPDFAvail) c, (AppCompatActivity) c).execute();
                             }

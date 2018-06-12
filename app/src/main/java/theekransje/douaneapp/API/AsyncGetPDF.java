@@ -68,22 +68,16 @@ public class AsyncGetPDF extends AsyncTask {
         if (Build.VERSION.SDK_INT >= 23) {
             if (app.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted2");
-                
+                Log.v(TAG, "Permission is granted2");
+
             } else {
 
-                Log.v(TAG,"Permission is revoked2");
+                Log.v(TAG, "Permission is revoked2");
                 ActivityCompat.requestPermissions(app, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-
             }
         }
 
-
-
-
-
         try {
-            
 
             ApiHelper apiHelper = new ApiHelper(endPoint + mrn, APIMethodes.GET);
 
@@ -104,18 +98,18 @@ public class AsyncGetPDF extends AsyncTask {
 
             File dir = new File(root + "/douane/");
             dir.mkdir();
-            
-            File target = new File(root+"/douane/"+mrn+".pdf");
+
+            File target = new File(root + "/douane/" + mrn + ".pdf");
             Log.d(TAG, "doInBackground: " + target.getAbsolutePath());
-            if (target.exists()){
+            if (target.exists()) {
                 Log.d(TAG, "doInBackground: file exists. No download");
                 url = null;
                 conection = null;
-                listener.OnPDFAvail(target.getAbsolutePath(),mrn);
-                return null; 
+                listener.OnPDFAvail(target.getAbsolutePath(), mrn);
+                return null;
             }
             Log.d(TAG, "doInBackground: starting download");
-            OutputStream output = new         FileOutputStream(target);
+            OutputStream output = new FileOutputStream(target);
             byte data[] = new byte[1024];
 
             long total = 0;
@@ -135,11 +129,11 @@ public class AsyncGetPDF extends AsyncTask {
             input.close();
             url = null;
             conection = null;
-            listener.OnPDFAvail(target.getAbsolutePath(),mrn);
+            listener.OnPDFAvail(target.getAbsolutePath(), mrn);
 
         } catch (Exception e) {
             Log.e("Error: ", e.getMessage());
-        }finally {
+        } finally {
 
         }
 
