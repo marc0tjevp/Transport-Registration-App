@@ -116,13 +116,16 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                                 allready = false;
                                 new AsyncGetPDF(f.getMRNFormulier().getMrn(), (OnPDFAvail) c, (AppCompatActivity) c).execute();
                             }
-
+                            Log.d(TAG, "run: " + f.isPdfAvail() + f.getDouaneStatus());
+                            Log.d(TAG, "run: size" + adapter.getmData().size());
+                            Log.d(TAG, "run: " + adapter.getmData().toString());
                             if (allready){
                                 Log.d(TAG, "run: Thread shutdown as planned");
                                 break;
                             }
 
                         }
+                        Log.d(TAG, "run: sleeping for 5s");
                         Thread.sleep(5000);
                     }
 
@@ -175,8 +178,6 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     protected void onResume() {
         super.onResume();
 
-        //    BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
-        //    navigation.setSelectedItemId(R.id.navbar_status);
     }
 
     @Override
@@ -197,7 +198,8 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     @Override
     protected void onPause() {
         super.onPause();
-        t.interrupt();
+        Log.d(TAG, "onPause: killing update thread");
+        t.interrupt();;
     }
 
 

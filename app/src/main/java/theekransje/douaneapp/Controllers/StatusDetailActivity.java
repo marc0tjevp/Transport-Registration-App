@@ -1,8 +1,10 @@
 package theekransje.douaneapp.Controllers;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.util.IOUtils;
 
@@ -80,19 +83,29 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
                 @Override
                 public void onClick(View v) {
                     try{
-                        File file = new File(c.getFilesDir().getAbsolutePath()+ "/" + f.getMRNFormulier().getMrn() + ".pdf");
-                        Log.d(TAG, "onClick: file path " + file);
-                        Uri uri = Uri.fromFile(file.getAbsoluteFile());
-                        Log.d(TAG, "onClick: absolute file path " + file.getAbsolutePath());
 
-                        Intent i;
-                        i = new Intent(Intent.ACTION_VIEW);
-                        i.setDataAndType(uri,"application/pdf");
-                        startActivity(i);
+                        String root = Environment.getExternalStorageDirectory().toString();
+                        File target = new File(root+"/douane/"+f.getMRNFormulier().getMrn()+".pdf");
+                        if (target.exists())
+                        {
+                            Intent intent=new Intent(Intent.ACTION_VIEW);
+                            Uri uri = Uri.fromFile(target);
+                            intent.setDataAndType(uri, "application/pdf");
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                            try
+                            {
+                                startActivity(intent);
+                            }
+                            catch(ActivityNotFoundException e)
+                            {
+                                Toast.makeText(c, "No Application available to view pdf", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
                     }catch (Exception e){
                         e.printStackTrace();
-                    }
-
+                }
                 }
             });
         }else {
