@@ -86,10 +86,14 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         Object[] data = {drivenTime.getDate(),state};
                         new AsyncSendTime().execute(data);
                         handler.removeCallbacks(drivenTime);
+                        drivenTime=new TimerClock(handler,listener);
+                        handler.postDelayed(drivenTime,1000);
                         state = DrivingState.Paused;
                     } else {
                         Object[] data = {drivenTime.getDate(),state};
                         new AsyncSendTime().execute(data);
+                        handler.removeCallbacks(drivenTime);
+                        drivenTime=new TimerClock(handler,listener);
                         handler.postDelayed(drivenTime,1000);
                         state = DrivingState.Driving;
 
