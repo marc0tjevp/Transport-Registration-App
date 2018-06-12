@@ -30,10 +30,12 @@ public class ApiHelper {
     private APIMethodes apiMethode;
 
     private HttpURLConnection conn;
+    private String url;
 
     public ApiHelper(String endpoint, APIMethodes apiMethode) {
         this.endpoint = endpoint;
         this.apiMethode = apiMethode;
+        this.url = API_URL + endpoint;
     }
 
 
@@ -104,5 +106,7 @@ public class ApiHelper {
 
     }
 
-
+    public String getUrl() {
+        return url;
+    }
 }
