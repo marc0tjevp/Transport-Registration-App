@@ -16,19 +16,22 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import theekransje.douaneapp.API.AsyncSendTime;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Domain.TimerClock;
 import theekransje.douaneapp.Interfaces.OnTimeChange;
+import theekransje.douaneapp.Interfaces.OnTimesReady;
 import theekransje.douaneapp.R;
 
-public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimeChange{
+public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimeChange, OnTimesReady{
     private static final String TAG = "DrivingActivity";
 
     private ArrayList<Freight> freights;
     private Driver driver;
+    private DrivingAdapter adapter;
     private Context c;
     private DrivingState state;
     private TextView view;
@@ -133,5 +136,12 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onTimesReady(ArrayList<Date> dates) {
+        for (Date date:dates){
+            adapter.addDate(date);
+        }
     }
 }
