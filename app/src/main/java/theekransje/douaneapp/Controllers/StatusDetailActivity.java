@@ -1,13 +1,23 @@
 package theekransje.douaneapp.Controllers;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.common.util.IOUtils;
+
+import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import theekransje.douaneapp.Domain.Driver;
@@ -31,6 +41,9 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status_detail);
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
 
         this.c = this;
         this.driver = (Driver) getIntent().getSerializableExtra("DRIVER");
@@ -43,7 +56,7 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
 
 
 
-            Freight f = (Freight) getIntent().getSerializableExtra("FREIGHT");
+           final Freight f = (Freight) getIntent().getSerializableExtra("FREIGHT");
 
         ((TextView)(findViewById(R.id.status_detail_client))).setText(""+f.getMRNFormulier().Opdrachtgever);
         ((TextView)(findViewById(R.id.status_detail_datetime))).setText(""+f.getMRNFormulier().DateTime + "");
@@ -55,6 +68,38 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
         ((TextView)(findViewById(R.id.status_detail_total_weight))).setText(""+f.getMRNFormulier().TotaalGewicht + "");
         ((TextView)(findViewById(R.id.status_detail_status))).setText(      "Status:  " +f.getDouaneStatus().toString());
         ((TextView)(findViewById(R.id.status_detail_value))).setText(""+f.getMRNFormulier().TotaalBedrag + "" + f.getMRNFormulier().Currency);
+
+
+
+
+        ImageButton b = ((ImageButton) (findViewById(R.id.pdfAvail)));
+
+        if(f.isPdfAvail()){
+           b.setVisibility(View.VISIBLE);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try{
+                        File file = new File(c.getFilesDir().getAbsolutePath()+ "/" + f.getMRNFormulier().getMrn() + ".pdf");
+                        Log.d(TAG, "onClick: file path " + file);
+                        Uri uri = Uri.fromFile(file.getAbsoluteFile());
+                        Log.d(TAG, "onClick: absolute file path " + file.getAbsolutePath());
+
+                        Intent i;
+                        i = new Intent(Intent.ACTION_VIEW);
+                        i.setDataAndType(uri,"application/pdf");
+                        startActivity(i);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }else {
+            b.setVisibility(View.INVISIBLE);
+        }
+
+
     }
 
     @Override
