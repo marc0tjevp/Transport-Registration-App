@@ -4,8 +4,10 @@ package theekransje.douaneapp.API;
 import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
@@ -63,6 +65,23 @@ public class AsyncGetPDF extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         int count;
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (app.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted2");
+                
+            } else {
+
+                Log.v(TAG,"Permission is revoked2");
+                ActivityCompat.requestPermissions(app, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+
+            }
+        }
+
+
+
+
+
         try {
             
 
