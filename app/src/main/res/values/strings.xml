@@ -40,6 +40,8 @@
 
 
     <string name="code_not_mrn">Code voldoet niet aan MRN standaard</string>
+    <string name="invalid_credentials">Foute login gegevens</string>
+    <string name="undefined">Onbekende error</string>
 
 
 </resources>

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,19 +20,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-import theekransje.douaneapp.API.APIMethodes;
-import theekransje.douaneapp.API.ApiHelper;
 import theekransje.douaneapp.API.AsyncLogin;
-import theekransje.douaneapp.Domain.APITask;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Interfaces.OnLoginResult;
 import theekransje.douaneapp.Persistence.BackgroundDataSenderThread;
-import theekransje.douaneapp.Persistence.DBHelper;
 import theekransje.douaneapp.R;
 
 public class LoginActivity extends AppCompatActivity implements OnLoginResult {
@@ -49,10 +44,6 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         final TextView userName = (TextView) findViewById(R.id.login_user);
         final TextView passWd = (TextView) findViewById(R.id.login_passwd);
         final TextView IMEIView = (TextView) findViewById(R.id.login_imei);
-
-
-
-
 
         ///////set IMEI
 
@@ -131,13 +122,14 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     }
 
     @Override
-    public void onLoginFailure(final String error) {
+
+    public void onLoginFailure(@StringRes final int error ) {
         Log.d(TAG, "onLoginFailure: called");
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(error), Toast.LENGTH_SHORT).show();
             }
         });
     }
