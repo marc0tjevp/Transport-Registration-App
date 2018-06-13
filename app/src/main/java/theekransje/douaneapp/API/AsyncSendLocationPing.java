@@ -35,7 +35,7 @@ public class AsyncSendLocationPing extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void[] objects) {
-        Log.d(TAG, "Doinbackgroudn sending location");
+        Log.d(TAG, "Doinbackground sending location");
         ApiHelper apiHelper = new ApiHelper(endPoint + "/" + mrn, APIMethodes.POST);
         Log.d(TAG, endPoint + "/" + mrn);
         HttpURLConnection conn = null;
@@ -64,7 +64,7 @@ public class AsyncSendLocationPing extends AsyncTask<Void, Void, Void> {
             } else {
                 conn.getErrorStream().close();
             }
-
+            os.close();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         } finally {

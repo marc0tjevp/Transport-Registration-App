@@ -29,7 +29,7 @@ import theekransje.douaneapp.Domain.TimerClock;
 import theekransje.douaneapp.Interfaces.OnTimeChange;
 import theekransje.douaneapp.R;
 
-public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimeChange{
+public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnTimeChange {
     private static final String TAG = "DrivingActivity";
 
     private ArrayList<Freight> freights;
@@ -52,6 +52,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
             LocationService.LocationTrackingBinder binder = (LocationService.LocationTrackingBinder) service;
             locationService = binder.getService();
         }
+
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
         }
@@ -83,15 +84,14 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
             public void onClick(View v) {
                 //schedules the Timer's tasks
                 if (drivingButton.getText().equals(getString(R.string.start_of_drive))) {
-                    drivenTime=new TimerClock(handler,listener);
+                    drivenTime = new TimerClock(handler, listener);
                     realTime = new TimerClock(handler);
-                    handler.postDelayed(drivenTime,1000);
-                    handler.postDelayed(realTime,1000);
+                    handler.postDelayed(drivenTime, 1000);
+                    handler.postDelayed(realTime, 1000);
                     drivingButton.setText(R.string.end_of_drive);
-                    state= DrivingState.Driving;
+                    state = DrivingState.Driving;
 
                     if (freights.size() > 0) {
-                        Log.d(TAG, "Help");
                         Intent intent = new Intent(DrivingActivity.this, LocationService.class);
                         intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -102,30 +102,32 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         locationService.startLocationTracking();
 
                     }
-                } else if (drivingButton.getText().equals(getString(R.string.end_of_drive))){
+                } else if (drivingButton.getText().equals(getString(R.string.end_of_drive))) {
                     state = DrivingState.Stopped;
                     handler.removeCallbacks(realTime);
                     handler.removeCallbacks(drivenTime);
                     drivingButton.setText(R.string.start_of_drive);
-                    Object[] data = {drivenTime.getDate(),state};
+                    Object[] data = {drivenTime.getDate(), state};
                     new AsyncSendTime().execute(data);
+                    locationService.stopLocationTracking();
                 }
-            }});
+            }
+        });
         pauseButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (state==DrivingState.Stopped){
+                if (state == DrivingState.Stopped) {
                     pauseButton.setChecked(false);
-                }else {
-                    if (isChecked){
-                        Object[] data = {drivenTime.getDate(),state};
+                } else {
+                    if (isChecked) {
+                        Object[] data = {drivenTime.getDate(), state};
                         new AsyncSendTime().execute(data);
                         handler.removeCallbacks(drivenTime);
                         state = DrivingState.Paused;
                     } else {
-                        Object[] data = {drivenTime.getDate(),state};
+                        Object[] data = {drivenTime.getDate(), state};
                         new AsyncSendTime().execute(data);
-                        handler.postDelayed(drivenTime,1000);
+                        handler.postDelayed(drivenTime, 1000);
                         state = DrivingState.Driving;
 
                     }
@@ -134,22 +136,21 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         });
 
 
-
         BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
         navigation.setSelectedItemId(R.id.navbar_drive);
         navigation.setOnNavigationItemSelectedListener(this);
 
 
-
     }
-    public void onTimeChange(String string){
+
+    public void onTimeChange(String string) {
         view.setText(string);
         this.text = string;
     }
 
     @Override
     public void toast() {
-        Toast.makeText(this,R.string.offer_break,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.offer_break, Toast.LENGTH_LONG).show();
     }
 
     @Override

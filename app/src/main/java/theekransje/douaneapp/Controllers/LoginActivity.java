@@ -36,6 +36,7 @@ import theekransje.douaneapp.R;
 
 public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     private static final String TAG = "LoginActivity";
+    public static boolean serviceIsRunning = false;
 
     int hash;
 
@@ -44,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         Log.d(TAG, "onCreate: called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        serviceIsRunning = false;
         final TextView userName = (TextView) findViewById(R.id.login_user);
         final TextView passWd = (TextView) findViewById(R.id.login_passwd);
         final TextView IMEIView = (TextView) findViewById(R.id.login_imei);
