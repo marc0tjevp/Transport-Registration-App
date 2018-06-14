@@ -76,8 +76,10 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     handler.removeCallbacks(realTime);
                     handler.removeCallbacks(drivenTime);
                     drivingButton.setText(R.string.start_of_drive);
-                    Object[] data = {drivenTime.getDate(),state};
-                    new AsyncSendTime().execute(data);
+                    for (Freight freight : freights) {
+                        Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
+                        new AsyncSendTime().execute(data);
+                    }
                 }
             }});
         pauseButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -87,17 +89,19 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     pauseButton.setChecked(false);
                 }else {
                     if (isChecked){
-
-                            Object[] data = {drivenTime.getDate(), state};
-                            new AsyncSendTime().execute(data);
-
+                    for (Freight freight : freights) {
+                        Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
+                        new AsyncSendTime().execute(data);
+                    }
                         handler.removeCallbacks(drivenTime);
                         drivenTime=new TimerClock(handler,listener);
                         handler.postDelayed(drivenTime,1000);
                         state = DrivingState.Paused;
                     } else {
-                        Object[] data = {drivenTime.getDate(),state};
-                        new AsyncSendTime().execute(data);
+                        for (Freight freight : freights) {
+                            Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
+                            new AsyncSendTime().execute(data);
+                        }
                         handler.removeCallbacks(drivenTime);
                         drivenTime=new TimerClock(handler,listener);
                         handler.postDelayed(drivenTime,1000);
@@ -107,6 +111,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 }
             }
         });
+
         new AsyncGetDrivenTimes(driver,this).execute();
 
 
@@ -146,5 +151,10 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         for (Date date:dates){
             adapter.addDate(date);
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

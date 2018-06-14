@@ -7,27 +7,28 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import theekransje.douaneapp.Controllers.DrivingState;
+import theekransje.douaneapp.Domain.APITask;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Interfaces.OnTimesReady;
+import theekransje.douaneapp.Persistence.DBHelper;
 
 public class AsyncGetDrivenTimes extends AsyncTask{
     private static final String TAG = "AsyncSendTime";
-    private final String endPoint = "/tbd";
+    private final String endPoint= "/getdrivebyid";
     private ApiHelper helper;
     private Driver driver;
     private OnTimesReady listener;
+    private final APITask task;
 
     public AsyncGetDrivenTimes(Driver driver, OnTimesReady listener) {
-        helper = new ApiHelper(endPoint,APIMethodes.GET);
         this.driver = driver;
         this.listener = listener;
+        helper = new ApiHelper(endPoint,APIMethodes.GET);
+        task = new APITask(new JSONObject(),APIMethodes.GET,endPoint);
     }
 
     @Override
@@ -35,13 +36,13 @@ public class AsyncGetDrivenTimes extends AsyncTask{
         try {
             helper.token = driver.getToken();
             HttpURLConnection conn = helper.getConnection();
-            JSONObject object = new JSONObject();
-
-
+            DBHelper dbHelper = new DBHelper(listener.getContext());
+            dbHelper.insertTask(task);
             int statusCode = conn.getResponseCode();
             Log.d(TAG, "doInBackground: statuscode: " + statusCode);
 
             if (statusCode == 200) {
+                dbHelper.removeTask(task);
                 ArrayList<Date> dates = new ArrayList<>();
                 JSONObject times = new JSONObject(helper.convertIStoString(conn.getInputStream()));
                 JSONArray array = (JSONArray) times.get("message");
