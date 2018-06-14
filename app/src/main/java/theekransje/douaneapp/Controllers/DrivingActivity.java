@@ -18,6 +18,7 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.Date;
 
+import theekransje.douaneapp.API.AsyncGetDrivenTimes;
 import theekransje.douaneapp.API.AsyncSendTime;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
@@ -86,8 +87,10 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     pauseButton.setChecked(false);
                 }else {
                     if (isChecked){
-                        Object[] data = {drivenTime.getDate(),state};
-                        new AsyncSendTime().execute(data);
+
+                            Object[] data = {drivenTime.getDate(), state};
+                            new AsyncSendTime().execute(data);
+
                         handler.removeCallbacks(drivenTime);
                         drivenTime=new TimerClock(handler,listener);
                         handler.postDelayed(drivenTime,1000);
@@ -104,7 +107,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 }
             }
         });
-
+        new AsyncGetDrivenTimes(driver,this).execute();
 
 
         BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);

@@ -7,11 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import theekransje.douaneapp.Controllers.DrivingState;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Interfaces.OnTimesReady;
 
@@ -30,10 +32,11 @@ public class AsyncGetDrivenTimes extends AsyncTask{
 
     @Override
     protected Object doInBackground(Object[] objects) {
-        JSONObject j = new JSONObject();
         try {
             helper.token = driver.getToken();
             HttpURLConnection conn = helper.getConnection();
+            JSONObject object = new JSONObject();
+
 
             int statusCode = conn.getResponseCode();
             Log.d(TAG, "doInBackground: statuscode: " + statusCode);
