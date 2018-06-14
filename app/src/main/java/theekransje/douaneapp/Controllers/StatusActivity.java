@@ -68,8 +68,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             Log.d(TAG, "onCreate: SELECTED MRNs" + this.selectedMRN.size());
         }
 
-        for (String s : this.selectedMRN
-                ) {
+        for (String s : this.selectedMRN) {
             new AsyncGetStatusDetail(s, this).execute();
         }
 
@@ -119,7 +118,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                             Log.d(TAG, "run: " + f.isPdfAvail() + f.getDouaneStatus());
                             Log.d(TAG, "run: size" + adapter.getmData().size());
                             Log.d(TAG, "run: " + adapter.getmData().toString());
-                            if (allready){
+                            if (allready) {
                                 Log.d(TAG, "run: Thread shutdown as planned");
                                 break;
                             }
@@ -166,9 +165,13 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                 return true;
 
             case R.id.navbar_drive:
-                Navbar.goToDrive(c, driver, freights);
-
-                return true;
+                if (freights.size() > 0) {
+                    Navbar.goToDrive(c, driver, freights);
+                    return true;
+                } else {
+                    Toast.makeText(this, R.string.no_freights_selected, Toast.LENGTH_LONG).show();;
+                    return false;
+                }
         }
         return false;
     }
@@ -199,7 +202,8 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: killing update thread");
-        t.interrupt();;
+        t.interrupt();
+        ;
     }
 
 

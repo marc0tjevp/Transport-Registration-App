@@ -20,7 +20,7 @@ import theekransje.douaneapp.Domain.Driver;
 
 public class ApiHelper {
     private static final String TAG = "ApiHelper";
-    public static final String API_URL = "http://192.168.1.78:8080/";
+    public static final String API_URL = "http://192.168.178.10:8080/";
     public static String token;
 
 
