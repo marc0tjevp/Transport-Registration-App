@@ -37,7 +37,7 @@ public class AsyncGetStatusUpdate extends AsyncTask<Freight,ArrayList<String>,Fr
         try {
             OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
             JSONObject mrns = new JSONObject();
-            mrns.put("mrn",freight[0].getMRNFormulier().Mrn);
+            mrns.put("mrn",freight[0].getMRNFormulier().getMrn());
             Log.e(TAG,mrns.toString());
             osw.write(mrns.toString());
             Log.d(TAG,helper.convertIStoString(connection.getInputStream()));
@@ -45,16 +45,18 @@ public class AsyncGetStatusUpdate extends AsyncTask<Freight,ArrayList<String>,Fr
             Freight newFreight = new Freight();
             MRNFormulier formulier = new MRNFormulier();
 
-            formulier.Mrn = data.getString("mrn");
-            formulier.AantalArtikelen=data.getInt("aantalartikelen");
-            formulier.Afzender = data.getString("afzender");
-            formulier.Currency = data.getString("currency");
-            formulier.DateTime = (String) data.get("time");
-            formulier.Ontvanger = data.getString("ontvanger");
-            formulier.Opdrachtgever = data.getString("opdrachtgever");
-            formulier.Reference = data.getString("reference");
-            formulier.TotaalBedrag = data.getDouble("totaalbedrag");
-            formulier.TotaalGewicht = data.getDouble("totaalgewicht");
+            formulier.setMrn(data.getString("mrn"));
+            formulier.setArticleAmount(data.getInt("aantalartikelen"));
+            formulier.setSender(data.getString("afzender"));
+            formulier.setCurrency(data.getString("currency"));
+            formulier.setDateTime((String) data.get("time"));
+            formulier.setReceiver( data.getString("ontvanger"));
+            formulier.setClient(data.getString("opdrachtgever"));
+            formulier.setReference(data.getString("reference"));
+            formulier.setTotalPRice(data.getDouble("totaalbedrag"));
+            formulier.setTotalWeight(data.getDouble("totaalgewicht"));
+            formulier.setOrigin(data.getString("addressOrigin"));
+            formulier.setDestination(data.getString("addressDestination"));
             newFreight.setMRNFormulier(formulier);
             listener.onStatusUpdateAvail(newFreight);
         } catch (Exception e){

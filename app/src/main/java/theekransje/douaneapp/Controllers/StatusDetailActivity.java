@@ -24,8 +24,6 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
     private Context c;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,19 +40,20 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
         navigation.setOnNavigationItemSelectedListener(this);
 
 
+        Freight f = (Freight) getIntent().getSerializableExtra("FREIGHT");
 
-            Freight f = (Freight) getIntent().getSerializableExtra("FREIGHT");
-
-        ((TextView)(findViewById(R.id.status_detail_client))).setText(""+f.getMRNFormulier().Opdrachtgever);
-        ((TextView)(findViewById(R.id.status_detail_datetime))).setText(""+f.getMRNFormulier().DateTime + "");
-        ((TextView)(findViewById(R.id.status_detail_recipient))).setText(""+f.getMRNFormulier().Ontvanger);
-        ((TextView)(findViewById(R.id.status_detail_reference))).setText(""+f.getMRNFormulier().getReference());
-        ((TextView)(findViewById(R.id.status_detail_item_amount))).setText(""+f.getMRNFormulier().getAantalArtikelen());
-        ((TextView)(findViewById(R.id.status_detail_sender))).setText(""+f.getMRNFormulier().Afzender);
-        ((TextView)(findViewById(R.id.status_detail_mrn))).setText(         "MRN: "  + f.getMRNFormulier().Mrn);
-        ((TextView)(findViewById(R.id.status_detail_total_weight))).setText(""+f.getMRNFormulier().TotaalGewicht + "");
-        ((TextView)(findViewById(R.id.status_detail_status))).setText(      "Status:  " +f.getDouaneStatus().toString());
-        ((TextView)(findViewById(R.id.status_detail_value))).setText(""+f.getMRNFormulier().TotaalBedrag + "" + f.getMRNFormulier().Currency);
+        ((TextView) (findViewById(R.id.status_detail_client))).setText("" + f.getMRNFormulier().getClient());
+        ((TextView) (findViewById(R.id.status_detail_datetime))).setText("" + f.getMRNFormulier().getDateTime() + "");
+        ((TextView) (findViewById(R.id.status_detail_recipient))).setText("" + f.getMRNFormulier().getReceiver());
+        ((TextView) (findViewById(R.id.status_detail_reference))).setText("" + f.getMRNFormulier().getReference());
+        ((TextView) (findViewById(R.id.status_detail_item_amount))).setText("" + f.getMRNFormulier().getArticleAmount());
+        ((TextView) (findViewById(R.id.status_detail_sender))).setText("" + f.getMRNFormulier().getSender());
+        ((TextView) (findViewById(R.id.status_detail_mrn))).setText("MRN: " + f.getMRNFormulier().getMrn());
+        ((TextView) (findViewById(R.id.status_detail_total_weight))).setText("" + f.getMRNFormulier().getTotalWeight() + "");
+        ((TextView) (findViewById(R.id.status_detail_status))).setText("Status:  " + f.getDouaneStatus().toString());
+        ((TextView) (findViewById(R.id.status_detail_value))).setText("" + f.getMRNFormulier().getTotalPRice() + " " + f.getMRNFormulier().getCurrency());
+        ((TextView) (findViewById(R.id.status_detail_origin))).setText("" + f.getMRNFormulier().getOrigin());
+        ((TextView) (findViewById(R.id.status_detail_destination))).setText("" + f.getMRNFormulier().getDestination());
     }
 
     @Override

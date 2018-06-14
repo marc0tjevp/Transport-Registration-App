@@ -1,7 +1,6 @@
 package theekransje.douaneapp.Domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
  * Created by Sander on 5/24/2018.
@@ -10,99 +9,120 @@ import java.time.LocalDate;
 public class MRNFormulier implements Serializable {
         private static final String TAG = "MRNFormulier";
 
-        public String Mrn;
-        public String Reference;
-        public String DateTime;
-        public String Afzender;
-        public String Ontvanger;
-        public String Opdrachtgever;
-        public int AantalArtikelen;
-        public double TotaalBedrag;
-        public String Currency;
-        public double TotaalGewicht;
+        private String mrn;
+        private String reference;
+        private String dateTime;
+        private String sender;
+        private String receiver;
+        private String client;
+        private int articleAmount;
+        private double totalPRice;
+        private String currency;
+        private double totalWeight;
+        private String origin;
+        private String destination;
 
-
-        public static String getTAG() {
+        private static String getTAG() {
                 return TAG;
         }
 
         public String getMrn() {
-                return Mrn;
+                return mrn;
         }
 
         public void setMrn(String mrn) {
-                Mrn = mrn;
+                this.mrn = mrn;
         }
 
         public String getReference() {
-                return Reference;
+                return reference;
         }
 
         public void setReference(String reference) {
-                Reference = reference;
+                this.reference = reference;
         }
 
         public String getDateTime() {
-                return DateTime;
+                return dateTime;
+        }
+
+        public void setDateTime(String dateTime) {
+                this.dateTime = dateTime;
         }
 
         public void String(String dateTime) {
-                DateTime = dateTime;
+                this.dateTime = dateTime;
         }
 
-        public String getAfzender() {
-                return Afzender;
+        public String getSender() {
+                return sender;
         }
 
-        public void setAfzender(String afzender) {
-                Afzender = afzender;
+        public void setSender(String sender) {
+                this.sender = sender;
         }
 
-        public String getOntvanger() {
-                return Ontvanger;
+        public String getReceiver() {
+                return receiver;
         }
 
-        public void setOntvanger(String ontvanger) {
-                Ontvanger = ontvanger;
+        public void setReceiver(String receiver) {
+                this.receiver = receiver;
         }
 
-        public String getOpdrachtgever() {
-                return Opdrachtgever;
+        public String getClient() {
+                return client;
         }
 
-        public void setOpdrachtgever(String opdrachtgever) {
-                Opdrachtgever = opdrachtgever;
+        public void setClient(String client) {
+                this.client = client;
         }
 
-        public int getAantalArtikelen() {
-                return AantalArtikelen;
+        public int getArticleAmount() {
+                return articleAmount;
         }
 
-        public void setAantalArtikelen(int aantalArtikelen) {
-                AantalArtikelen = aantalArtikelen;
+        public void setArticleAmount(int articleAmount) {
+                this.articleAmount = articleAmount;
         }
 
-        public double getTotaalBedrag() {
-                return TotaalBedrag;
+        public double getTotalPRice() {
+                return totalPRice;
         }
 
-        public void setTotaalBedrag(double totaalBedrag) {
-                TotaalBedrag = totaalBedrag;
+        public void setTotalPRice(double totalPRice) {
+                this.totalPRice = totalPRice;
         }
 
         public String getCurrency() {
-                return Currency;
+                return currency;
         }
 
         public void setCurrency(String currency) {
-                Currency = currency;
+                this.currency = currency;
         }
 
-        public double getTotaalGewicht() {
-                return TotaalGewicht;
+        public double getTotalWeight() {
+                return totalWeight;
         }
 
-        public void setTotaalGewicht(double totaalGewicht) {
-                TotaalGewicht = totaalGewicht;
+        public void setTotalWeight(double totalWeight) {
+                this.totalWeight = totalWeight;
+        }
+
+        public String getOrigin() {
+                return origin;
+        }
+
+        public void setOrigin(String origin) {
+                this.origin = origin;
+        }
+
+        public String getDestination() {
+                return destination;
+        }
+
+        public void setDestination(String destination) {
+                this.destination = destination;
         }
 }

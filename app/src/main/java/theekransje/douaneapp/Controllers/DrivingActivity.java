@@ -75,7 +75,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         view.setText(text);
         if (freights.size() > 0) {
             Intent intent = new Intent(this, LocationService.class);
-            intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
+            intent.putExtra("mrn", freights.get(0).getMRNFormulier().getMrn());
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
         //Setting onClickListener for Starting/Stopping the drive
@@ -93,7 +93,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
 
                     if (freights.size() > 0) {
                         Intent intent = new Intent(DrivingActivity.this, LocationService.class);
-                        intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
+                        intent.putExtra("mrn", freights.get(0).getMRNFormulier().getMrn());
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             startForegroundService(intent);
                         } else {
