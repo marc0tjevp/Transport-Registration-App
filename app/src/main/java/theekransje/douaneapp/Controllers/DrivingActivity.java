@@ -16,19 +16,23 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import theekransje.douaneapp.API.AsyncGetDrivenTimes;
 import theekransje.douaneapp.API.AsyncSendTime;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Domain.TimerClock;
 import theekransje.douaneapp.Interfaces.OnTimeChange;
+import theekransje.douaneapp.Interfaces.OnTimesReady;
 import theekransje.douaneapp.R;
 
-public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimeChange{
+public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimeChange, OnTimesReady{
     private static final String TAG = "DrivingActivity";
 
     private ArrayList<Freight> freights;
     private Driver driver;
+    private DrivingAdapter adapter;
     private Context c;
     private DrivingState state;
     private TextView view;
@@ -72,8 +76,10 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     handler.removeCallbacks(realTime);
                     handler.removeCallbacks(drivenTime);
                     drivingButton.setText(R.string.start_of_drive);
-                    Object[] data = {drivenTime.getDate(),state};
-                    new AsyncSendTime().execute(data);
+                    for (Freight freight : freights) {
+                        Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
+                        new AsyncSendTime().execute(data);
+                    }
                 }
             }});
         pauseButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -83,13 +89,21 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     pauseButton.setChecked(false);
                 }else {
                     if (isChecked){
-                        Object[] data = {drivenTime.getDate(),state};
+                    for (Freight freight : freights) {
+                        Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
                         new AsyncSendTime().execute(data);
+                    }
                         handler.removeCallbacks(drivenTime);
+                        drivenTime=new TimerClock(handler,listener);
+                        handler.postDelayed(drivenTime,1000);
                         state = DrivingState.Paused;
                     } else {
-                        Object[] data = {drivenTime.getDate(),state};
-                        new AsyncSendTime().execute(data);
+                        for (Freight freight : freights) {
+                            Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
+                            new AsyncSendTime().execute(data);
+                        }
+                        handler.removeCallbacks(drivenTime);
+                        drivenTime=new TimerClock(handler,listener);
                         handler.postDelayed(drivenTime,1000);
                         state = DrivingState.Driving;
 
@@ -98,6 +112,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
             }
         });
 
+        new AsyncGetDrivenTimes(driver,this).execute();
 
 
         BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
@@ -129,5 +144,17 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onTimesReady(ArrayList<Date> dates) {
+        for (Date date:dates){
+            adapter.addDate(date);
+        }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }
