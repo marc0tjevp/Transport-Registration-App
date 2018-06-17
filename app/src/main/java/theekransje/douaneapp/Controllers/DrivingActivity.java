@@ -79,13 +79,15 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     drivingButton.setText(R.string.end_of_drive);
                     state= DrivingState.Driving;
                 } else if (drivingButton.getText().equals(getString(R.string.end_of_drive))){
-                    state = DrivingState.Stopped;
-                    handler.removeCallbacks(realTime);
-                    handler.removeCallbacks(drivenTime);
-                    drivingButton.setText(R.string.start_of_drive);
-                    for (Freight freight : freights) {
-                        Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn};
-                        new AsyncSendTime().execute(data);
+                    if (freights!= null) {
+                        state = DrivingState.Stopped;
+                        handler.removeCallbacks(realTime);
+                        handler.removeCallbacks(drivenTime);
+                        drivingButton.setText(R.string.start_of_drive);
+                        for (Freight freight : freights) {
+                            Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
+                            new AsyncSendTime().execute(data);
+                        }
                     }
                 }
             }});
