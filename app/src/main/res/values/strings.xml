@@ -21,7 +21,7 @@
     <string name="drive_break">Pauze</string>
     <string name="offer_break">U heeft meer dan 4 uur en 15 minuten aaneengesloten gereden. Een pauze is aan te raden.</string>
 
-    <string name="text_navbar_status">Huidig</string>
+    <string name="text_navbar_status">Vracht</string>
     <string name="text_navbar_freight">Toevoegen</string>
     <string name="text_navbar_drive">Rijden</string>
     <string name="sender">Verzender:</string>
