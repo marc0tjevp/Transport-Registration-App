@@ -84,7 +84,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     handler.removeCallbacks(drivenTime);
                     drivingButton.setText(R.string.start_of_drive);
                     for (Freight freight : freights) {
-                        Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
+                        Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn};
                         new AsyncSendTime().execute(data);
                     }
                 }
@@ -98,24 +98,25 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     if (isChecked) {
                         if (freights != null) {
                             for (Freight freight : freights) {
-                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn, driver.getUid()};
+                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
                                 new AsyncSendTime().execute(data);
                             }
                             handler.removeCallbacks(drivenTime);
                             drivenTime = new TimerClock(handler, listener);
                             handler.postDelayed(drivenTime, 1000);
                             state = DrivingState.Paused;
-                        } else {
+                        } } else {
+                        if (freights!= null) {
                             for (Freight freight : freights) {
-                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn, driver.getUid()};
+                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
                                 new AsyncSendTime().execute(data);
                             }
                             handler.removeCallbacks(drivenTime);
                             drivenTime = new TimerClock(handler, listener);
                             handler.postDelayed(drivenTime, 1000);
                             state = DrivingState.Driving;
-
                         }
+
                     }
                 }
             }
