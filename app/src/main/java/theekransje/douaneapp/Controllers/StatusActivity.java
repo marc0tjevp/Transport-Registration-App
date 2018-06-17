@@ -165,13 +165,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                 return true;
 
             case R.id.navbar_drive:
-                if (freights.size() > 0) {
-                    Navbar.goToDrive(c, driver, freights);
-                    return true;
-                } else {
-                    Toast.makeText(this, R.string.no_freights_selected, Toast.LENGTH_LONG).show();;
-                    return false;
-                }
+                return Navbar.goToDrive(c, driver, freights);
         }
         return false;
     }
