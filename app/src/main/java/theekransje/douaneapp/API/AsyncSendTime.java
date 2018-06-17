@@ -34,10 +34,9 @@ public class AsyncSendTime extends AsyncTask {
                     break;
             }
             object.put("mrn",objects[2]);
-            object.put("driverID",objects[3]);
             conn.getOutputStream().write(object.toString().getBytes());
         } catch (Exception e){
-
+            e.printStackTrace();
         }
         return null;
     }

@@ -56,7 +56,6 @@ public class DrivingAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         Date date = dates.get(position);
-        holder.view = convertView.findViewById(R.id.driving_time_view);
         holder.view.setText(date.toString());
         return convertView;
     }
