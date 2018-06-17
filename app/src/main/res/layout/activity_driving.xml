@@ -55,7 +55,7 @@
                 tools:text="@string/drive_break" />
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <ListView
             android:id="@+id/time_seen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
