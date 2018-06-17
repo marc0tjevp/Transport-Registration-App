@@ -6,16 +6,19 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import theekransje.douaneapp.API.AsyncGetDrivenTimes;
@@ -25,6 +28,7 @@ import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Domain.TimerClock;
 import theekransje.douaneapp.Interfaces.OnTimeChange;
 import theekransje.douaneapp.Interfaces.OnTimesReady;
+import theekransje.douaneapp.Persistence.DBHelper;
 import theekransje.douaneapp.R;
 
 public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimeChange, OnTimesReady{
@@ -57,6 +61,9 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         this.drivingButton = findViewById(R.id.driving_end_button);
         this.pauseButton = findViewById(R.id.driving_break_button);
         this.view = findViewById(R.id.driving_time_view);
+        ListView view1 = findViewById(R.id.time_seen);
+        adapter = new DrivingAdapter(new ArrayList<Date>(),getLayoutInflater());
+        view1.setAdapter(adapter);
 
         view.setText(text);
         //Setting onClickListener for Starting/Stopping the drive
@@ -88,32 +95,35 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 if (state==DrivingState.Stopped){
                     pauseButton.setChecked(false);
                 }else {
-                    if (isChecked){
-                    for (Freight freight : freights) {
-                        Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
-                        new AsyncSendTime().execute(data);
-                    }
-                        handler.removeCallbacks(drivenTime);
-                        drivenTime=new TimerClock(handler,listener);
-                        handler.postDelayed(drivenTime,1000);
-                        state = DrivingState.Paused;
-                    } else {
-                        for (Freight freight : freights) {
-                            Object[] data = {drivenTime.getDate(), state,freight.getMRNFormulier().Mrn,driver.getUid()};
-                            new AsyncSendTime().execute(data);
-                        }
-                        handler.removeCallbacks(drivenTime);
-                        drivenTime=new TimerClock(handler,listener);
-                        handler.postDelayed(drivenTime,1000);
-                        state = DrivingState.Driving;
+                    if (isChecked) {
+                        if (freights != null) {
+                            for (Freight freight : freights) {
+                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn, driver.getUid()};
+                                new AsyncSendTime().execute(data);
+                            }
+                            handler.removeCallbacks(drivenTime);
+                            drivenTime = new TimerClock(handler, listener);
+                            handler.postDelayed(drivenTime, 1000);
+                            state = DrivingState.Paused;
+                        } else {
+                            for (Freight freight : freights) {
+                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn, driver.getUid()};
+                                new AsyncSendTime().execute(data);
+                            }
+                            handler.removeCallbacks(drivenTime);
+                            drivenTime = new TimerClock(handler, listener);
+                            handler.postDelayed(drivenTime, 1000);
+                            state = DrivingState.Driving;
 
+                        }
                     }
                 }
             }
         });
 
         new AsyncGetDrivenTimes(driver,this).execute();
-
+        adapter.addDate(Calendar.getInstance().getTime());
+        adapter.addDate(Calendar.getInstance().getTime());
 
         BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
         navigation.setSelectedItemId(R.id.navbar_drive);
@@ -121,6 +131,8 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
 
 
     }
+
+
     public void onTimeChange(String string){
         view.setText(string);
         this.text = string;
