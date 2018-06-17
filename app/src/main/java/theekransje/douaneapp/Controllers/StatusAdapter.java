@@ -33,6 +33,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         public TextView mrn;
         public ConstraintLayout cl;
         public ImageView thumb;
+        public ImageView pdf;
 
 
         public View view;
@@ -48,6 +49,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             this.mrn = itemView.findViewById(R.id.status_row_mrn);
             this.cl = itemView.findViewById(R.id.status_row_cl);
             this.thumb = itemView.findViewById(R.id.status_row_thumb);
+            this.pdf = itemView.findViewById(R.id.status_row_pdf);
 
             this.view.setOnClickListener(this);
 
@@ -117,11 +119,16 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         if (mData.get(position).getDouaneStatus().equals(DouaneStatus.LOSSEN_OK) || mData.get(position).getDouaneStatus().equals(DouaneStatus.VERTREK_OK)) {
             holder.thumb.setImageDrawable(mContext.getDrawable(R.drawable.ic_thumb_up_black_24dp));
             holder.thumb.setVisibility(View.VISIBLE);
+            if (freight.isPdfAvail()){
+                holder.pdf.setVisibility(View.VISIBLE);
+            }
         } else if (mData.get(position).getDouaneStatus().equals(DouaneStatus.VERZONDEN)) {
             holder.thumb.setImageDrawable(mContext.getDrawable(R.drawable.ic_timer_black_24dp));
             holder.thumb.setVisibility(View.VISIBLE);
+            holder.pdf.setVisibility(View.INVISIBLE);
         } else {
             holder.thumb.setVisibility(View.INVISIBLE);
+            holder.pdf.setVisibility(View.INVISIBLE);
         }
     }
 

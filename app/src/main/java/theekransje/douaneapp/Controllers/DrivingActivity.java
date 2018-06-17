@@ -11,29 +11,40 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
+import theekransje.douaneapp.API.AsyncGetDrivenTimes;
 import theekransje.douaneapp.API.AsyncSendTime;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Domain.TimerClock;
 import theekransje.douaneapp.Interfaces.OnTimeChange;
+import theekransje.douaneapp.Interfaces.OnTimesReady;
+import theekransje.douaneapp.Persistence.DBHelper;
 import theekransje.douaneapp.R;
 
-public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnTimeChange {
+
+
+public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimeChange, OnTimesReady{
+
     private static final String TAG = "DrivingActivity";
 
     private ArrayList<Freight> freights;
     private Driver driver;
+    private DrivingAdapter adapter;
     private Context c;
     private DrivingState state;
     private TextView view;
@@ -71,6 +82,9 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         this.drivingButton = findViewById(R.id.driving_end_button);
         this.pauseButton = findViewById(R.id.driving_break_button);
         this.view = findViewById(R.id.driving_time_view);
+        ListView view1 = findViewById(R.id.time_seen);
+        adapter = new DrivingAdapter(new ArrayList<Date>(),getLayoutInflater());
+        view1.setAdapter(adapter);
 
         view.setText(text);
         if (freights.size() > 0) {
@@ -89,6 +103,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     handler.postDelayed(drivenTime, 1000);
                     handler.postDelayed(realTime, 1000);
                     drivingButton.setText(R.string.end_of_drive);
+
                     state = DrivingState.Driving;
 
                     if (freights.size() > 0) {
@@ -110,6 +125,20 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     Object[] data = {drivenTime.getDate(), state};
                     new AsyncSendTime().execute(data);
                     locationService.stopLocationTracking();
+//=======
+//                    state= DrivingState.Driving;
+//                } else if (drivingButton.getText().equals(getString(R.string.end_of_drive))){
+//                    if (freights!= null) {
+//                        state = DrivingState.Stopped;
+//                        handler.removeCallbacks(realTime);
+//                        handler.removeCallbacks(drivenTime);
+//                        drivingButton.setText(R.string.start_of_drive);
+//                        for (Freight freight : freights) {
+//                            Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
+//                            new AsyncSendTime().execute(data);
+//                        }
+//                    }
+//>>>>>>> master
                 }
             }
         });
@@ -118,6 +147,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (state == DrivingState.Stopped) {
                     pauseButton.setChecked(false);
+
                 } else {
                     if (isChecked) {
                         Object[] data = {drivenTime.getDate(), state};
@@ -129,12 +159,42 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         new AsyncSendTime().execute(data);
                         handler.postDelayed(drivenTime, 1000);
                         state = DrivingState.Driving;
+//=======
+//                }else {
+//                    if (isChecked) {
+//                        if (freights != null) {
+//                            for (Freight freight : freights) {
+//                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
+//                                new AsyncSendTime().execute(data);
+//                            }
+//                            handler.removeCallbacks(drivenTime);
+//                            drivenTime = new TimerClock(handler, listener);
+//                            handler.postDelayed(drivenTime, 1000);
+//                            state = DrivingState.Paused;
+//                        } } else {
+//                        if (freights!= null) {
+//                            for (Freight freight : freights) {
+//                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
+//                                new AsyncSendTime().execute(data);
+//                            }
+//                            handler.removeCallbacks(drivenTime);
+//                            drivenTime = new TimerClock(handler, listener);
+//                            handler.postDelayed(drivenTime, 1000);
+//                            state = DrivingState.Driving;
+//                        }
+//>>>>>>> master
 
                     }
                 }
             }
         });
 
+//<<<<<<< HEAD
+//=======
+//        new AsyncGetDrivenTimes(driver,this).execute();
+//        adapter.addDate(Calendar.getInstance().getTime());
+//        adapter.addDate(Calendar.getInstance().getTime());
+//>>>>>>> master
 
         BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
         navigation.setSelectedItemId(R.id.navbar_drive);
@@ -143,7 +203,12 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
 
     }
 
+//<<<<<<< HEAD
     public void onTimeChange(String string) {
+//=======
+//
+//    public void onTimeChange(String string){
+//>>>>>>> master
         view.setText(string);
         this.text = string;
     }
@@ -166,5 +231,17 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onTimesReady(ArrayList<Date> dates) {
+        for (Date date:dates){
+            adapter.addDate(date);
+        }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

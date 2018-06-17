@@ -49,7 +49,12 @@ public class AsyncGetStatusDetail extends AsyncTask {
             if (statusCode == 200) {
                 Log.d(TAG, "doInBackground: ");
 
-                JSONObject jsonObject = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream())).getJSONObject("message");
+
+                JSONObject reply = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream()));
+                JSONObject jsonObject = reply.getJSONObject("message");
+
+
+
                 MRNFormulier mrnFormulier = new MRNFormulier();
                 mrnFormulier.setMrn(mrn);
                 mrnFormulier.setAantalArtikelen(jsonObject.getInt("articleAmount"));
