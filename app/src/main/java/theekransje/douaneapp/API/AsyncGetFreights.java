@@ -62,6 +62,7 @@ public class AsyncGetFreights extends AsyncTask {
 
                 for (int i = 0; i < jsonArray.length(); i++){
                     JSONObject j = jsonArray.getJSONObject(i);
+
                     mrns.add(j.getString("mrn"));
                 }
 
