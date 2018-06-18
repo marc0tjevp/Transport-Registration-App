@@ -11,7 +11,7 @@ import theekransje.douaneapp.Controllers.DrivingState;
 
 public class AsyncSendTime extends AsyncTask {
     private static final String TAG = "AsyncSendTime";
-    private final String endPoint = "/senddrive";
+    private final String endPoint = "drivetimes/senddrive";
     private ApiHelper helper;
 
     public AsyncSendTime(){
