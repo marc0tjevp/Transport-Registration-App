@@ -98,14 +98,19 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             @Override
             public void run() {
                 try {
+                    Thread.sleep(1000);
                     boolean allready = false;
 
                     while (!allready) {
+                        allready = true;
+                        if (adapter.getmData().size() == 0){
+                            break;
+                        }
 
                         Log.d(TAG, "run: Status Update thread running");
                         for (Freight f : adapter.getmData()
                                 ) {
-                            allready = true;
+
                             if (!f.getDouaneStatus().equals(DouaneStatus.VERTREK_OK)) {
                                 Log.d(TAG, "run: status doesnt eq. VERTREK_OK updating form " + f.getMRNFormulier().getMrn());
                                 updateStatus(f.getMRNFormulier().getMrn());
@@ -120,6 +125,8 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                             Log.d(TAG, "run: " + f.isPdfAvail() + f.getDouaneStatus());
                             Log.d(TAG, "run: size" + adapter.getmData().size());
                             Log.d(TAG, "run: " + adapter.getmData().toString());
+
+                        }
                             if (allready) {
                                 Log.d(TAG, "run: Thread shutdown as planned");
                                 navigation.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) c);
@@ -131,9 +138,11 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                                 });
 
                                 break;
-                            }
+
 
                         }
+
+
                         Log.d(TAG, "run: sleeping for 5s");
                         Thread.sleep(1000);
                     }
@@ -184,6 +193,10 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     @Override
     protected void onResume() {
         super.onResume();
+        if (t.isInterrupted()){
+            t.start();
+        }
+
 
     }
 

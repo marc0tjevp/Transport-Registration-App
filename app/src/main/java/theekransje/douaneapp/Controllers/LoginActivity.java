@@ -37,6 +37,7 @@ import theekransje.douaneapp.R;
 public class LoginActivity extends AppCompatActivity implements OnLoginResult {
     private static final String TAG = "LoginActivity";
     public static boolean serviceIsRunning = false;
+    private Context c;
 
     int hash;
 
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         final TextView passWd = (TextView) findViewById(R.id.login_passwd);
         final TextView IMEIView = (TextView) findViewById(R.id.login_imei);
 
-
+        c = this;
 
 
 
@@ -63,7 +64,6 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
         } else {
             try {
                 String IMEI = ((TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-
                 this.hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
 
                 if (hash < 0) {
@@ -77,16 +77,48 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
                 Log.d(TAG, "onCreate: MISSING PERMISSIONS FOR SECURITY CHECK");
             }
         }
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 103);
         //asks for location permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 2873);
-            return;
+
+        }
+
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (c.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted2");
+
+            } else {
+                Log.v(TAG, "Permission is revoked2");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+            }
         }
 
 
         ((Button) findViewById(R.id.login_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try{
+                    Log.d(TAG, "onClick: called");
+
+
+                String IMEI = ((TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+                hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
+
+                if (hash < 0) {
+                    hash = hash * (-1);
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        IMEIView.setText("Unique ID: " + hash);
+                    }
+                });
+
                 if (!passWd.getText().equals("")
                         &&
                         !userName.getText().equals("")
@@ -104,7 +136,15 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
 
                 }
                 ;
-
+            }catch(SecurityException e){
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(c, "Onvoldoende rechten", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            }
             }
         });
 
