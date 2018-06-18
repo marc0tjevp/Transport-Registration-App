@@ -19,10 +19,15 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import theekransje.douaneapp.API.AsyncGetPDF;
 import theekransje.douaneapp.API.AsyncGetStatusDetail;
+import theekransje.douaneapp.API.LocationAPI;
 import theekransje.douaneapp.Domain.DouaneStatus;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
@@ -89,8 +94,41 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), FreightActivity.class);
-                v.getContext().startActivity(intent);
+
+                Object response = null;
+                try {
+                    response = new LocationAPI().execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if (response != null) {
+                    JSONObject jsonObject;
+                    try {
+                        // Top level json object
+                        jsonObject = new JSONObject((String) response);
+
+
+                        String country = jsonObject.getString("country");
+
+                        Log.i(TAG, "Country = " + country);
+                        if (country != null && country.equals("Netherlands")) {
+                            Intent intent = new Intent(v.getContext(), FreightActivity.class);
+                            v.getContext().startActivity(intent);
+                        } else {
+                            String message = getResources().getString(R.string.country_not_netherlands);
+
+                            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    } catch (JSONException ex) {
+                        Log.e(TAG, "onPostExecute JSONException " + ex.getLocalizedMessage());
+                    }
+
+
+                }
+
             }
         });
 
