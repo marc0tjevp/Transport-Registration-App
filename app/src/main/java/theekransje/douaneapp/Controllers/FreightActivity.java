@@ -143,7 +143,6 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
                 findViewById(R.id.search);
         editSearch.setOnQueryTextListener(this);
 
-        onQueryTextChange("");
         list.setVisibility(View.GONE);
 
 
@@ -152,14 +151,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
                 AsyncGetFreights(this, driver).
 
                 execute();
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(c, "Kan niet terug tijdens het rijden.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        
         navigation.setVisibility(View.INVISIBLE);
     }
 
@@ -264,16 +256,19 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        Log.d(TAG, "onQueryTextSubmit: " + query);
 
+        adapter.filter(query);
+        adapter.notifyDataSetChanged();
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-
+        Log.d(TAG, "onQueryTextChange: " + newText);
 
         String text = newText;
-        adapter.filter(text);
+        freightAdapter.Search(newText);
         return false;
     }
 
