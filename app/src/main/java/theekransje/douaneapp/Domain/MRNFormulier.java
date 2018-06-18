@@ -20,6 +20,8 @@ public class MRNFormulier implements Serializable {
         public double TotaalBedrag;
         public String Currency;
         public double TotaalGewicht;
+        private String ontvangstAdres;
+        private String verzenderAdres;
 
 
         public static String getTAG() {
@@ -104,5 +106,21 @@ public class MRNFormulier implements Serializable {
 
         public void setTotaalGewicht(double totaalGewicht) {
                 TotaalGewicht = totaalGewicht;
+        }
+
+        public String getOntvangstAdres() {
+                return ontvangstAdres;
+        }
+
+        public void setOntvangstAdres(String ontvangstAdres) {
+                this.ontvangstAdres = ontvangstAdres;
+        }
+
+        public String getVerzenderAdres() {
+                return verzenderAdres;
+        }
+
+        public void setVerzenderAdres(String verzenderAdres) {
+                this.verzenderAdres = verzenderAdres;
         }
 }

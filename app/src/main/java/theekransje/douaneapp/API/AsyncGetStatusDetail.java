@@ -66,6 +66,8 @@ public class AsyncGetStatusDetail extends AsyncTask {
                 mrnFormulier.setOpdrachtgever(jsonObject.getString("client"));
                 mrnFormulier.setReference(jsonObject.getString("reference"));
                 mrnFormulier.DateTime = jsonObject.getString("dateTime");
+                mrnFormulier.setVerzenderAdres(jsonObject.getString("addressOrigin"));
+                mrnFormulier.setOntvangstAdres(jsonObject.getString("addressDestination"));
 
 
                 Freight freight = new Freight();
