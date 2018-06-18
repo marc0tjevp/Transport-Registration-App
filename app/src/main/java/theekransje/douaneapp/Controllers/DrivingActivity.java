@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,7 +39,7 @@ import theekransje.douaneapp.R;
 
 
 
-public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimeChange, OnTimesReady{
+public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "DrivingActivity";
 
@@ -46,160 +47,143 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
     private Driver driver;
     private DrivingAdapter adapter;
     private Context c;
-    private DrivingState state;
-    private TextView view;
+    private TextView timeTextView;
     private Button drivingButton;
-    private ToggleButton pauseButton;
-    private TimerClock drivenTime;
-    private TimerClock pauseTime;
-    private TimerClock realTime;
-    private String text = "00:00:00";
-    private Handler handler;
-    private OnTimeChange listener = this;
-
-    private LocationService locationService = new LocationService();
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            LocationService.LocationTrackingBinder binder = (LocationService.LocationTrackingBinder) service;
-            locationService = binder.getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-        }
-    };
+    private Button pauseButton;
+    private long startTime;
+    private long endTime;
+    private long realStartTime;
+    private Thread t;
+    private Thread t2;
+    private boolean isPauze = false;
+    private boolean isDriving = false;
+    private BottomNavigationView navigation;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving);
         //variable definition
-        this.handler = new Handler();
-        this.state = DrivingState.Stopped;
         this.c = this;
         this.driver = (Driver) getIntent().getSerializableExtra("DRIVER");
         this.freights = (ArrayList<Freight>) getIntent().getSerializableExtra("FREIGHTS");
-        this.drivingButton = findViewById(R.id.driving_end_button);
-        this.pauseButton = findViewById(R.id.driving_break_button);
-        this.view = findViewById(R.id.driving_time_view);
-        ListView view1 = findViewById(R.id.time_seen);
-        adapter = new DrivingAdapter(new ArrayList<Date>(),getLayoutInflater());
-        view1.setAdapter(adapter);
-
-        view.setText(text);
-        if (freights.size() > 0) {
-            Intent intent = new Intent(this, LocationService.class);
-            intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
-            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        }
-        //Setting onClickListener for Starting/Stopping the drive
-        drivingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //schedules the Timer's tasks
-                if (drivingButton.getText().equals(getString(R.string.start_of_drive))) {
-                    drivenTime = new TimerClock(handler, listener);
-                    realTime = new TimerClock(handler);
-                    handler.postDelayed(drivenTime, 1000);
-                    handler.postDelayed(realTime, 1000);
-                    drivingButton.setText(R.string.end_of_drive);
-
-                    state = DrivingState.Driving;
-
-                    if (freights.size() > 0) {
-                        Intent intent = new Intent(DrivingActivity.this, LocationService.class);
-                        intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            startForegroundService(intent);
-                        } else {
-                            startService(intent);
-                        }
-                        locationService.startLocationTracking();
-
-                    }
-                } else if (drivingButton.getText().equals(getString(R.string.end_of_drive))) {
-                    if (freights!= null) {
-                        state = DrivingState.Stopped;
-                        handler.removeCallbacks(realTime);
-                        handler.removeCallbacks(drivenTime);
-                        drivingButton.setText(R.string.start_of_drive);
-                        for (Freight freight : freights) {
-                            Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
-                            new AsyncSendTime().execute(data);
-                        }
-                    }
-                }
-            }
-        });
-        pauseButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (state == DrivingState.Stopped) {
-                    pauseButton.setChecked(false);
-
-                } else {
-                    if (isChecked) {
-
-                        if (freights != null) {
-                            for (Freight freight : freights) {
-                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
-                                new AsyncSendTime().execute(data);
-                            }
-                            handler.removeCallbacks(drivenTime);
-                            pauseTime = new TimerClock(handler);
-                            handler.postDelayed(drivenTime, 1000);
-                            state = DrivingState.Paused;
-                        } } else {
-                        if (freights!= null) {
-                            for (Freight freight : freights) {
-                                Object[] data = {pauseTime.getDate(), state, freight.getMRNFormulier().Mrn};
-                                new AsyncSendTime().execute(data);
-                            }
-                            handler.removeCallbacks(pauseTime);
-                            drivenTime = new TimerClock(drivenTime);
-                            handler.postDelayed(drivenTime, 1000);
-                            state = DrivingState.Driving;
-                        } else {
-                            Object[] data = {drivenTime.getDate(), state};
-                            new AsyncSendTime().execute(data);
-                            handler.postDelayed(drivenTime, 1000);
-                            state = DrivingState.Driving;
-
-                        }
-
-                    }
-                }
-            }
-        });
-
-        new AsyncGetDrivenTimes(driver,this).execute();
-
-        BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
+        navigation = this.findViewById(R.id.driving_navbar);
         navigation.setSelectedItemId(R.id.navbar_drive);
         navigation.setOnNavigationItemSelectedListener(this);
 
+        timeTextView = findViewById(R.id.driving_time_view);
+        timeTextView.setText("00:00:00");
+        drivingButton = findViewById(R.id.driving_end_button);
+        pauseButton = findViewById(R.id.driving_break_button);
 
-    }
-    
-    public void onTimeChange(String string){
+        t = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                timeTextView.setText(System.currentTimeMillis()+"");
+                if (isDriving){
+                    navigation.setVisibility(View.INVISIBLE);
+                    drivingButton.setText(R.string.end_of_drive);
+                    startTime=System.currentTimeMillis();
+                    realStartTime=System.currentTimeMillis();
+                }else {
+                    navigation.setVisibility(View.VISIBLE);
+                    drivingButton.setText(R.string.start_of_drive);
+                    endTime = System.currentTimeMillis();
+                    Log.d(TAG,"Totaal gereden tijd: "+(endTime-startTime));
+                    for (Freight freight : freights) {
+                        Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
+                        new AsyncSendTime().execute(data);
+                    }
+                }
+            }
+        };
 
-        view.setText(string);
-        this.text = string;
-    }
+        t2 = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                if (isPauze){
+                    pauseButton.setText(R.string.drive_resume);
+                    endTime = System.currentTimeMillis();
+                    Log.d(TAG,"Totaal gereden tijd: "+(endTime-startTime));
+                    for (Freight freight : freights) {
+                        Object[] data = {startTime, endTime, "Rijden", freight.getMRNFormulier().getMrn()};
+                        new AsyncSendTime().execute(data);
+                    }
+                    startTime=System.currentTimeMillis();
+                }else {
+                    pauseButton.setText(R.string.drive_break);
+                    endTime = System.currentTimeMillis();
+                    Log.d(TAG,"Totaal gereden tijd: "+(endTime-startTime));
+                    realStartTime=realStartTime+(endTime-startTime);
+                    for (Freight freight : freights) {
+                        Object[] data = {startTime, endTime, "Pauze", freight.getMRNFormulier().getMrn()};
+                        new AsyncSendTime().execute(data);
+                    }
+                    startTime= System.currentTimeMillis();
+                }
+            }
+        };
+        Thread timeUpdateThread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try{
+                while (true) {
+                    while (!isPauze && isDriving) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Date date = new Date(System.currentTimeMillis() - realStartTime);
+                                String[] dateString = date.toString().split(" ");
+                                timeTextView.setText("" + dateString[3]);
+                            }
+                        });
 
-    @Override
-    public void toast() {
-        Toast.makeText(this, R.string.offer_break, Toast.LENGTH_LONG).show();
+
+                        Thread.sleep(100);
+                    }
+
+
+                    Thread.sleep(100);
+                }
+
+                }catch (Exception e){
+
+                }}
+        };
+
+        drivingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isDriving = !isDriving;
+                runOnUiThread(t);
+            }
+        });
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPauze = !isPauze;
+                runOnUiThread(t2);
+            }
+        });
+
+      timeUpdateThread.start();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navbar_status:
-                Navbar.goToStatus(c, driver, freights);
+                if (!isDriving) {
+                    Navbar.goToStatus(c, driver, freights);
 
-                return true;
+                    return true;
+                } else {
+                    return false;
+                }
             case R.id.navbar_drive:
                 Navbar.goToDrive(c, driver, freights);
 
@@ -209,14 +193,16 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
     }
 
     @Override
-    public void onTimesReady(ArrayList<Date> dates) {
-        for (Date date:dates){
-            adapter.addDate(date);
+    public void onBackPressed() {
+        if (isDriving) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(c, "Kan niet terug tijdens het rijden.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            super.onBackPressed();
         }
-    }
-
-    @Override
-    public Context getContext() {
-        return this;
     }
 }

@@ -19,6 +19,7 @@
     <string name="start_of_drive">Start rit</string>
     <string name="end_of_drive">Einde rit</string>
     <string name="drive_break">Pauze</string>
+    <string name="drive_resume">Hervat</string>
     <string name="offer_break">U heeft meer dan 4 uur en 15 minuten aaneengesloten gereden. Een pauze is aan te raden.</string>
 
     <string name="text_navbar_status">Vracht</string>
