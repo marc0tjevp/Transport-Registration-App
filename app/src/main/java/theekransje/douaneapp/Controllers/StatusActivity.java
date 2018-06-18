@@ -40,6 +40,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     private ArrayList<String> selectedMRN;
     private StatusAdapter adapter;
     private Thread t;
+    private BottomNavigationView navigation;
 
     private static final String TAG = "StatusActivity";
 
@@ -54,9 +55,10 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         this.selectedMRN = (ArrayList<String>) getIntent().getSerializableExtra("MRN");
 
 
-        BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
+        navigation = this.findViewById(R.id.status_navbar);
         navigation.setSelectedItemId(R.id.navbar_status);
-        navigation.setOnNavigationItemSelectedListener(this);
+        navigation.setVisibility(View.GONE);
+
 
         if (this.freights == null || this.freights.size() == 0) {
             this.freights = new ArrayList<>();
@@ -120,12 +122,20 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                             Log.d(TAG, "run: " + adapter.getmData().toString());
                             if (allready) {
                                 Log.d(TAG, "run: Thread shutdown as planned");
+                                navigation.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) c);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        navigation.setVisibility(View.VISIBLE);
+                                    }
+                                });
+
                                 break;
                             }
 
                         }
                         Log.d(TAG, "run: sleeping for 5s");
-                        Thread.sleep(5000);
+                        Thread.sleep(1000);
                     }
 
 
