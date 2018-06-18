@@ -25,6 +25,14 @@ public class TimerClock implements Runnable{
         this();
         this.delayHandler = delayHandler;
     }
+    public TimerClock(TimerClock clock){
+        this.hours = clock.hours;
+        this.minutes = clock.minutes;
+        this.seconds = clock.seconds;
+        this.delayHandler = clock.delayHandler;
+        this.listener = clock.listener;
+        startDate = Calendar.getInstance().getTime();
+    }
 
     public TimerClock(Handler delayHandler,OnTimeChange listener){
         this(delayHandler);
