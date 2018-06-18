@@ -34,7 +34,6 @@ public class AsyncGetDrivenTimes extends AsyncTask{
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            helper.token = driver.getToken();
             HttpURLConnection conn = helper.getConnection();
             DBHelper dbHelper = new DBHelper(listener.getContext());
             dbHelper.insertTask(task);
