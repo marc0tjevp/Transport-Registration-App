@@ -43,6 +43,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
     private Button drivingButton;
     private ToggleButton pauseButton;
     private TimerClock drivenTime;
+    private TimerClock pauseTime;
     private TimerClock realTime;
     private String text = "00:00:00";
     private Handler handler;
@@ -104,17 +105,17 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                                 new AsyncSendTime().execute(data);
                             }
                             handler.removeCallbacks(drivenTime);
-                            drivenTime = new TimerClock(handler, listener);
+                            pauseTime = new TimerClock(handler);
                             handler.postDelayed(drivenTime, 1000);
                             state = DrivingState.Paused;
                         } } else {
                         if (freights!= null) {
                             for (Freight freight : freights) {
-                                Object[] data = {drivenTime.getDate(), state, freight.getMRNFormulier().Mrn};
+                                Object[] data = {pauseTime.getDate(), state, freight.getMRNFormulier().Mrn};
                                 new AsyncSendTime().execute(data);
                             }
-                            handler.removeCallbacks(drivenTime);
-                            drivenTime = new TimerClock(handler, listener);
+                            handler.removeCallbacks(pauseTime);
+                            drivenTime = new TimerClock(drivenTime);
                             handler.postDelayed(drivenTime, 1000);
                             state = DrivingState.Driving;
                         }
@@ -125,8 +126,6 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         });
 
         new AsyncGetDrivenTimes(driver,this).execute();
-        adapter.addDate(Calendar.getInstance().getTime());
-        adapter.addDate(Calendar.getInstance().getTime());
 
         BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
         navigation.setSelectedItemId(R.id.navbar_drive);
