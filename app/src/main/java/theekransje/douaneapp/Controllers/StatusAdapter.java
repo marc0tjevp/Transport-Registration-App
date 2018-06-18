@@ -83,10 +83,16 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
     public void addFreight(Freight f) {
         for (Freight ff : mData) {
             if (ff.getMRNFormulier().getMrn().equals(f.getMRNFormulier().getMrn())) {
+
+                if (ff.getDouaneStatus().equals(f.getDouaneStatus())){
+                    return;
+                }
                 mData.remove(ff);
                 break;
             }
         }
+
+
         this.mData.add(f);
         this.notifyDataSetChanged();
     }

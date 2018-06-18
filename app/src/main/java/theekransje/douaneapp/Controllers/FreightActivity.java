@@ -152,6 +152,15 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
                 AsyncGetFreights(this, driver).
 
                 execute();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(c, "Kan niet terug tijdens het rijden.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        navigation.setVisibility(View.INVISIBLE);
     }
 
     public void scan(View view) {
