@@ -31,6 +31,8 @@
 
     <string name="status_detail_datetime">Datum:</string>
     <string name="status_detail_sender">Afzender: </string>
+    <string name="status_detail_recipient_adress">Adres ontvanger: </string>
+    <string name="status_detail_sender_adress">Adres verzender: </string>
     <string name="status_detail_recipient">Ontvanger: </string>
     <string name="status_detail_reference">Referentie:"</string>
     <string name="status_detail_client">Opdrachtgever: </string>
