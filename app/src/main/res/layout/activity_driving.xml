@@ -44,14 +44,12 @@
                 android:layout_weight="1"
                 android:text="@string/start_of_drive" />
 
-            <ToggleButton
+            <Button
                 android:id="@+id/driving_break_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/drive_break"
-                android:textOff="@string/drive_break"
-                android:textOn="@string/drive_break"
                 tools:text="@string/drive_break" />
         </LinearLayout>
 

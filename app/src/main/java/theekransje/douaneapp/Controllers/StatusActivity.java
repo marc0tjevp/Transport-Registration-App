@@ -114,7 +114,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                     }
                     
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         };
