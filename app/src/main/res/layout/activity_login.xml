@@ -36,9 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="gebruiker"
-            android:textAlignment="center" />
             android:hint="@string/gebruiker"
             android:inputType="textPersonName" />
 
@@ -47,9 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword"
-            android:text="wachtwoord"
-            android:textAlignment="center" />
             android:hint="@string/wachtwoord"
             android:inputType="textPassword" />
 

@@ -2,6 +2,7 @@ package theekransje.douaneapp.Controllers;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -87,17 +89,21 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     startTime=System.currentTimeMillis();
                     realStartTime=System.currentTimeMillis();
                 }else {
-                    navigation.setVisibility(View.VISIBLE);
-                    drivingButton.setText(R.string.start_of_drive);
-                    endTime = System.currentTimeMillis();
-                    Log.d(TAG,"Totaal gereden tijd: "+(endTime-startTime));
-                    for (Freight freight : freights) {
-                        Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
-                        new AsyncSendTime().execute(data);
-                    }
+
+                            navigation.setVisibility(View.VISIBLE);
+                            drivingButton.setText(R.string.start_of_drive);
+                            endTime = System.currentTimeMillis();
+                            Log.d(TAG,"Totaal gereden tijd: "+(endTime-startTime));
+                            for (Freight freight : freights) {
+                                Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
+                                new AsyncSendTime().execute(data);
+                                timeTextView.setText("00:00:00");
+                            }
+                        }
+
                 }
-            }
-        };
+            };
+
 
         t2 = new Thread(){
             @Override
@@ -155,12 +161,26 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         };
 
         drivingButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                isDriving = !isDriving;
-                runOnUiThread(t);
-            }
-        });
+
+                if (isDriving){
+                    new AlertDialog.Builder(c)
+                        .setTitle("Weet je zeker dat je klaar bent met rijden?")
+                        .setMessage("Weet je zeker dat je klaar bent met rijden?")
+                            .setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    isDriving = !isDriving;
+                                    runOnUiThread(t);
+                                    }
+                                    }).setNegativeButton(android.R.string.no,null).show();
+                    }else {
+                    isDriving = !isDriving;
+                    runOnUiThread(t);
+                }
+            }});
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,22 +195,20 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (!isDriving) {
         switch (item.getItemId()) {
             case R.id.navbar_status:
-                if (!isDriving) {
+
                     Navbar.goToStatus(c, driver, freights);
 
                     return true;
-                } else {
-                    return false;
-                }
+
             case R.id.navbar_drive:
                 Navbar.goToDrive(c, driver, freights);
 
                 return true;
         }
-        return false;
-    }
+    }  return false;}
 
     @Override
     public void onBackPressed() {

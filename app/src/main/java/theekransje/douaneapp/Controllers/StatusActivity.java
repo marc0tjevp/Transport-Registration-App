@@ -62,7 +62,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
 
         navigation = this.findViewById(R.id.status_navbar);
         navigation.setSelectedItemId(R.id.navbar_status);
-        navigation.setVisibility(View.GONE);
+        navigation.setVisibility(View.VISIBLE);
 
 
         if (this.freights == null || this.freights.size() == 0) {
@@ -222,7 +222,8 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                 return true;
 
             case R.id.navbar_drive:
-                return Navbar.goToDrive(c, driver, freights);
+                Navbar.goToDrive(c, driver, freights);
+                return true;
         }
         return false;
     }
