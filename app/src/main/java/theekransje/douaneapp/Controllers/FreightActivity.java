@@ -69,6 +69,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         }
 
 
+
         BottomNavigationView navigation = this.findViewById(R.id.freight_navbar);
         navigation.setOnNavigationItemSelectedListener(this);
 
@@ -142,15 +143,12 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
                 findViewById(R.id.search);
         editSearch.setOnQueryTextListener(this);
 
-        onQueryTextChange("");
         list.setVisibility(View.GONE);
 
 
-        new
+        new AsyncGetFreights(this, driver).execute();
+        
 
-                AsyncGetFreights(this, driver).
-
-                execute();
     }
 
     public void scan(View view) {
@@ -254,22 +252,35 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        Log.d(TAG, "onQueryTextSubmit: " + query);
 
+        adapter.filter(query);
+        adapter.notifyDataSetChanged();
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-
+        Log.d(TAG, "onQueryTextChange: " + newText);
 
         String text = newText;
-        adapter.filter(text);
+        freightAdapter.Search(newText);
         return false;
     }
 
     @Override
     public void OnFreightListAvail(ArrayList<String> freights) {
         this.allFreightMrn = freights;
+
+        if (freights.size() == 0){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(c, "Geen vrachten gevonden.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
         freightAdapter = new FreightAdapter(freights, this.getLayoutInflater(), selected);
 
         runOnUiThread(new Runnable() {

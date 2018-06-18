@@ -71,7 +71,8 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
         ((TextView)(findViewById(R.id.status_detail_total_weight))).setText(""+f.getMRNFormulier().TotaalGewicht + "");
         ((TextView)(findViewById(R.id.status_detail_status))).setText(      "Status:  " +f.getDouaneStatus().toString());
         ((TextView)(findViewById(R.id.status_detail_value))).setText(""+f.getMRNFormulier().TotaalBedrag + "" + f.getMRNFormulier().Currency);
-
+        ((TextView) (findViewById(R.id.status_detail_recipient_adress))).setText(f.getMRNFormulier().getOntvangstAdres());
+        ((TextView) (findViewById(R.id.status_detail_sender_adress))).setText(f.getMRNFormulier().getVerzenderAdres());
 
 
 

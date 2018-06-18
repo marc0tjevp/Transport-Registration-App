@@ -77,6 +77,8 @@ public class AsyncGetPDF extends AsyncTask {
             }
         }
 
+
+
         try {
 
             ApiHelper apiHelper = new ApiHelper(endPoint + mrn, APIMethodes.GET);

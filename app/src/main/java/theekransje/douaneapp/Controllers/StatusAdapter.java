@@ -83,10 +83,16 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
     public void addFreight(Freight f) {
         for (Freight ff : mData) {
             if (ff.getMRNFormulier().getMrn().equals(f.getMRNFormulier().getMrn())) {
+
+                if (ff.getDouaneStatus().equals(f.getDouaneStatus())){
+                    return;
+                }
                 mData.remove(ff);
                 break;
             }
         }
+
+
         this.mData.add(f);
         this.notifyDataSetChanged();
     }
@@ -128,6 +134,21 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             holder.pdf.setVisibility(View.INVISIBLE);
         } else {
             holder.thumb.setVisibility(View.INVISIBLE);
+            holder.pdf.setVisibility(View.INVISIBLE);
+        }
+
+        if (
+                mData.get(position).getDouaneStatus().equals(DouaneStatus.ERROR)
+                ||
+                mData.get(position).getDouaneStatus().equals(DouaneStatus.GEANNULEERD)
+                ||
+                mData.get(position).getDouaneStatus().equals(DouaneStatus.GEEN_VRIJGAVE)
+                ||
+                mData.get(position).getDouaneStatus().equals(DouaneStatus.CONTROLE)
+
+                ){
+            holder.thumb.setImageDrawable(mContext.getDrawable(R.drawable.ic_error_outline_black_24dp));
+            holder.thumb.setVisibility(View.VISIBLE);
             holder.pdf.setVisibility(View.INVISIBLE);
         }
     }

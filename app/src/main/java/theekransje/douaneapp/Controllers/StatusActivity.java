@@ -19,10 +19,15 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import theekransje.douaneapp.API.AsyncGetPDF;
 import theekransje.douaneapp.API.AsyncGetStatusDetail;
+import theekransje.douaneapp.API.LocationAPI;
 import theekransje.douaneapp.Domain.DouaneStatus;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
@@ -40,6 +45,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     private ArrayList<String> selectedMRN;
     private StatusAdapter adapter;
     private Thread t;
+    private BottomNavigationView navigation;
 
     private static final String TAG = "StatusActivity";
 
@@ -54,9 +60,10 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         this.selectedMRN = (ArrayList<String>) getIntent().getSerializableExtra("MRN");
 
 
-        BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
+        navigation = this.findViewById(R.id.status_navbar);
         navigation.setSelectedItemId(R.id.navbar_status);
-        navigation.setOnNavigationItemSelectedListener(this);
+        navigation.setVisibility(View.VISIBLE);
+
 
         if (this.freights == null || this.freights.size() == 0) {
             this.freights = new ArrayList<>();
@@ -87,8 +94,41 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), FreightActivity.class);
-                v.getContext().startActivity(intent);
+
+                Object response = null;
+                try {
+                    response = new LocationAPI().execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if (response != null) {
+                    JSONObject jsonObject;
+                    try {
+                        // Top level json object
+                        jsonObject = new JSONObject((String) response);
+
+
+                        String country = jsonObject.getString("country");
+
+                        Log.i(TAG, "Country = " + country);
+                        if (country != null && country.equals("Netherlands")) {
+                            Intent intent = new Intent(v.getContext(), FreightActivity.class);
+                            v.getContext().startActivity(intent);
+                        } else {
+                            String message = getResources().getString(R.string.country_not_netherlands);
+
+                            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    } catch (JSONException ex) {
+                        Log.e(TAG, "onPostExecute JSONException " + ex.getLocalizedMessage());
+                    }
+
+
+                }
+
             }
         });
 
@@ -96,14 +136,19 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             @Override
             public void run() {
                 try {
+                    Thread.sleep(1000);
                     boolean allready = false;
 
                     while (!allready) {
+                        allready = true;
+                        if (adapter.getmData().size() == 0){
+                            break;
+                        }
 
                         Log.d(TAG, "run: Status Update thread running");
                         for (Freight f : adapter.getmData()
                                 ) {
-                            allready = true;
+
                             if (!f.getDouaneStatus().equals(DouaneStatus.VERTREK_OK)) {
                                 Log.d(TAG, "run: status doesnt eq. VERTREK_OK updating form " + f.getMRNFormulier().getMrn());
                                 updateStatus(f.getMRNFormulier().getMrn());
@@ -118,19 +163,31 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                             Log.d(TAG, "run: " + f.isPdfAvail() + f.getDouaneStatus());
                             Log.d(TAG, "run: size" + adapter.getmData().size());
                             Log.d(TAG, "run: " + adapter.getmData().toString());
-                            if (allready) {
-                                Log.d(TAG, "run: Thread shutdown as planned");
-                                break;
-                            }
 
                         }
+                            if (allready) {
+                                Log.d(TAG, "run: Thread shutdown as planned");
+                                navigation.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) c);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        navigation.setVisibility(View.VISIBLE);
+                                    }
+                                });
+
+                                break;
+
+
+                        }
+
+
                         Log.d(TAG, "run: sleeping for 5s");
-                        Thread.sleep(5000);
+                        Thread.sleep(1000);
                     }
 
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         };
@@ -165,7 +222,8 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                 return true;
 
             case R.id.navbar_drive:
-                return Navbar.goToDrive(c, driver, freights);
+                Navbar.goToDrive(c, driver, freights);
+                return true;
         }
         return false;
     }
@@ -174,6 +232,10 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     @Override
     protected void onResume() {
         super.onResume();
+        if (t.isInterrupted()){
+            t.start();
+        }
+
 
     }
 
