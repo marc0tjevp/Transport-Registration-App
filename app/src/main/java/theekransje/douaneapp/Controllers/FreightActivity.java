@@ -69,6 +69,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         }
 
 
+
         BottomNavigationView navigation = this.findViewById(R.id.freight_navbar);
         navigation.setOnNavigationItemSelectedListener(this);
 
@@ -151,6 +152,15 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
                 AsyncGetFreights(this, driver).
 
                 execute();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(c, "Kan niet terug tijdens het rijden.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        navigation.setVisibility(View.INVISIBLE);
     }
 
     public void scan(View view) {
@@ -270,6 +280,16 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
     @Override
     public void OnFreightListAvail(ArrayList<String> freights) {
         this.allFreightMrn = freights;
+
+        if (freights.size() == 0){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(c, "Geen vrachten gevonden.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
         freightAdapter = new FreightAdapter(freights, this.getLayoutInflater(), selected);
 
         runOnUiThread(new Runnable() {
