@@ -90,44 +90,45 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     realStartTime=System.currentTimeMillis();
                 }else {
 
-                            navigation.setVisibility(View.VISIBLE);
-                            drivingButton.setText(R.string.start_of_drive);
-                            endTime = System.currentTimeMillis();
-                            Log.d(TAG,"Totaal gereden tijd: "+(endTime-startTime));
-                            for (Freight freight : freights) {
-                                Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
-                                new AsyncSendTime().execute(data);
-                                timeTextView.setText("00:00:00");
-                            }
+                        navigation.setVisibility(View.VISIBLE);
+                        drivingButton.setText(R.string.start_of_drive);
+                        endTime = System.currentTimeMillis();
+                        Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
+                        for (Freight freight : freights) {
+                            Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
+                            new AsyncSendTime().execute(data);
+                            timeTextView.setText("00:00:00");
                         }
-
+                        Navbar.goToStatus(c,driver,new ArrayList<Freight>());
+                }
                 }
             };
 
 
-        t2 = new Thread(){
+        t2 = new Thread() {
             @Override
             public void run() {
                 super.run();
-                if (isPauze){
+                if (isPauze) {
                     pauseButton.setText(R.string.drive_resume);
                     endTime = System.currentTimeMillis();
-                    Log.d(TAG,"Totaal gereden tijd: "+(endTime-startTime));
+                    Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
                     for (Freight freight : freights) {
                         Object[] data = {startTime, endTime, "Rijden", freight.getMRNFormulier().getMrn()};
                         new AsyncSendTime().execute(data);
                     }
-                    startTime=System.currentTimeMillis();
-                }else {
-                    pauseButton.setText(R.string.drive_break);
-                    endTime = System.currentTimeMillis();
-                    Log.d(TAG,"Totaal gereden tijd: "+(endTime-startTime));
-                    realStartTime=realStartTime+(endTime-startTime);
-                    for (Freight freight : freights) {
-                        Object[] data = {startTime, endTime, "Pauze", freight.getMRNFormulier().getMrn()};
-                        new AsyncSendTime().execute(data);
-                    }
-                    startTime= System.currentTimeMillis();
+                    startTime = System.currentTimeMillis();
+                } else {
+
+                        pauseButton.setText(R.string.drive_break);
+                        endTime = System.currentTimeMillis();
+                        Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
+                        realStartTime = realStartTime + (endTime - startTime);
+                        for (Freight freight : freights) {
+                            Object[] data = {startTime, endTime, "Pauze", freight.getMRNFormulier().getMrn()};
+                            new AsyncSendTime().execute(data);
+                        }
+                        startTime = System.currentTimeMillis();
                 }
             }
         };
@@ -166,20 +167,26 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
             public void onClick(View v) {
 
                 if (isDriving){
-                    new AlertDialog.Builder(c)
-                        .setTitle("Weet je zeker dat je klaar bent met rijden?")
-                        .setMessage("Weet je zeker dat je klaar bent met rijden?")
-                            .setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    isDriving = !isDriving;
-                                    runOnUiThread(t);
-                                    }
-                                    }).setNegativeButton(android.R.string.no,null).show();
+                    if (isPauze) {
+                        Toast.makeText(c, "Een rit eindigen is niet mogelijk gedurende een pauze", Toast.LENGTH_SHORT).show();
+                    } else {
+                        new AlertDialog.Builder(c)
+                                .setTitle("Weet je zeker dat je klaar bent met rijden?")
+                                .setMessage("Weet je zeker dat je klaar bent met rijden?")
+                                .setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                isDriving = !isDriving;
+                                runOnUiThread(t);
+                            }
+                        }).setNegativeButton(android.R.string.no, null).show();
+                    }
                     }else {
-                    isDriving = !isDriving;
-                    runOnUiThread(t);
-                }
+                    
+                        isDriving = !isDriving;
+                        runOnUiThread(t);
+                    }
+
             }});
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
