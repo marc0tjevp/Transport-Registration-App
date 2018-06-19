@@ -147,8 +147,8 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
 
         new AsyncGetFreights(this, driver).execute();
-        
 
+        navigation.setVisibility(View.INVISIBLE);
     }
 
     public void scan(View view) {
