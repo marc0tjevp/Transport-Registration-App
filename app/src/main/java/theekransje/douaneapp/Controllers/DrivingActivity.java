@@ -1,40 +1,30 @@
 package theekransje.douaneapp.Controllers;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Build;
-import android.os.Handler;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import java.text.DateFormat;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
+import theekransje.douaneapp.API.APIMethodes;
 import theekransje.douaneapp.API.AsyncGetDrivenTimes;
-import theekransje.douaneapp.API.AsyncSendTime;
+import theekransje.douaneapp.Domain.APITask;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
-import theekransje.douaneapp.Domain.TimerClock;
-import theekransje.douaneapp.Interfaces.OnTimeChange;
 import theekransje.douaneapp.Interfaces.OnTimesReady;
 import theekransje.douaneapp.Persistence.DBHelper;
 import theekransje.douaneapp.R;
@@ -100,7 +90,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
                         for (Freight freight : freights) {
                             Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
-                            new AsyncSendTime().execute(data);
+                            sendTime(data);
                             timeTextView.setText("00:00:00");
                         }
                         Navbar.goToStatus(c,driver,new ArrayList<Freight>());
@@ -119,7 +109,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
                     for (Freight freight : freights) {
                         Object[] data = {startTime, endTime, "Rijden", freight.getMRNFormulier().getMrn()};
-                        new AsyncSendTime().execute(data);
+                        sendTime(data);
                     }
                     startTime = System.currentTimeMillis();
                 } else {
@@ -130,7 +120,9 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         realStartTime = realStartTime + (endTime - startTime);
                         for (Freight freight : freights) {
                             Object[] data = {startTime, endTime, "Pauze", freight.getMRNFormulier().getMrn()};
-                            new AsyncSendTime().execute(data);
+
+                            sendTime(data);
+                            adapter.addDate(startTime+"\nPauze\n"+endTime);
                         }
                         startTime = System.currentTimeMillis();
                 }
@@ -263,5 +255,19 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
             }
         });
 
+    }
+
+    private void sendTime(Object[] data){
+        try {
+            JSONObject object = new JSONObject();
+            object.put("startTime", data[0]);
+            object.put("endTime", data[1]);
+            object.put("type", data[2]);
+            object.put("mrn", data[3]);
+            APITask task = new APITask(object, APIMethodes.POST, "drivetimes/senddrive");
+            new DBHelper(c).insertTask(task);
+        } catch (Exception e){
+
+        }
     }
 }
