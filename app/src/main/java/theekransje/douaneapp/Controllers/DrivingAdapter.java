@@ -15,14 +15,14 @@ import java.util.Date;
 import theekransje.douaneapp.R;
 
 public class DrivingAdapter extends BaseAdapter {
-    private ArrayList<Date> dates;
+    private ArrayList<String> dates;
     private LayoutInflater inflater;
 
-    public DrivingAdapter(ArrayList<Date> dateList, LayoutInflater layoutInflater){
+    public DrivingAdapter(ArrayList<String> dateList, LayoutInflater layoutInflater){
         dates = dateList;
         inflater = layoutInflater;
     }
-    public void addDate(Date date){
+    public void addDate(String date){
         dates.add(date);
     }
     @Override
@@ -55,8 +55,8 @@ public class DrivingAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Date date = dates.get(position);
-        holder.view.setText(date.toString());
+        String date = dates.get(position);
+        holder.view.setText(date);
         return convertView;
     }
     private static class ViewHolder implements View.OnClickListener {

@@ -41,7 +41,7 @@ import theekransje.douaneapp.R;
 
 
 
-public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class DrivingActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnTimesReady{
 
     private static final String TAG = "DrivingActivity";
 
@@ -60,6 +60,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
     private boolean isPauze = false;
     private boolean isDriving = false;
     private BottomNavigationView navigation;
+    private ArrayList<String> dates;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -72,11 +73,14 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         navigation = this.findViewById(R.id.driving_navbar);
         navigation.setSelectedItemId(R.id.navbar_drive);
         navigation.setOnNavigationItemSelectedListener(this);
-
+        dates = new ArrayList<>();
         timeTextView = findViewById(R.id.driving_time_view);
         timeTextView.setText("00:00:00");
         drivingButton = findViewById(R.id.driving_end_button);
         pauseButton = findViewById(R.id.driving_break_button);
+        adapter = new DrivingAdapter(dates,this.getLayoutInflater());
+        ListView timeView= findViewById(R.id.time_list);
+        timeView.setAdapter(adapter);
 
         t = new Thread(){
             @Override
@@ -196,7 +200,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 runOnUiThread(t2);
             }
         });
-
+        new AsyncGetDrivenTimes(this).execute();
       timeUpdateThread.start();
     }
 
@@ -229,5 +233,25 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void onTimesReady(final ArrayList<String> dates) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for(String date:dates){
+                    Log.d(TAG,date+"");
+                    adapter.addDate(date);
+
+                }adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 }
