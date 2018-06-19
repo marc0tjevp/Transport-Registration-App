@@ -279,4 +279,8 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             }
         }
     }
+    @Override
+    public void onBackPressed() {
+
+    }
 }
