@@ -62,7 +62,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
 
         navigation = this.findViewById(R.id.status_navbar);
         navigation.setSelectedItemId(R.id.navbar_status);
-        navigation.setVisibility(View.VISIBLE);
+        navigation.setVisibility(View.INVISIBLE);
 
 
         if (this.freights == null || this.freights.size() == 0) {
