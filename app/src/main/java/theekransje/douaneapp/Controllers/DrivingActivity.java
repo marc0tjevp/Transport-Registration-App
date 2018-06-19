@@ -92,9 +92,9 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                             Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
                             JSONObject object = new JSONObject();
                             try {
-                                object.put("", "");
+                                object.put("x", "x");
                             } catch (Exception e){
-                                
+
                             }
                             String endpoint = "customs/status/"+freight.getMRNFormulier().getMrn();
                             new DBHelper(c).insertTask(new APITask(object,APIMethodes.PUT,endpoint));
