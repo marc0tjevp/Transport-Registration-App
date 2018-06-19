@@ -192,8 +192,18 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isPauze = !isPauze;
-                runOnUiThread(t2);
+                if(isDriving){
+                    isPauze = !isPauze;
+                    runOnUiThread(t2);
+                }else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(c, "Eerst rijden, dan pauze", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
             }
         });
 
