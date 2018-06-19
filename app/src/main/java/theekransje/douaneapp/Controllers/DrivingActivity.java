@@ -89,7 +89,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         endTime = System.currentTimeMillis();
                         Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
                         for (Freight freight : freights) {
-                            Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
+                            Object[] data = {new Date(startTime).toString(), new Date(endTime).toString(), "Einde rit", freight.getMRNFormulier().getMrn()};
                             JSONObject object = new JSONObject();
                             try {
                                 object.put("x", "x");
@@ -116,7 +116,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     endTime = System.currentTimeMillis();
                     Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
                     for (Freight freight : freights) {
-                        Object[] data = {startTime, endTime, "Rijden", freight.getMRNFormulier().getMrn()};
+                        Object[] data = {new Date(startTime).toString(), new Date(endTime).toString(), "Rijden", freight.getMRNFormulier().getMrn()};
                         sendTime(data);
                         getTimes();
                     }
@@ -128,7 +128,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
                         realStartTime = realStartTime + (endTime - startTime);
                         for (Freight freight : freights) {
-                            Object[] data = {startTime, endTime, "Pauze", freight.getMRNFormulier().getMrn()};
+                            Object[] data = {new Date(startTime).toString(), new Date(endTime).toString(), "Pauze", freight.getMRNFormulier().getMrn()};
 
                             sendTime(data);
                             adapter.addDate(startTime+"\nPauze\n"+endTime);
