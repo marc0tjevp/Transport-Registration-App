@@ -94,7 +94,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                             try {
                                 object.put("x", "x");
                             } catch (Exception e){
-
+                                    e.printStackTrace();
                             }
                             String endpoint = "customs/status/"+freight.getMRNFormulier().getMrn();
                             new DBHelper(c).insertTask(new APITask(object,APIMethodes.PUT,endpoint));
