@@ -64,17 +64,9 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
         } else {
             try {
-                String IMEI = ((TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
-                
 
-                int hash = Settings.Secure.ANDROID_ID.hashCode();
-
-                if (hash < 0) {
-                    hash = hash * (-1);
-                }
-
-                IMEIView.setText("Unique ID: " + hash);
+                IMEIView.setText("Unique ID: " + getHash());
 
             } catch (SecurityException e) {
                 e.printStackTrace();
@@ -109,17 +101,12 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
                     Log.d(TAG, "onClick: called");
 
 
-                String IMEI = ((TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-                hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
 
-                if (hash < 0) {
-                    hash = hash * (-1);
-                }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        IMEIView.setText("Unique ID: " + hash);
+                        IMEIView.setText("Unique ID: " + getHash());
                     }
                 });
 
@@ -197,5 +184,22 @@ public class LoginActivity extends AppCompatActivity implements OnLoginResult {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    private String getHash(){
+        try{
+
+
+        String IMEI = ((TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        hash = IMEI != null? IMEI.hashCode():"dskldasj".hashCode();
+
+        if (hash < 0) {
+            hash = hash * (-1);
+        }
+
+        return "" +hash;}catch (SecurityException e){
+            e.printStackTrace();
+        }
+        return "Permission denied";
     }
 }

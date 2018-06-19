@@ -45,6 +45,7 @@ public class BackgroundDataSenderThread extends Thread {
                     }
 
 
+
                     Log.d(TAG, "BackgroundDataSenderThread: Trying to transmit data");
 
                     for (APITask a : dbHelper.getAllTasks()
