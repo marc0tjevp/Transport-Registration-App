@@ -90,6 +90,9 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         Log.d(TAG, "Totaal gereden tijd: " + (endTime - startTime));
                         for (Freight freight : freights) {
                             Object[] data = {startTime, endTime, "Einde rit", freight.getMRNFormulier().getMrn()};
+                            JSONObject object = new JSONObject();
+                            String endpoint = "customs/status/"+freight.getMRNFormulier().getMrn();
+                            new DBHelper(c).insertTask(new APITask(object,APIMethodes.PUT,endpoint));
                             sendTime(data);
                             timeTextView.setText("00:00:00");
                         }
@@ -110,6 +113,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     for (Freight freight : freights) {
                         Object[] data = {startTime, endTime, "Rijden", freight.getMRNFormulier().getMrn()};
                         sendTime(data);
+                        getTimes();
                     }
                     startTime = System.currentTimeMillis();
                 } else {
@@ -178,9 +182,9 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         }).setNegativeButton(android.R.string.no, null).show();
                     }
                     }else {
-                    
                         isDriving = !isDriving;
                         runOnUiThread(t);
+
                     }
 
             }});
@@ -191,7 +195,9 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                 if(isDriving){
                     isPauze = !isPauze;
                     runOnUiThread(t2);
+                    getTimes();
                 }else {
+                    getTimes();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -202,7 +208,6 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
 
             }
         });
-        new AsyncGetDrivenTimes(this).execute();
       timeUpdateThread.start();
     }
 
@@ -269,5 +274,8 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         } catch (Exception e){
 
         }
+    }
+    public void getTimes(){
+        new AsyncGetDrivenTimes(this).execute();
     }
 }
