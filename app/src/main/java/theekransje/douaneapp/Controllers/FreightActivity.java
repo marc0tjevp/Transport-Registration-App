@@ -104,6 +104,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         onQueryTextChange("");
         list.setVisibility(View.GONE);
 
+        navigation.setVisibility(View.INVISIBLE);
 
 
         new AsyncGetFreights(this,driver).execute();
