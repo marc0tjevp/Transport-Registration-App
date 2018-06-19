@@ -76,7 +76,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
             @Override
             public void run() {
                 super.run();
-                timeTextView.setText(System.currentTimeMillis()+"");
+            //    timeTextView.setText(System.currentTimeMillis()+"");
                 if (isDriving){
                     navigation.setVisibility(View.INVISIBLE);
                     drivingButton.setText(R.string.end_of_drive);
