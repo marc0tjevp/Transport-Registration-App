@@ -1,7 +1,12 @@
 package theekransje.douaneapp.Controllers;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Build;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
@@ -41,6 +46,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
     private Context c;
     private TextView timeTextView;
     private Button drivingButton;
+    private DrivingState state;
     private Button pauseButton;
     private long startTime;
     private long endTime;
@@ -52,10 +58,24 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
     private BottomNavigationView navigation;
     private ArrayList<String> dates;
 
+    private LocationService locationService = new LocationService();
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            LocationService.LocationTrackingBinder binder = (LocationService.LocationTrackingBinder) service;
+            locationService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+        }
+    };
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving);
+
+
         //variable definition
         this.c = this;
         this.driver = (Driver) getIntent().getSerializableExtra("DRIVER");
@@ -72,6 +92,14 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
         ListView timeView= findViewById(R.id.time_list);
         timeView.setAdapter(adapter);
 
+
+        if (freights.size() > 0) {
+            Intent intent = new Intent(this, LocationService.class);
+            intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+
+
         t = new Thread(){
             @Override
             public void run() {
@@ -82,8 +110,26 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                     drivingButton.setText(R.string.end_of_drive);
                     startTime=System.currentTimeMillis();
                     realStartTime=System.currentTimeMillis();
-                }else {
+                    state = DrivingState.Driving;
 
+                    if (freights.size() > 0) {
+                        Intent intent = new Intent(DrivingActivity.this, LocationService.class);
+                        intent.putExtra("mrn", freights.get(0).getMRNFormulier().Mrn);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            startForegroundService(intent);
+                        } else {
+                            startService(intent);
+                        }
+                        locationService.startLocationTracking();
+
+
+                } else if (drivingButton.getText().equals(getString(R.string.end_of_drive))) {
+
+                    locationService.stopLocationTracking();
+                }
+
+                }else {
+                        state = DrivingState.Stopped;
                         navigation.setVisibility(View.VISIBLE);
                         drivingButton.setText(R.string.start_of_drive);
                         endTime = System.currentTimeMillis();

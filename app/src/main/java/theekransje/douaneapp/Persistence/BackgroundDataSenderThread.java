@@ -66,7 +66,7 @@ public class BackgroundDataSenderThread extends Thread {
                             int statusCode = conn.getResponseCode();
                             Log.d(TAG, "backgroundsender: statuscode: " + statusCode);
 
-                            if (statusCode == 200) {
+                            if (statusCode == 200 || statusCode == 405) {
                                 Log.d(TAG, "Succesful. Deleting task: ID:" + a.getId() + " Method:" + a.getApiMethod() + " Endpoint:" + a.getEndpoint() + " Object: " + a.getJSONOBJECT().toString());
                                 dbHelper.removeTask(a);
                             } else {
@@ -80,7 +80,7 @@ public class BackgroundDataSenderThread extends Thread {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                     }
 
 
