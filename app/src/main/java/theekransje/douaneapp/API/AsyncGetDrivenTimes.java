@@ -18,38 +18,36 @@ import theekransje.douaneapp.Persistence.DBHelper;
 
 public class AsyncGetDrivenTimes extends AsyncTask{
     private static final String TAG = "AsyncSendTime";
-    private final String endPoint= "/getdrivebyid";
+    private final String endPoint= "drivetimes/getdrivebyid";
     private ApiHelper helper;
-    private Driver driver;
     private OnTimesReady listener;
-    private final APITask task;
 
-    public AsyncGetDrivenTimes(Driver driver, OnTimesReady listener) {
-        this.driver = driver;
+    public AsyncGetDrivenTimes(OnTimesReady listener) {
         this.listener = listener;
         helper = new ApiHelper(endPoint,APIMethodes.GET);
-        task = new APITask(new JSONObject(),APIMethodes.GET,endPoint);
     }
 
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
             HttpURLConnection conn = helper.getConnection();
-            DBHelper dbHelper = new DBHelper(listener.getContext());
-            dbHelper.insertTask(task);
             int statusCode = conn.getResponseCode();
             Log.d(TAG, "doInBackground: statuscode: " + statusCode);
 
             if (statusCode == 200) {
-                dbHelper.removeTask(task);
-                ArrayList<Date> dates = new ArrayList<>();
-                JSONObject times = new JSONObject(helper.convertIStoString(conn.getInputStream()));
+                ArrayList<String> dates = new ArrayList<>();
+                String outputFromthing=helper.convertIStoString(conn.getInputStream());
+                JSONObject times = new JSONObject(outputFromthing);
+
                 JSONArray array = (JSONArray) times.get("message");
-                for (int i = 0;array.length()<i;i++){
+                Log.d(TAG,array+"");
+                for (int i = 0;i<array.length();i++){
                     JSONObject time = array.getJSONObject(i);
-                    SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
-                    Date date = parser.parse(time.getString("dateTime"));
-                    dates.add(date);
+                    Log.d(TAG,time+"");
+                    Date startTime = new Date(time.getLong("startTime"));
+                    Date endTime = new Date(time.getLong("endTime"));
+                    String type = time.getString("type");
+                    dates.add(startTime+"\n"+type+"\n"+endTime);
                 }
                 listener.onTimesReady(dates);
             }else if (statusCode == 401) {

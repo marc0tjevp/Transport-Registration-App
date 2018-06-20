@@ -145,11 +145,10 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
         list.setVisibility(View.GONE);
 
-        navigation.setVisibility(View.INVISIBLE);
 
         new AsyncGetFreights(this, driver).execute();
-        
 
+        navigation.setVisibility(View.GONE);
     }
 
     public void scan(View view) {
