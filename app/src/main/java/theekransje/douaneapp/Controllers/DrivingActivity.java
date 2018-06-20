@@ -99,6 +99,15 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                                 new AsyncSendTime().execute(data);
                                 timeTextView.setText("00:00:00");
                             }
+                    state = DrivingState.Driving;
+
+                    if (freights.size() > 0) {
+                        Intent intent = new Intent(DrivingActivity.this, LocationService.class);
+                        intent.putExtra("mrn", freights.get(0).getMRNFormulier().getMrn());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            startForegroundService(intent);
+                        } else {
+                            startService(intent);
                         }
 
                 }

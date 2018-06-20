@@ -22,7 +22,7 @@
     <string name="drive_resume">Hervat</string>
     <string name="offer_break">U heeft meer dan 4 uur en 15 minuten aaneengesloten gereden. Een pauze is aan te raden.</string>
 
-    <string name="text_navbar_status">Vracht</string>
+    <string name="text_navbar_status">Vrachten</string>
     <string name="text_navbar_freight">Toevoegen</string>
     <string name="text_navbar_drive">Rijden</string>
     <string name="sender">Verzender:</string>
@@ -47,6 +47,10 @@
     <string name="gebruiker">Gebruikersnaam</string>
     <string name="wachtwoord">Wachtwoord</string>
     <string name="no_freights_selected">Geen vrachten geselecteerd</string>
+    <string name="invalid_credentials">Foute login gegevens</string>
+    <string name="undefined">Onbekende error</string>
+    <string name="status_detail_origin">Vanaf:</string>
+    <string name="status_detail_destination">Bestemmnig:</string>
 
 
 </resources>

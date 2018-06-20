@@ -3,14 +3,10 @@ package theekransje.douaneapp.API;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.Console;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
 
-import theekransje.douaneapp.Domain.DouaneStatus;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Domain.MRNFormulier;
 import theekransje.douaneapp.Interfaces.OnStatusDetailAvail;
@@ -57,18 +53,17 @@ public class AsyncGetStatusDetail extends AsyncTask {
 
                 MRNFormulier mrnFormulier = new MRNFormulier();
                 mrnFormulier.setMrn(mrn);
-                mrnFormulier.setAantalArtikelen(jsonObject.getInt("articleAmount"));
-                mrnFormulier.setAfzender(jsonObject.getString("sender"));
-                mrnFormulier.setOntvanger(jsonObject.getString("receiver"));
+                mrnFormulier.setArticleAmount(jsonObject.getInt("articleAmount"));
+                mrnFormulier.setSender(jsonObject.getString("sender"));
+                mrnFormulier.setReceiver(jsonObject.getString("receiver"));
                 mrnFormulier.setCurrency(jsonObject.getString("currency"));
-                mrnFormulier.setTotaalGewicht(jsonObject.getDouble("totalWeight"));
-                mrnFormulier.setTotaalBedrag(jsonObject.getDouble("totalAmount"));
-                mrnFormulier.setOpdrachtgever(jsonObject.getString("client"));
+                mrnFormulier.setTotalWeight(jsonObject.getDouble("totalWeight"));
+                mrnFormulier.setTotalPRice(jsonObject.getDouble("totalAmount"));
+                mrnFormulier.setClient(jsonObject.getString("client"));
                 mrnFormulier.setReference(jsonObject.getString("reference"));
                 mrnFormulier.DateTime = jsonObject.getString("dateTime");
                 mrnFormulier.setVerzenderAdres(jsonObject.getString("addressOrigin"));
                 mrnFormulier.setOntvangstAdres(jsonObject.getString("addressDestination"));
-
 
                 Freight freight = new Freight();
                 freight.setMRNFormulier(mrnFormulier);

@@ -35,24 +35,21 @@ import static org.hamcrest.Matchers.anything;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class FreightActivityTests {
+public class StatusActivityTests {
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule =
             new ActivityTestRule<>(LoginActivity.class);
-    private LoginActivityTests loginActivityTests = new LoginActivityTests();
+    private FreightActivityTests freightActivityTests = new FreightActivityTests();
 
 
     @Test
-    public void checksIfPressingAddButtonAddsMRN() throws InterruptedException {
-        loginActivityTests.checkIfLoginIsSuccessfulWithValidCredentials();
-        Thread.sleep(250);
-        onView(withId(R.id.status_imageButton)).perform(click());
+    public void checkIfStatusDetailGetsOpened() throws InterruptedException {
+        freightActivityTests.checksIfPressingAddButtonAddsMRN();
         Thread.sleep(250);
         onView(withText("18IT123457384910TF")).perform(click());
         Thread.sleep(250);
-        onView(withId(R.id.buttonSend)).perform(click());
-        Thread.sleep(250);
-        onView(withText(R.string.sending_codes));
+        onView(withText("Totaal gewicht")).perform(click());
     }
 
 }
+
