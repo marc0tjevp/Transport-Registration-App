@@ -79,6 +79,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     APITask a = new APITask(new JSONObject(cursor.getString(cursor.getColumnIndex(APITask.COLUMN_OBJECT))));
                     a.setId(cursor.getString(cursor.getColumnIndex(APITask.COLUMN_ID)));
                     r.add(a);
+
+                    Log.d(TAG, "getAllTasks: Task in API" + a.getEndpoint() + "  " + a.getApiMethod().toString() + "  " + a.getJSONOBJECT().toString());
                     Log.d(TAG, "getAllTasks: RETURNING SIZE " + r.size());
                 }catch (Exception e){
                     e.printStackTrace();

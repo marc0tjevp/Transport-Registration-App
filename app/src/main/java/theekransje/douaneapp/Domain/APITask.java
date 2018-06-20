@@ -39,11 +39,12 @@ public class APITask {
 
     public APITask(JSONObject jsonObject) {
         try{
-            this.apiMethod = (APIMethodes) jsonObject.get("METHOD");
+            this.apiMethod = APIMethodes.valueOf(jsonObject.getString("METHOD"));
             this.endpoint = (String) jsonObject.get("ENDPOINT");
             this.jsonObject = (JSONObject) jsonObject.get("JSONOBJECT");
 
         }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -57,7 +58,7 @@ public class APITask {
 
             return j;
         }catch (Exception e){
-
+            e.printStackTrace();
         }
 
 

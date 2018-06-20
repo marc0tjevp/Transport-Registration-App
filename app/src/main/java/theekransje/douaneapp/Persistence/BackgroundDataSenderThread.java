@@ -45,13 +45,14 @@ public class BackgroundDataSenderThread extends Thread {
                     }
 
 
+
                     Log.d(TAG, "BackgroundDataSenderThread: Trying to transmit data");
 
                     for (APITask a : dbHelper.getAllTasks()
                             ) {
                         Log.d(TAG, "Found task in DB: ID:" + a.getId() + " Method:" + a.getApiMethod() + " Endpoint:" + a.getEndpoint() + " Object: " + a.getJSONOBJECT().toString());
 
-                        ApiHelper ah = new ApiHelper(ApiHelper.API_URL + a.getEndpoint(), a.getApiMethod());
+                        ApiHelper ah = new ApiHelper(a.getEndpoint(), a.getApiMethod());
                         try {
                             HttpURLConnection conn = ah.getConnection();
 
