@@ -9,20 +9,21 @@ import java.io.Serializable;
 public class MRNFormulier implements Serializable {
         private static final String TAG = "MRNFormulier";
 
-        private String mrn;
-        private String reference;
-        private String dateTime;
-        private String sender;
-        private String receiver;
-        private String client;
-        private int articleAmount;
-        private double totalPRice;
-        private String currency;
-        private double totalWeight;
-        private String origin;
-        private String destination;
+        public String Mrn;
+        public String Reference;
+        public String DateTime;
+        public String Afzender;
+        public String Ontvanger;
+        public String Opdrachtgever;
+        public int AantalArtikelen;
+        public double TotaalBedrag;
+        public String Currency;
+        public double TotaalGewicht;
+        private String ontvangstAdres;
+        private String verzenderAdres;
 
-        private static String getTAG() {
+
+        public static String getTAG() {
                 return TAG;
         }
 
@@ -124,5 +125,21 @@ public class MRNFormulier implements Serializable {
 
         public void setDestination(String destination) {
                 this.destination = destination;
+        }
+
+        public String getOntvangstAdres() {
+                return ontvangstAdres;
+        }
+
+        public void setOntvangstAdres(String ontvangstAdres) {
+                this.ontvangstAdres = ontvangstAdres;
+        }
+
+        public String getVerzenderAdres() {
+                return verzenderAdres;
+        }
+
+        public void setVerzenderAdres(String verzenderAdres) {
+                this.verzenderAdres = verzenderAdres;
         }
 }

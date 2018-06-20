@@ -43,6 +43,10 @@
 
 
     <string name="code_not_mrn">Code voldoet niet aan MRN standaard</string>
+    <string name="country_not_netherlands">U bevindt zich niet in Nederland</string>
+    <string name="gebruiker">Gebruikersnaam</string>
+    <string name="wachtwoord">Wachtwoord</string>
+    <string name="no_freights_selected">Geen vrachten geselecteerd</string>
     <string name="invalid_credentials">Foute login gegevens</string>
     <string name="undefined">Onbekende error</string>
     <string name="status_detail_origin">Vanaf:</string>

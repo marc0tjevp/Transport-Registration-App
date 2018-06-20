@@ -45,6 +45,8 @@ public class BarcodeScannerActivity extends AppCompatActivity implements ZXingSc
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
+
+
         switch (requestCode) {
             case REQUEST_CAMERA_PERMISSION: {
                 // If request is cancelled, the result arrays are empty.
@@ -64,6 +66,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements ZXingSc
     @Override
     public void onResume() {
         super.onResume();
+
         if (zXingScannerView != null) {
             zXingScannerView.setResultHandler(this);
             zXingScannerView.startCamera();

@@ -54,9 +54,11 @@ public class AsyncGetFreights extends AsyncTask {
 
             if (statusCode == 200) {
                 Log.d(TAG, "doInBackground: ");
-                JSONObject jsonObject = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream()));
-                Log.d(TAG, jsonObject.toString());
+
+                JSONObject jsonObject = new JSONObject( ApiHelper.convertIStoString(conn.getInputStream()));
                 JSONArray jsonArray = jsonObject.getJSONArray("message");
+
+
 
                 ArrayList<String> mrns = new ArrayList<>();
 

@@ -20,6 +20,7 @@ public class TimerClock implements Runnable{
         seconds=0;
         minutes = 0;
         hours=0;
+        startDate = Calendar.getInstance().getTime();
     }
     public TimerClock(Handler delayHandler){
         this();
@@ -41,8 +42,8 @@ public class TimerClock implements Runnable{
 
     @Override
     public void run() {
-        startDate = Calendar.getInstance().getTime();
-        Log.d(TAG,"running Timer");
+
+
         if (hours==4&&minutes==15&&listener!=null){
             listener.toast();
         }
@@ -56,7 +57,7 @@ public class TimerClock implements Runnable{
             minutes = 0;
             hours = hours + 1;
         }
-        Log.d(TAG, "Current time:"+getTime());
+
         if (listener!=null) {
             listener.onTimeChange(getTime());
         }
@@ -64,7 +65,6 @@ public class TimerClock implements Runnable{
     }
 
     public String getTime(){
-        Log.d(TAG,"Current time: "+hours+":"+minutes);
         String output = "";
         if (hours<10){
             output="0"+hours;
