@@ -13,7 +13,6 @@ import java.net.HttpURLConnection;
 
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Interfaces.OnLoginResult;
-import theekransje.douaneapp.R;
 
 /**
  * Created by Sander on 5/24/2018.
@@ -79,9 +78,9 @@ public class AsyncLogin extends AsyncTask {
             }else if(statusCode == 401) {
                 Log.d(TAG, "doInBackground: Login failed");;
 
-                listener.onLoginFailure(R.string.invalid_credentials);
+                listener.onLoginFailure( "invalid credentials");
             }else{
-                listener.onLoginFailure(R.string.undefined);
+                listener.onLoginFailure("undefined error");
             }
 
             conn.disconnect();

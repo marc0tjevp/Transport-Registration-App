@@ -97,6 +97,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                                     e.printStackTrace();
                             }
 <<<<<<< HEAD
+<<<<<<< HEAD
                             String endpoint = "customs/status/"+freight.getMRNFormulier().getMrn();
                             new DBHelper(c).insertTask(new APITask(object,APIMethodes.PUT,endpoint));
                             sendTime(data);
@@ -112,6 +113,8 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         } else {
                             startService(intent);
 >>>>>>> parent of 3b253fb... Werkelijk geen idee hoe dit gebeurt is
+=======
+>>>>>>> parent of 0fe1eb8... Merge branch 'unit-tests' into master
                         }
                         Navbar.goToStatus(c,driver,new ArrayList<Freight>());
                 }

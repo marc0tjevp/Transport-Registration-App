@@ -1,7 +1,5 @@
 package theekransje.douaneapp.Interfaces;
 
-import android.support.annotation.StringRes;
-
 import theekransje.douaneapp.Domain.Driver;
 
 /**
@@ -10,5 +8,5 @@ import theekransje.douaneapp.Domain.Driver;
 
 public interface OnLoginResult {
     public void onLoginSucces(Driver driver);
-    public void onLoginFailure(@StringRes int error);
+    public void onLoginFailure(String error);
 }

@@ -117,8 +117,8 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
 
         holder.mrn.setText("" + freight.getMRNFormulier().getMrn());
-        holder.recipient.setText("" + freight.getMRNFormulier().getReceiver());
-        holder.sender.setText("" + freight.getMRNFormulier().getSender());
+        holder.recipient.setText("" + freight.getMRNFormulier().getOntvanger());
+        holder.sender.setText("" + freight.getMRNFormulier().getAfzender());
         holder.status.setText("" + freight.getDouaneStatus().toString());
 
 

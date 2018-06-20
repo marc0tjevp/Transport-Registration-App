@@ -39,7 +39,6 @@
             android:hint="@string/gebruiker"
             android:inputType="textPersonName"
             android:text="gebruiker"
-
             android:textAlignment="center" />
 
         <EditText
@@ -50,7 +49,6 @@
             android:hint="wachtwoord"
             android:inputType="textPassword"
             android:text="wachtwoord"
-
             android:textAlignment="center" />
 
 

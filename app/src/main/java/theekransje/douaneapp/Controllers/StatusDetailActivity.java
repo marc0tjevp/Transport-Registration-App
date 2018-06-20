@@ -37,6 +37,8 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
     private Context c;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,7 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
         BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
         navigation.setSelected(false);
         navigation.setOnNavigationItemSelectedListener(this);
+
 
 
            final Freight f = (Freight) getIntent().getSerializableExtra("FREIGHT");

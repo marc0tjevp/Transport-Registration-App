@@ -1,22 +1,15 @@
 package theekransje.douaneapp;
 
-import android.support.test.espresso.intent.Checks;
-import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.EditText;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import theekransje.douaneapp.Controllers.FreightActivity;
-import theekransje.douaneapp.Controllers.LoginActivity;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -37,22 +30,35 @@ import static org.hamcrest.Matchers.anything;
 @LargeTest
 public class FreightActivityTests {
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityRule =
-            new ActivityTestRule<>(LoginActivity.class);
-    private LoginActivityTests loginActivityTests = new LoginActivityTests();
+    public ActivityTestRule<FreightActivity> mActivityRule =
+            new ActivityTestRule<>(FreightActivity.class);
 
+    String testMRN = "1235sdsa";
 
     @Test
     public void checksIfPressingAddButtonAddsMRN() throws InterruptedException {
-        loginActivityTests.checkIfLoginIsSuccessfulWithValidCredentials();
+        onView(withId(R.id.mrnEditText)).perform(typeText(testMRN));
         Thread.sleep(250);
-        onView(withId(R.id.status_imageButton)).perform(click());
-        Thread.sleep(250);
-        onView(withText("18IT123457384910TF")).perform(click());
-        Thread.sleep(250);
-        onView(withId(R.id.buttonSend)).perform(click());
-        Thread.sleep(250);
-        onView(withText(R.string.sending_codes));
+        onView(withId(R.id.buttonAdd)).perform(click());
+        onView(withId(R.id.list_view)).check(matches(Matchers.withListSize(1)));
     }
 
+    @Test
+    public void checkIfPressingOnListItemOpensSnackbar() throws InterruptedException {
+        checksIfPressingAddButtonAddsMRN();
+        onView(withText(testMRN)).perform(click());
+        Thread.sleep(250);
+        onView(withText(R.string.want_to_delete))
+                .check(matches(withEffectiveVisibility(
+                        ViewMatchers.Visibility.VISIBLE
+                )));
+    }
+
+
+    @Test
+    public void checkIfPressingDeleteOnSnackbarDeletesItem() throws InterruptedException {
+        checkIfPressingOnListItemOpensSnackbar();
+        onView(withText(R.string.delete)).perform(click());
+        onView(withId(R.id.list_view)).check(matches(Matchers.withListSize(0)));
+    }
 }

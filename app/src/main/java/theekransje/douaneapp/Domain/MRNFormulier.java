@@ -1,6 +1,7 @@
 package theekransje.douaneapp.Domain;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * Created by Sander on 5/24/2018.
@@ -28,103 +29,83 @@ public class MRNFormulier implements Serializable {
         }
 
         public String getMrn() {
-                return mrn;
+                return Mrn;
         }
 
         public void setMrn(String mrn) {
-                this.mrn = mrn;
+                Mrn = mrn;
         }
 
         public String getReference() {
-                return reference;
+                return Reference;
         }
 
         public void setReference(String reference) {
-                this.reference = reference;
+                Reference = reference;
         }
 
         public String getDateTime() {
-                return dateTime;
-        }
-
-        public void setDateTime(String dateTime) {
-                this.dateTime = dateTime;
+                return DateTime;
         }
 
         public void String(String dateTime) {
-                this.dateTime = dateTime;
+                DateTime = dateTime;
         }
 
-        public String getSender() {
-                return sender;
+        public String getAfzender() {
+                return Afzender;
         }
 
-        public void setSender(String sender) {
-                this.sender = sender;
+        public void setAfzender(String afzender) {
+                Afzender = afzender;
         }
 
-        public String getReceiver() {
-                return receiver;
+        public String getOntvanger() {
+                return Ontvanger;
         }
 
-        public void setReceiver(String receiver) {
-                this.receiver = receiver;
+        public void setOntvanger(String ontvanger) {
+                Ontvanger = ontvanger;
         }
 
-        public String getClient() {
-                return client;
+        public String getOpdrachtgever() {
+                return Opdrachtgever;
         }
 
-        public void setClient(String client) {
-                this.client = client;
+        public void setOpdrachtgever(String opdrachtgever) {
+                Opdrachtgever = opdrachtgever;
         }
 
-        public int getArticleAmount() {
-                return articleAmount;
+        public int getAantalArtikelen() {
+                return AantalArtikelen;
         }
 
-        public void setArticleAmount(int articleAmount) {
-                this.articleAmount = articleAmount;
+        public void setAantalArtikelen(int aantalArtikelen) {
+                AantalArtikelen = aantalArtikelen;
         }
 
-        public double getTotalPRice() {
-                return totalPRice;
+        public double getTotaalBedrag() {
+                return TotaalBedrag;
         }
 
-        public void setTotalPRice(double totalPRice) {
-                this.totalPRice = totalPRice;
+        public void setTotaalBedrag(double totaalBedrag) {
+                TotaalBedrag = totaalBedrag;
         }
 
         public String getCurrency() {
-                return currency;
+                return Currency;
         }
 
         public void setCurrency(String currency) {
-                this.currency = currency;
+                Currency = currency;
         }
 
-        public double getTotalWeight() {
-                return totalWeight;
+        public double getTotaalGewicht() {
+                return TotaalGewicht;
         }
 
-        public void setTotalWeight(double totalWeight) {
-                this.totalWeight = totalWeight;
-        }
-
-        public String getOrigin() {
-                return origin;
-        }
-
-        public void setOrigin(String origin) {
-                this.origin = origin;
-        }
-
-        public String getDestination() {
-                return destination;
-        }
-
-        public void setDestination(String destination) {
-                this.destination = destination;
+        public void setTotaalGewicht(double totaalGewicht) {
+                TotaalGewicht = totaalGewicht;
         }
 
         public String getOntvangstAdres() {
