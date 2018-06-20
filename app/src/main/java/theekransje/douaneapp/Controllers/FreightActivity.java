@@ -17,9 +17,14 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import theekransje.douaneapp.API.AsyncGetFreights;
+import theekransje.douaneapp.API.LocationAPI;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Interfaces.OnFreightListAvail;
@@ -57,13 +62,12 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         this.freights = (ArrayList<Freight>) getIntent().getSerializableExtra("FREIGHTS");
 
 
-
-
         if (this.freights != null && this.freights.size() > 0) {
             for (Freight f : freights) {
                 FreightActivity.selected.add(f.getMRNFormulier().getMrn());
             }
         }
+
 
 
         BottomNavigationView navigation = this.findViewById(R.id.freight_navbar);
@@ -80,36 +84,108 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                Object response = null;
+                try {
+                    response = new LocationAPI().execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if (response != null) {
+                    JSONObject jsonObject;
+                    try {
+                        // Top level json object
+                        jsonObject = new JSONObject((String) response);
 
-                if (FreightActivity.selected.contains(new String(allFreightMrn.get(position)))) {
-                    view.setBackgroundColor(Color.WHITE);
-                    FreightActivity.selected.remove(allFreightMrn.get(position));
-                } else {
-                    view.setBackgroundColor(Color.GREEN);
-                    FreightActivity.selected.add(allFreightMrn.get(position));
-                    Log.d(TAG, "sendCodes: sending mrns: " + FreightActivity.selected.toString());
 
-                    Log.d(TAG, "onItemClick: selected now contains entries: " +  FreightActivity.selected.size());
+                        String country = jsonObject.getString("country");
+
+                        Log.i(TAG, "Country = " + country);
+                        if (country != null && country.equals("Netherlands")) {
+                            if (FreightActivity.selected.contains(new String(allFreightMrn.get(position)))) {
+                                view.setBackgroundColor(Color.WHITE);
+                                FreightActivity.selected.remove(allFreightMrn.get(position));
+                            } else {
+                                view.setBackgroundColor(Color.GREEN);
+                                FreightActivity.selected.add(allFreightMrn.get(position));
+                                Log.d(TAG, "sendCodes: sending mrns: " + FreightActivity.selected.toString());
+
+                                Log.d(TAG, "onItemClick: selected now contains entries: " + FreightActivity.selected.size());
+                            }
+                        } else {
+                            String message = getResources().getString(R.string.country_not_netherlands);
+
+                            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    } catch (JSONException ex) {
+                        Log.e(TAG, "onPostExecute JSONException " + ex.getLocalizedMessage());
+                    }
+
+
                 }
             }
+
         });
 
 
-        list = (ListView) findViewById(R.id.listview);
-        adapter = new ListViewAdapter(this, selected);
+        list = (ListView)
+
+                findViewById(R.id.listview);
+
+        adapter = new
+
+                ListViewAdapter(this, selected);
         list.setAdapter(adapter);
-        editSearch = (SearchView) findViewById(R.id.search);
+        editSearch = (SearchView)
+
+                findViewById(R.id.search);
         editSearch.setOnQueryTextListener(this);
-        onQueryTextChange("");
+
         list.setVisibility(View.GONE);
 
+        navigation.setVisibility(View.INVISIBLE);
 
+        new AsyncGetFreights(this, driver).execute();
+        
 
-        new AsyncGetFreights(this,driver).execute();
     }
 
     public void scan(View view) {
-        startActivityForResult(new Intent(this, BarcodeScannerActivity.class), SCAN_BARCODE);
+
+        Object response = null;
+        try {
+            response = new LocationAPI().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if (response != null) {
+            JSONObject jsonObject;
+            try {
+                // Top level json object
+                jsonObject = new JSONObject((String) response);
+
+
+                String country = jsonObject.getString("country");
+
+                Log.i(TAG, "Country = " + country);
+                if (country != null && country.equals("Netherlands")) {
+                    startActivityForResult(new Intent(this, BarcodeScannerActivity.class), SCAN_BARCODE);
+
+                } else {
+                    String message = getResources().getString(R.string.country_not_netherlands);
+
+                    Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            } catch (JSONException ex) {
+                Log.e(TAG, "onPostExecute JSONException " + ex.getLocalizedMessage());
+            }
+
+        }
     }
 
     @Override
@@ -121,13 +197,13 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
                     String mrnCode = data.getData().toString();
                     freightAdapter.addMRN(mrnCode);
                     freightAdapter.notifyDataSetChanged();
+
                 }
             }
         }
     }
 
     public void addMRN(View view) {
-
 
     }
 
@@ -140,7 +216,7 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
         intent.putExtra("DRIVER", driver);
         intent.putExtra("FREIGHTS", freights);
 
-        Log.d(TAG, "sendCodes: sending mrns: " +  FreightActivity.selected.toString());
+        Log.d(TAG, "sendCodes: sending mrns: " + FreightActivity.selected.toString());
         intent.putExtra("MRN", FreightActivity.selected);
 
 
@@ -177,28 +253,40 @@ public class FreightActivity extends AppCompatActivity implements BottomNavigati
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        Log.d(TAG, "onQueryTextSubmit: " + query);
 
+        adapter.filter(query);
+        adapter.notifyDataSetChanged();
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-
+        Log.d(TAG, "onQueryTextChange: " + newText);
 
         String text = newText;
-        adapter.filter(text);
+        freightAdapter.Search(newText);
         return false;
     }
 
     @Override
     public void OnFreightListAvail(ArrayList<String> freights) {
         this.allFreightMrn = freights;
+
+        if (freights.size() == 0){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(c, "Geen vrachten gevonden.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
         freightAdapter = new FreightAdapter(freights, this.getLayoutInflater(), selected);
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
 
 
                 listview.setAdapter(freightAdapter);

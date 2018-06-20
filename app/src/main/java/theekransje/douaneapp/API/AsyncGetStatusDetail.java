@@ -45,7 +45,12 @@ public class AsyncGetStatusDetail extends AsyncTask {
             if (statusCode == 200) {
                 Log.d(TAG, "doInBackground: ");
 
-                JSONObject jsonObject = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream())).getJSONObject("message");
+
+                JSONObject reply = new JSONObject(ApiHelper.convertIStoString(conn.getInputStream()));
+                JSONObject jsonObject = reply.getJSONObject("message");
+
+
+
                 MRNFormulier mrnFormulier = new MRNFormulier();
                 mrnFormulier.setMrn(mrn);
                 mrnFormulier.setArticleAmount(jsonObject.getInt("articleAmount"));
@@ -56,9 +61,9 @@ public class AsyncGetStatusDetail extends AsyncTask {
                 mrnFormulier.setTotalPRice(jsonObject.getDouble("totalAmount"));
                 mrnFormulier.setClient(jsonObject.getString("client"));
                 mrnFormulier.setReference(jsonObject.getString("reference"));
-                mrnFormulier.setDateTime(jsonObject.getString("dateTime"));
-                mrnFormulier.setOrigin(jsonObject.getString("addressOrigin"));
-                mrnFormulier.setDestination(jsonObject.getString("addressDestination"));
+                mrnFormulier.DateTime = jsonObject.getString("dateTime");
+                mrnFormulier.setVerzenderAdres(jsonObject.getString("addressOrigin"));
+                mrnFormulier.setOntvangstAdres(jsonObject.getString("addressDestination"));
 
                 Freight freight = new Freight();
                 freight.setMRNFormulier(mrnFormulier);

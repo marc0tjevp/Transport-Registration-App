@@ -11,7 +11,12 @@ public class Freight implements Serializable {
     private MRNFormulier MRNFormulier;
     private int ID;
     private DouaneStatus douaneStatus;
+    private boolean pdfAvail;
+    private String pdf;
 
+    public Freight() {
+        this.pdfAvail = false;
+    }
 
     public static String getTAG() {
         return TAG;
@@ -44,5 +49,21 @@ public class Freight implements Serializable {
     public void setDouaneStatus(DouaneStatus douaneStatus) {
         this.douaneStatus = douaneStatus;
 
+    }
+
+    public boolean isPdfAvail() {
+        return pdfAvail;
+    }
+
+    public void setPdfAvail(boolean pdfAvail) {
+        this.pdfAvail = pdfAvail;
+    }
+
+    public String getPdf() {
+        return pdf;
+    }
+
+    public void setPdf(String pdf) {
+        this.pdf = pdf;
     }
 }

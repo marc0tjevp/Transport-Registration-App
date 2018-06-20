@@ -19,18 +19,25 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import theekransje.douaneapp.API.AsyncGetPDF;
 import theekransje.douaneapp.API.AsyncGetStatusDetail;
+import theekransje.douaneapp.API.LocationAPI;
 import theekransje.douaneapp.Domain.DouaneStatus;
 import theekransje.douaneapp.Domain.Driver;
 import theekransje.douaneapp.Domain.Freight;
 import theekransje.douaneapp.Domain.MRNFormulier;
+import theekransje.douaneapp.Interfaces.OnPDFAvail;
 import theekransje.douaneapp.Interfaces.OnStatusDetailAvail;
 import theekransje.douaneapp.Interfaces.OnStatusUpdate;
 import theekransje.douaneapp.R;
 
-public class StatusActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnStatusUpdate, OnStatusDetailAvail {
+public class StatusActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, OnStatusUpdate, OnStatusDetailAvail, OnPDFAvail {
 
     private ArrayList<Freight> freights;
     private Driver driver;
@@ -38,6 +45,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     private ArrayList<String> selectedMRN;
     private StatusAdapter adapter;
     private Thread t;
+    private BottomNavigationView navigation;
 
     private static final String TAG = "StatusActivity";
 
@@ -52,9 +60,10 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         this.selectedMRN = (ArrayList<String>) getIntent().getSerializableExtra("MRN");
 
 
-        BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
+        navigation = this.findViewById(R.id.status_navbar);
         navigation.setSelectedItemId(R.id.navbar_status);
-        navigation.setOnNavigationItemSelectedListener(this);
+        navigation.setVisibility(View.INVISIBLE);
+
 
         if (this.freights == null || this.freights.size() == 0) {
             this.freights = new ArrayList<>();
@@ -66,8 +75,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
             Log.d(TAG, "onCreate: SELECTED MRNs" + this.selectedMRN.size());
         }
 
-        for (String s : this.selectedMRN
-                ) {
+        for (String s : this.selectedMRN) {
             new AsyncGetStatusDetail(s, this).execute();
         }
 
@@ -86,40 +94,106 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), FreightActivity.class);
-                v.getContext().startActivity(intent);
+
+                Object response = null;
+                try {
+                    response = new LocationAPI().execute().get();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if (response != null) {
+                    JSONObject jsonObject;
+                    try {
+                        // Top level json object
+                        jsonObject = new JSONObject((String) response);
+
+
+                        String country = jsonObject.getString("country");
+
+                        Log.i(TAG, "Country = " + country);
+                        if (country != null && country.equals("Netherlands")) {
+                            Intent intent = new Intent(v.getContext(), FreightActivity.class);
+                            v.getContext().startActivity(intent);
+                        } else {
+                            String message = getResources().getString(R.string.country_not_netherlands);
+
+                            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    } catch (JSONException ex) {
+                        Log.e(TAG, "onPostExecute JSONException " + ex.getLocalizedMessage());
+                    }
+
+
+                }
+
             }
         });
 
-       this.t = new Thread() {
+        this.t = new Thread() {
             @Override
             public void run() {
                 try {
+                    Thread.sleep(1000);
                     boolean allready = false;
 
                     while (!allready) {
+                        allready = true;
+                        if (adapter.getmData().size() == 0){
+                            break;
+                        }
 
                         Log.d(TAG, "run: Status Update thread running");
                         for (Freight f : adapter.getmData()
                                 ) {
-                            if (!f.getDouaneStatus().equals(DouaneStatus.VERTREK_OK)){
-                                Log.d(TAG, "run: status doesnt eq. VERTREK_OK updating form " + f.getMRNFormulier().getMrn() );
-                                allready = false;
+
+                            if (!f.getDouaneStatus().equals(DouaneStatus.VERTREK_OK)) {
+                                Log.d(TAG, "run: status doesnt eq. VERTREK_OK updating form " + f.getMRNFormulier().getMrn());
                                 updateStatus(f.getMRNFormulier().getMrn());
+                                allready = false;
+                            } else {
+
                             }
+                            if (!f.isPdfAvail() && f.getDouaneStatus().equals(DouaneStatus.VERTREK_OK)) {
+                                allready = false;
+                                new AsyncGetPDF(f.getMRNFormulier().getMrn(), (OnPDFAvail) c, (AppCompatActivity) c).execute();
+                            }
+                            Log.d(TAG, "run: " + f.isPdfAvail() + f.getDouaneStatus());
+                            Log.d(TAG, "run: size" + adapter.getmData().size());
+                            Log.d(TAG, "run: " + adapter.getmData().toString());
+
+                        }
+                            if (allready) {
+                                Log.d(TAG, "run: Thread shutdown as planned");
+                                navigation.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) c);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        navigation.setVisibility(View.VISIBLE);
+                                    }
+                                });
+
+                                break;
 
 
                         }
-                        Thread.sleep(5000);
+
+
+                        Log.d(TAG, "run: sleeping for 5s");
+                        Thread.sleep(1000);
                     }
-                    
+
+
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         };
 
-       t.start();
+        t.start();
 
         //    new StatusTimer(this);
     }
@@ -150,7 +224,6 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
 
             case R.id.navbar_drive:
                 Navbar.goToDrive(c, driver, freights);
-
                 return true;
         }
         return false;
@@ -160,9 +233,11 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     @Override
     protected void onResume() {
         super.onResume();
+        if (t.isInterrupted()){
+            t.start();
+        }
 
-        //    BottomNavigationView navigation = this.findViewById(R.id.status_navbar);
-        //    navigation.setSelectedItemId(R.id.navbar_status);
+
     }
 
     @Override
@@ -183,6 +258,25 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause: killing update thread");
         t.interrupt();
+        ;
+    }
+
+
+    @Override
+    public void OnPDFAvail(final String s, String mrn) {
+        for (final Freight f : adapter.getmData()) {
+            if (f.getMRNFormulier().getMrn().equals(mrn)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        f.setPdf(s);
+                        f.setPdfAvail(true);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }
     }
 }

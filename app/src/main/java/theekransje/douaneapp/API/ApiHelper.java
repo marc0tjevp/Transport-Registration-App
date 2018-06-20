@@ -20,7 +20,7 @@ import theekransje.douaneapp.Domain.Driver;
 
 public class ApiHelper {
     private static final String TAG = "ApiHelper";
-    public static final String API_URL = "http://192.168.178.10:8080/";
+    public static final String API_URL = "http://colt.softether.net:8080/";
     public static String token;
 
 
@@ -30,10 +30,12 @@ public class ApiHelper {
     private APIMethodes apiMethode;
 
     private HttpURLConnection conn;
+    private String url;
 
     public ApiHelper(String endpoint, APIMethodes apiMethode) {
         this.endpoint = endpoint;
         this.apiMethode = apiMethode;
+        this.url = API_URL + endpoint;
     }
 
 
@@ -104,5 +106,7 @@ public class ApiHelper {
 
     }
 
-
+    public String getUrl() {
+        return url;
+    }
 }

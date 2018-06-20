@@ -19,6 +19,7 @@
     <string name="start_of_drive">Start rit</string>
     <string name="end_of_drive">Einde rit</string>
     <string name="drive_break">Pauze</string>
+    <string name="drive_resume">Hervat</string>
     <string name="offer_break">U heeft meer dan 4 uur en 15 minuten aaneengesloten gereden. Een pauze is aan te raden.</string>
 
     <string name="text_navbar_status">Vrachten</string>
@@ -31,6 +32,8 @@
 
     <string name="status_detail_datetime">Datum:</string>
     <string name="status_detail_sender">Afzender: </string>
+    <string name="status_detail_recipient_adress">Adres ontvanger: </string>
+    <string name="status_detail_sender_adress">Adres verzender: </string>
     <string name="status_detail_recipient">Ontvanger: </string>
     <string name="status_detail_reference">Referentie:"</string>
     <string name="status_detail_client">Opdrachtgever: </string>
@@ -40,6 +43,10 @@
 
 
     <string name="code_not_mrn">Code voldoet niet aan MRN standaard</string>
+    <string name="country_not_netherlands">U bevindt zich niet in Nederland</string>
+    <string name="gebruiker">Gebruikersnaam</string>
+    <string name="wachtwoord">Wachtwoord</string>
+    <string name="no_freights_selected">Geen vrachten geselecteerd</string>
     <string name="invalid_credentials">Foute login gegevens</string>
     <string name="undefined">Onbekende error</string>
     <string name="status_detail_origin">Vanaf:</string>

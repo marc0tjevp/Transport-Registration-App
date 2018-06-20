@@ -23,20 +23,37 @@ public class FreightAdapter extends BaseAdapter {
     private ArrayList<String> mrns;
     private LayoutInflater mInflator;
     private ArrayList<String> selected;
+    private ArrayList<String> originalList;
 
-    public FreightAdapter(ArrayList<String> mrnList, LayoutInflater layoutInflater, ArrayList<String> selected){
+    public FreightAdapter(ArrayList<String> mrnList, LayoutInflater layoutInflater, ArrayList<String> selected) {
         mrns = mrnList;
         mInflator = layoutInflater;
         this.selected = selected;
+        this.originalList = mrnList;
+    }
+    public void Search(String text){
+        if (text.length() > 4){
+            mrns = new ArrayList<String>();
+            for (String s:originalList
+                 ) {
+                if (s.contains(text)){
+                    mrns.add(s);
+                }
+            }
+        }else {
+            mrns = originalList;
+        }
+
     }
 
-    public void addMRN(String s){
+    public void addMRN(String s) {
         mrns.add(s);
     }
 
-    public void removeMRN(int position){
+    public void removeMRN(int position) {
         mrns.remove(position);
     }
+
     @Override
     public int getCount() {
         return mrns.size();
@@ -87,8 +104,6 @@ public class FreightAdapter extends BaseAdapter {
 
 
     }
-
-
 
 
 }
