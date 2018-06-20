@@ -57,10 +57,11 @@ public class LocationAPI extends AsyncTask {
                 inputStream = httpConnection.getInputStream();
                 response = getStringFromInputStream(inputStream);
                 // Log.i(TAG, "doInBackground response = " + response);
+                inputStream.close();
             } else {
                 Log.e(TAG, "Error, invalid response");
             }
-            Log.i(TAG, "kutzooi" + response);
+            Log.i(TAG, "...error:" + response);
 
         } catch (MalformedURLException e) {
             Log.e(TAG, "doInBackground MalformedURLEx " + e.getLocalizedMessage());

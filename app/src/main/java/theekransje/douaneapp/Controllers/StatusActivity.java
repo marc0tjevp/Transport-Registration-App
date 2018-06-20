@@ -98,6 +98,7 @@ public class StatusActivity extends AppCompatActivity implements BottomNavigatio
                 Object response = null;
                 try {
                     response = new LocationAPI().execute().get();
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {

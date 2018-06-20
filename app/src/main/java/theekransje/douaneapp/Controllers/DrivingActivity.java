@@ -96,25 +96,10 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                             } catch (Exception e){
                                     e.printStackTrace();
                             }
-<<<<<<< HEAD
-<<<<<<< HEAD
                             String endpoint = "customs/status/"+freight.getMRNFormulier().getMrn();
                             new DBHelper(c).insertTask(new APITask(object,APIMethodes.PUT,endpoint));
                             sendTime(data);
                             timeTextView.setText("00:00:00");
-=======
-                    state = DrivingState.Driving;
-
-                    if (freights.size() > 0) {
-                        Intent intent = new Intent(DrivingActivity.this, LocationService.class);
-                        intent.putExtra("mrn", freights.get(0).getMRNFormulier().getMrn());
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            startForegroundService(intent);
-                        } else {
-                            startService(intent);
->>>>>>> parent of 3b253fb... Werkelijk geen idee hoe dit gebeurt is
-=======
->>>>>>> parent of 0fe1eb8... Merge branch 'unit-tests' into master
                         }
                         Navbar.goToStatus(c,driver,new ArrayList<Freight>());
                 }
