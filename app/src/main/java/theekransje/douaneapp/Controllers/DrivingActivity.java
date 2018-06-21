@@ -136,8 +136,6 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                             sendTime(data);
 
                         }
-                    adapter.addDate(new Date(startTime).toString().split(" ")[3]+"\nPauze\n"+new Date(endTime).toString().split(" ")[3]);
-                    adapter.notifyDataSetChanged();
                         startTime = System.currentTimeMillis();
                 }
             }
