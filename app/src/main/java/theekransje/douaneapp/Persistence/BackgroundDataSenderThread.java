@@ -40,7 +40,7 @@ public class BackgroundDataSenderThread extends Thread {
                 while (!kill) {
                     if (dbHelper.getAllTasks().size() == 0) {
 
-                        Log.d(TAG, "run: NO DATA TO SEND");
+                    //    Log.d(TAG, "run: NO DATA TO SEND");
                         break;
                     }
 
@@ -85,8 +85,8 @@ public class BackgroundDataSenderThread extends Thread {
 
 
                 }
-                Log.d(TAG, "run: holding for 20s");
-                Thread.sleep(20000);
+            //    Log.d(TAG, "run: holding for 100ms");
+                Thread.sleep(100);
 
             } catch (Exception e) {
                 e.printStackTrace();

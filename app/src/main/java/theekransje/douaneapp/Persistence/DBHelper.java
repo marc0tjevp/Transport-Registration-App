@@ -62,7 +62,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<APITask> getAllTasks(){
-        Log.d(TAG, "getAllTasks: called");
+     //   Log.d(TAG, "getAllTasks: called");
         
         ArrayList<APITask> r = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
