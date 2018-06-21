@@ -10,5 +10,6 @@ import theekransje.douaneapp.Domain.Freight;
 
 public interface OnStatusUpdate {
     ArrayList<Freight> getFreights();
+
     void onStatusUpdateAvail(Freight freight);
 }
