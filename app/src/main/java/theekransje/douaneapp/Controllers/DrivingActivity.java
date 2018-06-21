@@ -119,7 +119,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         Object[] data = {new Date(startTime).toString(), new Date(endTime).toString(), "Rijden", freight.getMRNFormulier().getMrn()};
                         sendTime(data);
                         getTimes();
-                        adapter.addDate(startTime+"\nRijden\n"+endTime);
+                        adapter.addDate(new Date(startTime).toString()+"\nRijden\n"+new Date(endTime).toString());
                         adapter.notifyDataSetChanged();
                     }
                     startTime = System.currentTimeMillis();
@@ -133,7 +133,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                             Object[] data = {new Date(startTime).toString(), new Date(endTime).toString(), "Pauze", freight.getMRNFormulier().getMrn()};
 
                             sendTime(data);
-                            adapter.addDate(startTime+"\nPauze\n"+endTime);
+                            adapter.addDate(new Date(startTime).toString()+"\nPauze\n"+new Date(endTime).toString());
                             adapter.notifyDataSetChanged();
                         }
                         startTime = System.currentTimeMillis();
