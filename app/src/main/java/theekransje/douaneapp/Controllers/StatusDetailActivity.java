@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,9 +54,9 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
         this.freights = (ArrayList<Freight>) getIntent().getSerializableExtra("FREIGHTS");
 
 
-        BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
-        navigation.setSelected(false);
-        navigation.setOnNavigationItemSelectedListener(this);
+       // BottomNavigationView navigation = this.findViewById(R.id.driving_navbar);
+       // navigation.setSelected(false);
+       // navigation.setOnNavigationItemSelectedListener(this);
 
 
 
@@ -77,6 +78,15 @@ public class StatusDetailActivity extends AppCompatActivity implements BottomNav
 
 
         ImageButton b = ((ImageButton) (findViewById(R.id.pdfAvail)));
+
+        Button bb = (Button) (findViewById(R.id.status_detail_back_button));
+
+               bb.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       onBackPressed();
+                   }
+               });
 
         if(f.isPdfAvail()){
            b.setVisibility(View.VISIBLE);

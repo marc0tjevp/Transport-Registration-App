@@ -121,7 +121,7 @@ public class DrivingActivity extends AppCompatActivity implements BottomNavigati
                         getTimes();
 
                     }
-                    adapter.addDate(new Date(startTime).toString().split(" ")[3]+"\nRijden\n"+new Date(endTime).toString().split(" ")[3]);
+                    adapter.addDate("Gereden   " + new Date(startTime).toString().split(" ")[3]+"   -   "+new Date(endTime).toString().split(" ")[3]);
                     adapter.notifyDataSetChanged();
                     startTime = System.currentTimeMillis();
                 } else {
